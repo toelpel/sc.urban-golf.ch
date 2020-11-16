@@ -1,78 +1,1 @@
-$( document ).ready(function() {
-    
-    $('#scorecard').DataTable( {
-        "paging":   false,
-        "info":     false,
-        "searching": false,
-        "ordering": true,
-        columnDefs: [
-        { 
-            orderable: false, targets:  "no-sort"}
-        ]
-    } );
-    
-    $(".op").click(function() {
-        var op = $(this).val();
-        if (op=="-") {
-            var elem = $(this).parent().next().find('select');
-            var result=elem.val();
-            if(result>-1 && result<=11) { result--; }
-        }
-        else if (op=="+") {
-            var elem = $(this).parent().prev().find('select');
-            var result=elem.val();
-            if(result>=-1 && result<11) { result++; }
-        }
-        
-        /*alert('id: '+id+' / gid: '+gid+' / pid: '+pid+' / Result: '+result);*/
-        elem.val(result).change();
-    });
-    
-    $("select[name='result']").on('change', function() {
-    /*$("select[name='result']").change(function() {*/
-        
-        var elem = $(this);
-    
-        var id = $(this).attr('id'); // ResultID
-        var gid = $(this).parent().parent().find('input[name=gid]').val(); // GameID
-        var hid = $(this).parent().parent().find('input[name=hid]').val(); // HoleID
-        var pid = $(this).parent().parent().find('input[name=pid]').val(); // PlayerID
-        var current_el = $(this).parent().parent().find('input[name=current]');
-        var result=$(this).val();
-        
-        var data = {
-            id:id,
-            gid:gid,
-            hid:hid,
-            pid:pid,
-            result,result
-        };
-
-        $('#resulttable').find("input, select").prop("disabled", true);
-        
-        /*console.log(data);*/
-        
-        request = $.ajax({
-            url: "/ajax.php?op=set_result",
-            type: "post",
-            data: data
-        });
-        
-        request.done(function (response, textStatus, jqXHR){
-            //console.log("Hooray, it worked!");
-            current_el.val(result);
-            elem.attr("id",response);
-            $('#resulttable').find("input, select").prop("disabled", false);
-        });
-        
-        request.fail(function (response, textStatus, jqXHR){
-            //console.log("Oh nooooo :-(");
-            elem.val(current_el.val());
-            $('#resulttable').find("input, select").prop("disabled", false);
-        });
-        
-        
-    });
-    
-    console.log("Javascript Working!");
-});
+$(document).ready(function () {    $('#scorecard').DataTable({        "paging": false,        "info": false,        "searching": false,        "ordering": true,        columnDefs: [            {                orderable: false, targets: "no-sort"            }        ]    });    $(".op").click(function () {        var op = $(this).val();        if (op == "-") {            var elem = $(this).parent().next().find('select');            var result = elem.val();            if (result > -1 && result <= 11) {                result--;            }        } else if (op == "+") {            var elem = $(this).parent().prev().find('select');            var result = elem.val();            if (result >= -1 && result < 11) {                result++;            }        }        /*alert('id: '+id+' / gid: '+gid+' / pid: '+pid+' / Result: '+result);*/        elem.val(result).change();    });    $("select[name='result']").on('change', function () {        /*$("select[name='result']").change(function() {*/        var elem = $(this);        var id = $(this).attr('id'); // ResultID        var gid = $(this).parent().parent().find('input[name=gid]').val(); // GameID        var hid = $(this).parent().parent().find('input[name=hid]').val(); // HoleID        var pid = $(this).parent().parent().find('input[name=pid]').val(); // PlayerID        var current_el = $(this).parent().parent().find('input[name=current]');        var result = $(this).val();        var data = {            id: id,            gid: gid,            hid: hid,            pid: pid,            result, result        };        $('#resulttable').find("input, select").prop("disabled", true);        /*console.log(data);*/        request = $.ajax({            url: "/ajax.php?op=set_result",            type: "post",            data: data        });        request.done(function (response, textStatus, jqXHR) {            //console.log("Hooray, it worked!");            current_el.val(result);            elem.attr("id", response);            $('#resulttable').find("input, select").prop("disabled", false);        });        request.fail(function (response, textStatus, jqXHR) {            //console.log("Oh nooooo :-(");            elem.val(current_el.val());            $('#resulttable').find("input, select").prop("disabled", false);        });    });    console.log("Javascript Working!");});
