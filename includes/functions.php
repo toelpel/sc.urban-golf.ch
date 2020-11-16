@@ -120,7 +120,7 @@ function freegame_menu($id)
 
 function freegame_opengame()
 {
-    $sql = 'SELECT `id`,`timestamp` FROM `sc_fg_games` ORDER BY `timestamp` DESC LIMIT 0,10';
+    $sql = 'SELECT `id`,`timestamp` FROM `sc_fg_games`			ORDER BY `timestamp` DESC			LIMIT 0,10';
     $result = db_query($sql);
     while ($row = mysqli_fetch_assoc($result)) {
         $content .= '<a href="?op=freegame&action=hole&id=' . $row["id"] . '"><div class="button">' . $row["id"] . ' (' . date_format(date_create($row["timestamp"]), 'd.m.Y / H:i') . ')</div></a>';
@@ -229,9 +229,9 @@ function freegame_hole($id, $holeid)
         $tablerow .= '<td><select name="result" class="button" id="' . $result["id"] . '">';
         $tablerow .= '<option value="-">-</option>'; // - means 'Hole not played'
         for ($x = -1; $x <= 11; $x++) {
-            if ($result["result"] == $x) $selected = "selected";
+            if ($result["result"] == $x) $selected = ' selected';
             else $selected = "";
-            $tablerow .= '<option value="' . $x . '" ' . $selected . '>' . $x . '</option>';
+            $tablerow .= '<option value="' . $x . '"' . $selected . '>' . $x . '</option>';
         }
         $tablerow .= '</select></td>';
 
