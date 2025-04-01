@@ -5,7 +5,7 @@
 
 # Configuration & Deployment
 db/
-includes/db_config_template.php
+includes/db_config.template.php
 
 # Documentation
 README.md
