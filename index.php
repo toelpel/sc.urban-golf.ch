@@ -7,7 +7,6 @@ include "includes/functions.php";
 $GLOBALS["db_connect"] = db_connect();
 
 // Fetch template
-
 $template = file_get_contents("style/template.html");
 $output = replace_html_vars($template);
 
