@@ -31,7 +31,8 @@ jobs:
             .git/
             .github/
             .gitignore
-            db/*
+            db
+            db/**
             includes/db_config.template.php
             README.md
             LICENSE
