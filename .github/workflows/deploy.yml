@@ -28,8 +28,10 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./
           exclude: |
-            .git/
-            .github/
+            .git
+            .git/**
+            .github
+            .github/**
             .gitignore
             db
             db/**
