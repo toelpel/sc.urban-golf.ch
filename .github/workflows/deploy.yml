@@ -15,8 +15,8 @@ jobs:
       - name: Create db_config.php from template
         run: |
           sed -e "s|{{DB_HOST}}|${{ secrets.DB_HOST }}|g" \
-              -e "s|{{DB_USER}}|${{ secrets.DB_USER }}|g" \
-              -e "s|{{DB_PASS}}|${{ secrets.DB_PASS }}|g" \
+              -e "s|{{DB_USER}}|${{ secrets.DB_USERNAME }}|g" \
+              -e "s|{{DB_PASS}}|${{ secrets.DB_PASSWORD }}|g" \
               -e "s|{{DB_NAME}}|${{ secrets.DB_NAME }}|g" \
               includes/db_config.template.php > includes/db_config.php
 
