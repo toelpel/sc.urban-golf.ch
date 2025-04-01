@@ -1,14 +1,14 @@
 <?php
-function db_connect()
+function db_connect(): mysqli
 {
 	include ('includes/db_config.php');
-	$db = new mysqli($dbhost, $dbuname, $dbpass, $dbname);
+	$db = new mysqli(hostname: $dbhost, username: $dbuname, password: $dbpass, database: $dbname);
 
 	if ($db->connect_error)
 	{
 		die('Connect Error (' . $db->connect_errno . ') ' . $mysqli->connect_error);
 	}
-	elseif ($result = $db->query("SELECT DATABASE()"))
+	elseif ($result = $db->query(query: "SELECT DATABASE()"))
 	{
 		$row = $result->fetch_row();
 		if ($row[0] != $dbname)
@@ -20,14 +20,13 @@ function db_connect()
 	return $db;
 }
 
-function db_query($sql)
+function db_query($sql): bool|mysqli_result
 {
-	global $db_connect;
-	$result = $db_connect->query($sql);
-	return $result;
+	$db_connect = $GLOBALS["db_connect"];
+    return $db_connect->query(query: $sql);
 }
 
-function formclean($data)
+function formclean($data): array
 {
 	foreach (array_keys($data) as $key)
 	{
@@ -37,28 +36,28 @@ function formclean($data)
 	return $formdata;
 }
 
-function replace_html_vars($template)
+function replace_html_vars($template): array|string
 {
-	$op = htmlspecialchars($_GET["op"]);
+	$op = htmlspecialchars(string: $_GET["op"]);
 	$id = $_COOKIE["SC-GameCode"];
 	if ($_GET["id"]) $id = $_GET["id"];
 
 	switch ($op)
 	{
 		case "freegame":
-			$content = freegame($id);
+			$content = freegame(id: $id);
 		break;
 
 		default:
 			/*$content = mainmenu();*/
-			$content = freegame($id);
+			$content = freegame(id: $id);
 	}
 
-	$output = str_replace("{!CONTENT!}", $content, $template);
+	$output = str_replace(search: "{!CONTENT!}", replace: $content, subject: $template);
 	return $output;
 }
 
-function mainmenu()
+function mainmenu(): string
 {
 	$content = '<a href="?op=freegame"><div class="button">Freies Spiel</div></a>';
 
@@ -68,19 +67,19 @@ function mainmenu()
 # ----- Free Game Functions ----- #
 # ------------------------------- #
 
-function check_fg_id($id)
+function check_fg_id($id): int
 {
 	// Checks if the id is already in use. If in use returns 0, if not in use returns 1
 	$sql = 'SELECT `id` FROM `sc_fg_games` WHERE `id` = ' . $id;
-	$result = db_query($sql);
-	if (mysqli_num_rows($result) > 0) return 0;
+	$result = db_query(sql: $sql);
+	if (mysqli_num_rows(result: $result) > 0) return 0;
 	else return 1;
 }
 
-function freegame($id)
+function freegame($id): string
 {
 
-	$action = htmlspecialchars($_GET["action"]);
+	$action = htmlspecialchars(string: $_GET["action"]);
 
 	switch ($action)
 	{
@@ -89,55 +88,57 @@ function freegame($id)
 		break;
 		case "hole":
 			/*$id = htmlspecialchars($_GET["id"]);*/
-			$holeid = htmlspecialchars($_GET["holeid"]);
-			$content = freegame_hole($id, $holeid);
+			$holeid = htmlspecialchars(string: $_GET["holeid"]);
+			$content = freegame_hole(id: $id, holeid: $holeid);
 		break;
 		case "opengame":
 			$content = freegame_opengame();
 		break;
 		case "scorecard":
 			/*$id = htmlspecialchars($_GET["id"]);*/
-			$holeid = htmlspecialchars($_GET["holeid"]);
-			$content = freegame_scorecard($id);
+			$holeid = htmlspecialchars(string: $_GET["holeid"]);
+			$content = freegame_scorecard(id: $id);
 		break;
 
 		default:
-			$content = freegame_menu($id);
+			$content = freegame_menu(id: $id);
 	}
 
 	return $content;
 }
 
-function freegame_menu($id)
+function freegame_menu($id): string
 {
 	$id = $_COOKIE["SC-GameCode"];
 	$content = '<a href="?op=freegame&action=newedit"><div class="button">Neues Spiel</div></a>';
-	/*$content .= '<form class="fg_menu">';    $content .= '<input type="text" name="id" value="'.$id.'"><a href="?op=freegame&action=hole&id='.$id.'">'; */
-	$content .= '<a href="?op=freegame&action=opengame"><div class="button">Spiel �ffnen</div></a>';
+	/* $content .= '<form class="fg_menu">'; */
+	/* $content .= '<input type="text" name="id" value="'.$id.'"><a href="?op=freegame&action=hole&id='.$id.'">'; */
+	$content .= '<a href="?op=freegame&action=opengame"><div class="button">Spiel öffnen</div></a>';
 
-	/*if ($id) { $content .= '<a href="?op=freegame&action=hole"><div class="button">Spiel '.$id.' �ffnen</div></a>'; }    //$content .= '<input class="button" type="submit" name="submit" id="submit" value="Spiel �ffnen" style="width: 82%";">';    //$content .= '</form>';*/
-	/*$content .= '<a href="/"><div class="button">Zur�ck</div></a>';*/
+	/* if ($id) { $content .= '<a href="?op=freegame&action=hole"><div class="button">Spiel '.$id.' öffnen</div></a>'; } */
+	/* $content .= '<input class="button" type="submit" name="submit" id="submit" value="Spiel öffnen" style="width: 82%";">';    //$content .= '</form>'; */
+	/* $content .= '<a href="/"><div class="button">Zurück</div></a>'; */
 
 	return $content;
 }
 
-function freegame_opengame()
+function freegame_opengame(): string
 {
 	$sql = 'SELECT `id`,`timestamp` FROM `sc_fg_games`			ORDER BY `timestamp` DESC			LIMIT 0,10';
 	$result = db_query($sql);
-	while ($row = mysqli_fetch_assoc($result))
+	while ($row = mysqli_fetch_assoc(result: $result))
 	{
-		$content .= '<a href="?op=freegame&action=hole&id=' . $row["id"] . '"><div class="button">' . $row["id"] . ' (' . date_format(date_create($row["timestamp"]) , 'd.m.Y / H:i') . ')</div></a>';
+		$content .= '<a href="?op=freegame&action=hole&id=' . $row["id"] . '"><div class="button">' . $row["id"] . ' (' . date_format(object: date_create(datetime: $row["timestamp"]) , format: 'd.m.Y / H:i') . ')</div></a>';
 	}
 	return $content;
 }
 
-function freegame_scorecard($id)
+function freegame_scorecard($id): string
 {
 
 	$sql = 'SELECT COUNT(DISTINCT holeid) AS holecount FROM `sc_fg_results` WHERE gameid=' . $id;
 	$result = db_query($sql);
-	while ($row = mysqli_fetch_assoc($result))
+	while ($row = mysqli_fetch_assoc(result: $result))
 	{
 		$holecount = $row['holecount'];
 	}
@@ -147,15 +148,15 @@ function freegame_scorecard($id)
             JOIN `sc_fg_players` ON `sc_fg_results`.`playerid` = `sc_fg_players`.`id`
             WHERE `sc_fg_results`.`gameid` = ' . $id . '
             ORDER BY `sc_fg_results`.`playerid` ASC';
-	$result_player = db_query($sql);
+	$result_player = db_query(sql: $sql);
 
 	for ($x = 1;$x <= $holecount;$x++)
 	{
 		$thead .= '<th class="no-sort"><a href="?op=freegame&action=hole&id=' . $id . '&holeid=' . ($x) . '">' . $x . '</a></th>';
 	}
-	$thead .= '<th>Total</th><th>�</th>';
+	$thead .= '<th>Total</th><th>Avg.</th>';
 
-	while ($players = mysqli_fetch_assoc($result_player))
+	while ($players = mysqli_fetch_assoc(result: $result_player))
 	{
 
 		$tbody .= '<tr><td>' . $players['name'] . '</td>';
@@ -167,17 +168,17 @@ function freegame_scorecard($id)
                     WHERE `sc_fg_results`.`gameid` = ' . $id . '
                     AND `sc_fg_results`.`holeid` = ' . $x . '
                     AND `sc_fg_results`.`playerid`= ' . $players['playerid'];
-			$result_result = db_query($sql);
+			$result_result = db_query(sql: $sql);
 
-			$result = mysqli_fetch_assoc($result_result);
+			$result = mysqli_fetch_assoc(result: $result_result);
 			$tbody .= '<td>' . $result['result'] . '</td>';
 		}
 		$sql = 'SELECT SUM(`result`) AS "SUM",ROUND(AVG(`result`),1) AS "AVG"
                 FROM `sc_fg_results`
                 WHERE `sc_fg_results`.`gameid` = ' . $id . '
                 AND `sc_fg_results`.`playerid`= ' . $players['playerid'];
-		$result = db_query($sql);
-		$result = mysqli_fetch_assoc($result);
+		$result = db_query(sql: $sql);
+		$result = mysqli_fetch_assoc(result: $result);
 		$tbody .= '<td>' . $result['SUM'] . '</td>';
 		$tbody .= '<td>' . $result['AVG'] . '</td>';
 
@@ -195,12 +196,12 @@ function freegame_scorecard($id)
 	return $content;
 }
 
-function freegame_hole($id, $holeid)
+function freegame_hole($id, $holeid): string
 {
 	if ($holeid == "") $holeid = 1;
 	$sql = 'SELECT id,name,timestamp FROM `sc_fg_games` WHERE id = ' . $id;
-	$result = db_query($sql);
-	while ($row = mysqli_fetch_assoc($result))
+	$result = db_query(sql: $sql);
+	while ($row = mysqli_fetch_assoc(result: $result))
 	{
 		$gamedata = $row;
 	}
@@ -219,8 +220,8 @@ function freegame_hole($id, $holeid)
             LEFT JOIN `sc_fg_results` ON `sc_fg_players`.id = `sc_fg_results`.playerid AND `sc_fg_results`.holeid = ' . $holeid . '
             WHERE `sc_fg_players`.gameid = ' . $id . '
             ORDER BY `sc_fg_players`.id ASC';
-	$result = db_query($sql);
-	while ($row = mysqli_fetch_assoc($result))
+	$result = db_query(sql: $sql);
+	while ($row = mysqli_fetch_assoc(result: $result))
 	{
 		$resultdata[] = $row;
 	}
@@ -264,28 +265,28 @@ function freegame_hole($id, $holeid)
 	return $content;
 }
 
-function freegame_newedit()
+function freegame_newedit(): string
 {
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST')
 	{
 		// Data Posted
 		// Clean user input
-		$formdata = formclean($_POST);
+		$formdata = formclean(data: $_POST);
 
-		$id = $formdata[id];
+		$id = $formdata["id"];
 		if (!$id)
 		{
 			do
 			{
-				$id = rand(100000, 999999);
+				$id = rand(min: 100000, max: 999999);
 			}
-			while (check_fg_id($id) == 0);
+			while (check_fg_id(id: $id) == 0);
 		}
 
 		// Save Game Data
 		$sql = 'INSERT INTO `sc_fg_games` (id, name, timestamp) VALUES("' . $id . '","' . $formdata["name"] . '",NOW()) ON DUPLICATE KEY UPDATE name="' . $formdata["name"] . '"';
-		$result = db_query($sql);
+		$result = db_query(sql: $sql);
 
 		// Save Player Data
 		foreach ($formdata["players"] as $player)
@@ -293,30 +294,32 @@ function freegame_newedit()
 			if ($player["name"])
 			{
 				$sql = 'INSERT INTO `sc_fg_players` (id,name,gameid) VALUES("' . $player["id"] . '","' . $player["name"] . '","' . $id . '") ON DUPLICATE KEY UPDATE name="' . $player["name"] . '"';
-				$result = db_query($sql);
+				$result = db_query(sql: $sql);
 			}
 		}
 
+		// Setting cookie
 		setcookie("SC-GameCode", $id, time() + 2592000);
-		$content = '<h4>Daten wurden gespeichert.</h4>';
-		$content .= '<a href="?op=freegame"><div class="button">Weiter</div></a>';
+		// Redirect directly to newly created game
+		header("Location: ?op=freegame&action=hole&id=" . $id);
+		exit;
 
 	}
 	else
 	{
-		$id = htmlspecialchars($_GET["id"]);
+		$id = htmlspecialchars(string: $_GET["id"]);
 		if ($id)
 		{
 			// Edit Game (Get Data from SQL and put in Form)
 			$sql = 'SELECT name FROM `sc_fg_games` WHERE id = ' . $id;
-			$result = db_query($sql);
-			while ($row = mysqli_fetch_assoc($result))
+			$result = db_query(sql: $sql);
+			while ($row = mysqli_fetch_assoc(result: $result))
 			{
 				$gamedata[] = $row;
 			}
 			$sql = 'SELECT id,name FROM `sc_fg_players` WHERE gameid = ' . $id . ' ORDER BY id ASC';
 			$result = db_query($sql);
-			while ($row = mysqli_fetch_assoc($result))
+			while ($row = mysqli_fetch_assoc(result: $result))
 			{
 				$playerdata[] = $row;
 			}

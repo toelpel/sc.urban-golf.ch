@@ -7,7 +7,7 @@ include('includes/functions.php');
 $GLOBALS['db_connect'] = db_connect();
 
 // Get variables from query string
-$op = htmlspecialchars($_GET["op"]);
+$op = htmlspecialchars(string: $_GET["op"]);
 
 // Process action
 switch ($op) {

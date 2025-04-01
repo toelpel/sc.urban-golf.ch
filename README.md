@@ -15,3 +15,5 @@ Simple but useful Urban Golf score card application.
 
 ## Deployment challenges
 - How to run application locally without a valid database?
+-- Database schema uploaded to folder db
+--> working on a pipeline to deploy test/prod automatically on release

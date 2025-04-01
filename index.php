@@ -1,6 +1,8 @@
 <?php
+// Set header
+header('Content-Type: text/html; charset=utf-8');
 
-# Include functions
+// Include functions
 include "includes/functions.php";
 
 // Setup database connection
