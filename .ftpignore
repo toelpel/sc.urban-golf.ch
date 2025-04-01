@@ -1,0 +1,15 @@
+# Git & GitHub
+.git/
+.github/
+.gitignore
+
+# Configuration & Deployment
+db/
+
+# Documentation
+README.md
+LICENSE
+
+# Misc
+*.zip
+*.bak
