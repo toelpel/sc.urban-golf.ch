@@ -28,12 +28,12 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./
           exclude: |
-          .git*
-          .github*
-          .gitignore
-          db/*
-          includes/db_config.template.php
-          README.md
-          LICENSE
-          *.zip
-          *.bak
+            .git*
+            .github*
+            .gitignore
+            db/*
+            includes/db_config.template.php
+            README.md
+            LICENSE
+            *.zip
+            *.bak
