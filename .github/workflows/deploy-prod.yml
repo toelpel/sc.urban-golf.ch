@@ -1,4 +1,4 @@
-name: Deploy to FTP on Release
+name: Deploy Release to FTP
 
 on:
   release:
