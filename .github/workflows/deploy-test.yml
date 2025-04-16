@@ -21,14 +21,13 @@ jobs:
               -e "s|{{DB_NAME}}|${{ secrets.DB_NAME_TEST }}|g" \
               includes/db_config.template.php > includes/db_config.php
 
-      - name: Upload via FTP to /test/
+      - name: Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
+          server: ${{ secrets.FTP_HOST_TEST }}
+          username: ${{ secrets.FTP_USER_TEST }}
+          password: ${{ secrets.FTP_PASS_TEST }}
           local-dir: ./ 
-          server-dir: /test/
           exclude: |
             .git
             .git/**
