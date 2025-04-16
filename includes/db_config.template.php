@@ -1,6 +1,6 @@
 <?php
     $dbhost = '{{DB_HOST}}';
-    $dbuname = '{{DB_USER}}';
-    $dbpass = '{{DB_PASS}}';
+    $dbuname = '{{DB_USERNAME}}';
+    $dbpass = '{{DB_PASSWORD}}';
     $dbname = '{{DB_NAME}}';
 ?>
