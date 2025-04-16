@@ -10,7 +10,7 @@ if ($mysqli->connect_error) {
 }
 
 // Nur auf Testdatenbank anwenden
-if (DB_NAME !== 'teevau3c_sctest') {
+if ($dbuname !== 'teevau3c_sctest') {
     die("🚫 Nicht in einer Test-Datenbank!");
 }
 
