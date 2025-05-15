@@ -191,7 +191,7 @@ function freegame_scorecard($id): string
 	$content .= $tbody;
 	$content .= '</tbody>';
 	$content .= '</table>';
-	$content .= '<a href="javascript:history.back()"><div class="button" style="margin-top:25px;">Zur�ck</div></a>';
+	$content .= '<a href="javascript:history.back()"><div class="button" style="margin-top:25px;">Zurück</div></a>';
 
 	return $content;
 }
