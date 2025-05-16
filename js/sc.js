@@ -8,6 +8,10 @@ $(document).ready(function() {
 			{
 				orderable: false,
 				targets: "no-sort"
+			},
+			{
+				className: "dt-center",
+				targets: "_all"
 			}
 		]
 	});
