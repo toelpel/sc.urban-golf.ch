@@ -2,7 +2,7 @@
   <div class="max-w-4xl mx-auto p-4">
     <h1 class="text-2xl font-bold mb-6">Scorecard – Spiel #{{ gameId }}</h1>
 
-    <div v-if="players.length && scores.length" class="overflow-x-auto">
+    <div v-if="players.length && scores" class="overflow-x-auto">
       <table class="min-w-full border">
         <thead>
           <tr>
@@ -49,13 +49,24 @@ onMounted(async () => {
   const ids = JSON.parse(localStorage.getItem(`game-${gameId}-players`)) || [];
   players.value = ids;
 
+  const res = await fetch(`https://api.sc.urban-golf.ch/api/players`);
+  const allPlayers = await res.json();
+
   for (const id of ids) {
-    const res = await fetch(`https://api.sc.urban-golf.ch/api/players`);
-    const allPlayers = await res.json();
     const player = allPlayers.find(p => p.id === id);
     playerNames[id] = player?.name || `#${id}`;
     scores[id] = {};
-    holes.forEach(h => scores[id][h] = '');
+    holes.forEach(h => (scores[id][h] = ''));
+  }
+
+  // Neue Zeilen: Scores vom Server laden
+  const scoreRes = await fetch(`https://api.sc.urban-golf.ch/api/scores?game_id=${gameId}`);
+  const scoreData = await scoreRes.json();
+
+  for (const entry of scoreData) {
+    const { player_id, hole, strokes } = entry;
+    if (!scores[player_id]) scores[player_id] = {};
+    scores[player_id][hole] = strokes;
   }
 });
 
