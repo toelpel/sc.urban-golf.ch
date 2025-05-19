@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies & build frontend
         run: |
           cd frontend
-          npm ci
+          npm install
           npm run build
 
       - name: Upload via FTP
