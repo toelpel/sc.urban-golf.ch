@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 const fastify = Fastify({ logger: true });
 
 await fastify.register(cors, {
-  origin: ['https://sc.urban-golf.ch'],
+  origin: true,
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type'],
   preflightContinue: false,
