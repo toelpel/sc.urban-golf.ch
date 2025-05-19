@@ -1,0 +1,46 @@
+name: Deploy Test Branch to FTP
+
+on:
+  push:
+    branches:
+      - test
+    paths:
+      - 'frontend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies & build frontend
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
+      - name: Upload via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST_TEST }}
+          username: ${{ secrets.FTP_USER_TEST }}
+          password: ${{ secrets.FTP_PASS_TEST }}
+          local-dir: frontend/dist
+          server-dir: /new/
+          exclude: |
+            .git
+            .git/**
+            .github
+            .github/**
+            .gitignore
+            README.md
+            LICENSE
+            *.zip
+            *.bak
