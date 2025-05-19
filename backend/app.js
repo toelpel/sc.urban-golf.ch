@@ -16,12 +16,18 @@ const __dirname = path.dirname(__filename);
 const fastify = Fastify({ logger: true });
 
 await fastify.register(cors, {
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || false
+  origin: ['https://sc.urban-golf.ch'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
 });
 
 fastify.register(scoreRoutes, { prefix: '/api/scores' });
 fastify.register(gameRoutes, { prefix: '/api/games' });
 fastify.register(playerRoutes, { prefix: '/api/players' });
+
+fastify.get('/', async (req, reply) => {
+  reply.send({ status: 'ok', service: 'Urban Golf API' });
+});
 
 const PORT = process.env.PORT || 3000;
 
