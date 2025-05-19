@@ -1,14 +1,24 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
-import { dirname } from 'path';
+import fs from 'fs';
+import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
+
+// Ziel: backend/data/scores.db
+const dbPath = path.resolve(__dirname, '../data/scores.db');
+const dbDir = path.dirname(dbPath);
+
+// Verzeichnis anlegen, falls nicht vorhanden
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
 
 export async function getDBConnection() {
   const db = await open({
-    filename: __dirname + '/../data/scores.db',
+    filename: dbPath,
     driver: sqlite3.Database
   });
 
