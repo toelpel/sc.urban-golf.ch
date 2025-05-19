@@ -46,7 +46,12 @@ const scores = reactive({});
 
 onMounted(async () => {
   const res = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
-  players.value = await res.json();
+  const data = await res.json();
+  if (!Array.isArray(data)) {
+    console.error('Unerwartete Spielerantwort:', data);
+    return;
+  }
+  players.value = data;
 
   for (const player of players.value) {
     scores[player.id] = {};
