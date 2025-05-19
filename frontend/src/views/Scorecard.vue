@@ -11,16 +11,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="player in players" :key="player">
-            <td class="border px-2 py-1 font-medium">{{ getPlayerName(player) }}</td>
+          <tr v-for="player in players" :key="player.id">
+            <td class="border px-2 py-1 font-medium">{{ player.name }}</td>
             <td v-for="hole in holes" :key="hole" class="border px-2 py-1">
               <input
-                v-model.number="scores[player][hole]"
+                v-model.number="scores[player.id][hole]"
                 type="number"
                 min="1"
                 max="20"
                 class="w-16 p-1 border rounded text-center"
-                @blur="submitScore(player, hole)"
+                @blur="submitScore(player.id, hole)"
               />
             </td>
           </tr>
@@ -43,23 +43,16 @@ const holes = Array.from({ length: 9 }, (_, i) => i + 1); // 9 Löcher
 
 const players = ref([]);
 const scores = reactive({});
-const playerNames = reactive({});
 
 onMounted(async () => {
-  const ids = JSON.parse(localStorage.getItem(`game-${gameId}-players`)) || [];
-  players.value = ids;
+  const res = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
+  players.value = await res.json();
 
-  const res = await fetch(`https://api.sc.urban-golf.ch/api/players`);
-  const allPlayers = await res.json();
-
-  for (const id of ids) {
-    const player = allPlayers.find(p => p.id === id);
-    playerNames[id] = player?.name || `#${id}`;
-    scores[id] = {};
-    holes.forEach(h => (scores[id][h] = ''));
+  for (const player of players.value) {
+    scores[player.id] = {};
+    holes.forEach(h => (scores[player.id][h] = ''));
   }
 
-  // Neue Zeilen: Scores vom Server laden
   const scoreRes = await fetch(`https://api.sc.urban-golf.ch/api/scores?game_id=${gameId}`);
   const scoreData = await scoreRes.json();
 
@@ -69,10 +62,6 @@ onMounted(async () => {
     scores[player_id][hole] = strokes;
   }
 });
-
-function getPlayerName(id) {
-  return playerNames[id] || `#${id}`;
-}
 
 async function submitScore(playerId, hole) {
   const strokes = scores[playerId][hole];
