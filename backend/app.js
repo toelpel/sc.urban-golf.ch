@@ -19,6 +19,8 @@ await fastify.register(cors, {
   origin: ['https://sc.urban-golf.ch'],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type'],
+  preflightContinue: false,
+  optionsSuccessStatus: 200
 });
 
 fastify.register(scoreRoutes, { prefix: '/api/scores' });
