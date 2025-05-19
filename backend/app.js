@@ -3,7 +3,10 @@ import cors from '@fastify/cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 import scoreRoutes from './routes/scores.js';
+import gameRoutes from './routes/games.js';
+import playerRoutes from './routes/players.js';
 
 dotenv.config();
 
@@ -17,6 +20,8 @@ await fastify.register(cors, {
 });
 
 fastify.register(scoreRoutes, { prefix: '/api/scores' });
+fastify.register(gameRoutes, { prefix: '/api/games' });
+fastify.register(playerRoutes, { prefix: '/api/players' });
 
 const PORT = process.env.PORT || 3000;
 
