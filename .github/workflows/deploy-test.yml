@@ -32,7 +32,7 @@ jobs:
           server: ${{ secrets.FTP_HOST_TEST }}
           username: ${{ secrets.FTP_USER_TEST }}
           password: ${{ secrets.FTP_PASS_TEST }}
-          local-dir: frontend/dist
+          local-dir: frontend/dist/
           server-dir: /new/
           exclude: |
             .git
