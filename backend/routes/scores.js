@@ -28,6 +28,6 @@ export default async function (fastify, opts) {
       'INSERT INTO scores (game_id, player_id, hole, strokes) VALUES (?, ?, ?, ?)',
       [game_id, player_id, hole, strokes]
     );
-    reply.send({ id: result.lastID, game_id, player_id, hole, strokes });
+    reply.code(200).send({ id: result.lastID, game_id, player_id, hole, strokes });
   });
 }

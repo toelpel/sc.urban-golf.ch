@@ -7,7 +7,7 @@ export default async function (fastify, opts) {
 
     const db = await getDBConnection();
     const result = await db.run('INSERT INTO players (name) VALUES (?)', [name]);
-    reply.send({ id: result.lastID, name });
+    reply.code(200).send({ id: result.lastID, name });
   });
 
   fastify.get('/', async (req, reply) => {
