@@ -44,16 +44,8 @@ function removePlayer(index) {
 }
 
 async function createGame() {
-  // Neues Spiel erstellen
-  const resGame = await fetch('https://api.sc.urban-golf.ch/api/games', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: gameName.value })
-  });
-  const game = await resGame.json();
-
-  // Spieler erfassen
   const playerIds = [];
+
   for (const name of playerNames.value.filter(n => n.trim() !== '')) {
     const res = await fetch('https://api.sc.urban-golf.ch/api/players', {
       method: 'POST',
@@ -64,8 +56,15 @@ async function createGame() {
     playerIds.push(player.id);
   }
 
-  // Weiter zur Scorecard mit game ID & player IDs (z.B. via localStorage)
-  localStorage.setItem(`game-${game.id}-players`, JSON.stringify(playerIds));
+  const resGame = await fetch('https://api.sc.urban-golf.ch/api/games', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: gameName.value,
+      players: playerIds
+    })
+  });
+  const game = await resGame.json();
   router.push(`/scorecard/${game.id}`);
 }
 </script>
