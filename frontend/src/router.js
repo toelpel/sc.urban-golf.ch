@@ -9,7 +9,9 @@ const routes = [
   { path: '/scorecard/:id', component: Scorecard },
 ];
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory('/new/'),
   routes,
 });
+
+export default router;
