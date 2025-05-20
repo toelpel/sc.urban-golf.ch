@@ -2,6 +2,12 @@
   <div class="max-w-4xl mx-auto p-4">
     <h1 class="text-2xl font-bold mb-6">Scorecard – Spiel #{{ gameId }}</h1>
 
+    <div class="mb-4">
+      <button @click="addHole" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+        + Loch hinzufügen
+      </button>
+    </div>
+
     <div v-if="players.length && scores" class="overflow-x-auto">
       <table class="min-w-full border">
         <thead>
@@ -39,10 +45,18 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const gameId = route.params.id;
-const holes = Array.from({ length: 9 }, (_, i) => i + 1); // 9 Löcher
+const holes = ref([1]); // beginne mit einem Loch
 
 const players = ref([]);
 const scores = reactive({});
+
+function addHole() {
+  const next = Math.max(...holes.value) + 1;
+  holes.value.push(next);
+  for (const player of players.value) {
+    scores[player.id][next] = '';
+  }
+}
 
 onMounted(async () => {
   const res = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
@@ -55,7 +69,7 @@ onMounted(async () => {
 
   for (const player of players.value) {
     scores[player.id] = {};
-    holes.forEach(h => (scores[player.id][h] = ''));
+    holes.value.forEach(h => (scores[player.id][h] = ''));
   }
 
   const scoreRes = await fetch(`https://api.sc.urban-golf.ch/api/scores?game_id=${gameId}`);
@@ -65,6 +79,7 @@ onMounted(async () => {
     const { player_id, hole, strokes } = entry;
     if (!scores[player_id]) scores[player_id] = {};
     scores[player_id][hole] = strokes;
+    if (!holes.value.includes(hole)) holes.value.push(hole);
   }
 });
 
