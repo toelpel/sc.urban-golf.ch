@@ -1,40 +1,57 @@
 <template>
-  <div class="max-w-4xl mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-6">Scorecard – Spiel #{{ gameId }}</h1>
+  <div class="max-w-6xl mx-auto px-4">
+    <h1 class="text-2xl font-bold mb-6 text-center">
+      Scorecard – Spiel #{{ gameId }}
+    </h1>
 
-    <div class="mb-4">
-      <button @click="addHole" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-        + Loch hinzufügen
-      </button>
+    <div v-if="players.length === 0" class="text-gray-500 text-center">
+      Lade Spieler und Scores ...
     </div>
 
-    <div v-if="players.length && scores" class="overflow-x-auto">
-      <table class="min-w-full border">
+    <div v-else>
+      <table class="w-full border-collapse mb-6">
         <thead>
           <tr>
-            <th class="border px-2 py-1">Spieler</th>
-            <th v-for="n in holes" :key="n" class="border px-2 py-1">Loch {{ n }}</th>
+            <th class="border-b p-2 text-left">Spieler</th>
+            <th
+              v-for="hole in holes"
+              :key="hole"
+              class="border-b p-2 text-center"
+            >
+              Loch {{ hole }}
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="player in players" :key="player.id">
-            <td class="border px-2 py-1 font-medium">{{ player.name }}</td>
-            <td v-for="hole in holes" :key="hole" class="border px-2 py-1">
+          <tr
+            v-for="player in players"
+            :key="player.id"
+            class="odd:bg-white even:bg-gray-50"
+          >
+            <td class="p-2 font-medium text-left">{{ player.name }}</td>
+            <td
+              v-for="hole in holes"
+              :key="hole"
+              class="p-2 text-center"
+            >
               <input
-                v-model.number="scores[player.id][hole]"
                 type="number"
+                v-model="scores[player.id][hole]"
+                @blur="saveScore(player.id, hole)"
+                class="w-16 p-1 text-center border border-gray-300 rounded"
                 min="1"
-                max="20"
-                class="w-16 p-1 border rounded text-center"
-                @blur="submitScore(player.id, hole)"
               />
             </td>
           </tr>
         </tbody>
       </table>
-    </div>
-    <div v-else>
-      <p class="text-gray-600">Lade Spieler und Scores ...</p>
+
+      <button
+        @click="addHole"
+        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow"
+      >
+        + Loch hinzufügen
+      </button>
     </div>
   </div>
 </template>
