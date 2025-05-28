@@ -5,7 +5,7 @@
         <router-link to="/" class="text-2xl font-semibold text-green-700 hover:text-green-800">Urban Golf</router-link>
         <div class="space-x-4">
           <router-link to="/new-game" class="text-gray-700 hover:text-black">Neues Spiel</router-link>
-          <router-link to="/games" class="text-gray-700 hover:text-black">Spiele</router-link>
+          <router-link to="/list-games" class="text-gray-700 hover:text-black">Spiele</router-link>
         </div>
       </div>
     </nav>
