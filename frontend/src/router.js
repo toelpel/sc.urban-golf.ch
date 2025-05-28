@@ -7,6 +7,7 @@ const routes = [
   { path: '/', component: Home },
   { path: '/new-game', component: NewGame },
   { path: '/scorecard/:id', component: Scorecard },
+  { path: '/games', component: ListGames }
 ];
 
 const router = createRouter({

@@ -57,65 +57,68 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const gameId = route.params.id;
-const holes = ref([1]); // beginne mit einem Loch
 
 const players = ref([]);
-const scores = reactive({});
+const scores = ref({});
+const holes = ref([]);
 
 function addHole() {
-  const next = Math.max(...holes.value) + 1;
-  holes.value.push(next);
-  for (const player of players.value) {
-    scores[player.id][next] = '';
-  }
+  const nextHole = holes.value.length > 0 ? Math.max(...holes.value) + 1 : 1;
+  holes.value.push(nextHole);
 }
 
-onMounted(async () => {
-  const res = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
-  const data = await res.json();
-  if (!Array.isArray(data)) {
-    console.error('Unerwartete Spielerantwort:', data);
-    return;
-  }
-  players.value = data;
-
-  for (const player of players.value) {
-    scores[player.id] = {};
-    holes.value.forEach(h => (scores[player.id][h] = ''));
-  }
-
-  const scoreRes = await fetch(`https://api.sc.urban-golf.ch/api/scores?game_id=${gameId}`);
-  const scoreData = await scoreRes.json();
-
-  for (const entry of scoreData) {
-    const { player_id, hole, strokes } = entry;
-    if (!scores[player_id]) scores[player_id] = {};
-    scores[player_id][hole] = strokes;
-    if (!holes.value.includes(hole)) holes.value.push(hole);
-  }
-});
-
-async function submitScore(playerId, hole) {
-  const strokes = scores[playerId][hole];
-  if (!strokes || strokes < 1) return;
-
-  await fetch('https://api.sc.urban-golf.ch/api/scores', {
+async function saveScore(playerId, hole) {
+  const strokes = scores.value[playerId][hole];
+  await fetch(`https://api.sc.urban-golf.ch/api/scores`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       game_id: gameId,
       player_id: playerId,
       hole,
-      strokes
-    })
+      strokes,
+    }),
   });
 }
-</script>
 
-<style scoped>
-</style>
+onMounted(async () => {
+  // Spieler laden
+  const res = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
+  const data = await res.json();
+
+  if (!Array.isArray(data)) {
+    console.error('Unerwartete Spielerantwort:', data);
+    return;
+  }
+
+  players.value = data;
+
+  for (const player of players.value) {
+    scores.value[player.id] = {};
+  }
+
+  // Scores laden
+  const scoreRes = await fetch(`https://api.sc.urban-golf.ch/api/scores?game_id=${gameId}`);
+  const scoreData = await scoreRes.json();
+
+  for (const entry of scoreData) {
+    const { player_id, hole, strokes } = entry;
+    if (!scores.value[player_id]) scores.value[player_id] = {};
+    scores.value[player_id][hole] = strokes;
+  }
+
+  // Lochliste aufbauen
+  holes.value = Array.from(
+    new Set(scoreData.map(entry => entry.hole))
+  ).sort((a, b) => a - b);
+
+  if (holes.value.length === 0) {
+    holes.value.push(1);
+  }
+});
+</script>
