@@ -34,7 +34,16 @@ const games = ref([]);
 
 onMounted(async () => {
   const res = await fetch('https://api.sc.urban-golf.ch/api/games');
-  games.value = await res.json();
+  const data = await res.json();
+
+  if (!Array.isArray(data)) {
+    console.error('API-Antwort ist kein Array:', data);
+    return;
+  }
+
+  games.value = data;
+  console.log('Geladene Spiele:', games.value);
+
 });
 
 function formatDate(timestamp) {
