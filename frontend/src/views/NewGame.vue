@@ -10,14 +10,6 @@
         class="w-full p-2 border rounded"
       />
 
-      <input
-        type="number"
-        v-model.number="initialHoleCount"
-        min="0"
-        placeholder="Anzahl Löcher (0 = manuell)"
-        class="w-full p-2 border rounded"
-      />
-
       <div v-for="(name, index) in players" :key="index">
         <input
           type="text"
@@ -95,26 +87,7 @@ async function createGame() {
       return;
     }
 
-    // Löcher vorbereiten, wenn gewünscht
-    const holeCount = parseInt(initialHoleCount.value);
-    if (holeCount > 0) {
-      for (const playerId of playerIds) {
-        for (let i = 1; i <= holeCount; i++) {
-          await fetch('https://api.sc.urban-golf.ch/api/scores', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              game_id: game.id,
-              player_id: playerId,
-              hole: i,
-              strokes: ''
-            })
-          });
-        }
-      }
-    }
-
-    router.push(`/scorecard/${game.id}`);
+    router.push(`/hole/${game.id}/1`);
   } catch (err) {
     console.error('Fehler beim Erstellen des Spiels:', err);
     alert('Es gab ein Problem beim Erstellen des Spiels.');

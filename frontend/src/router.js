@@ -25,6 +25,10 @@ const dynamicRoutes = [
   {
     path: '/scorecard/:id',
     component: () => import('./views/Scorecard.vue')
+  },
+  {
+    path: '/hole/:gameId/:hole',
+    component: () => import('./views/HoleView.vue')
   }
 ];
 
