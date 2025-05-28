@@ -43,11 +43,11 @@ onMounted(async () => {
 
   games.value = data;
   console.log('Geladene Spiele:', games.value);
-
 });
 
-function formatDate(timestamp) {
-  return new Date(timestamp).toLocaleString('de-CH', {
+function formatDate(ts) {
+  if (!ts) return 'unbekannt';
+  return new Date(ts).toLocaleString('de-CH', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
