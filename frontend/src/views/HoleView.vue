@@ -64,8 +64,10 @@ const players = ref([]);
 const scores = ref({});
 const gameName = ref('');
 
-onMounted(async () => {
-  // Spielname laden
+async function loadHoleData() {
+  scores.value = {};
+
+  // Spielname erneut holen (optional caching möglich)
   const resGame = await fetch(`https://api.sc.urban-golf.ch/api/games`);
   const games = await resGame.json();
   const match = games.find(g => g.id === parseInt(gameId));
@@ -79,16 +81,18 @@ onMounted(async () => {
     scores.value[player.id] = '';
   }
 
-  // Bisherige Scores laden
+  // Scores für aktuelles Loch laden
   const resScores = await fetch(`https://api.sc.urban-golf.ch/api/scores?game_id=${gameId}`);
   const allScores = await resScores.json();
 
   for (const entry of allScores) {
-    if (parseInt(entry.hole) === parseInt(hole)) {
+    if (parseInt(entry.hole) === parseInt(route.params.hole)) {
       scores.value[entry.player_id] = entry.strokes;
     }
   }
-});
+}
+
+onMounted(loadHoleData);
 
 function changeStrokes(playerId, delta) {
   const current = parseInt(scores.value[playerId]) || 0;
@@ -111,4 +115,11 @@ async function saveScore(playerId) {
     })
   });
 }
+
+import { watch } from 'vue';
+
+watch(() => route.params.hole, async () => {
+  await loadHoleData();
+});
+
 </script>
