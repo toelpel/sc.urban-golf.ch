@@ -31,8 +31,7 @@ export default async function (fastify, opts) {
       `SELECT p.id, p.name
        FROM players p
        JOIN game_players gp ON gp.player_id = p.id
-       WHERE gp.game_id = ?
-       ORDER BY gp.id ASC`,
+       WHERE gp.game_id = ?`,
       [gameId]
     );
     reply.send(players);
