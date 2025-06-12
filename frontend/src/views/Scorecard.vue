@@ -1,75 +1,114 @@
 <template>
-  <div class="max-w-6xl mx-auto px-4">
+  <div class="max-w-full overflow-x-auto">
     <h1 class="text-2xl font-bold mb-6 text-center">
-      Scorecard – Spiel #{{ gameId }}
+      {{ gameId }} – {{ gameName }}
     </h1>
 
     <div v-if="players.length === 0" class="text-gray-500 text-center">
       Lade Spieler und Scores ...
     </div>
 
-    <div v-else>
-      <table class="w-full border-collapse mb-6">
-        <thead>
-          <tr>
-            <th
-              class="border-b p-2 text-left cursor-pointer select-none"
-              @click="sortBy('name')"
-            >
-              Spieler
-              <span v-if="sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
-            </th>
-            <th
-              v-for="hole in holes"
-              :key="hole"
-              class="border-b p-2 text-center"
-            >
-              <router-link
-                :to="`/hole/${gameId}/${hole}`"
-                class="text-blue-600 hover:underline"
+    <div v-else class="overflow-x-auto">
+      <div class="inline-block min-w-full">
+        <div class="flex w-full">
+          <!-- Fixierte Spieler-Spalte -->
+          <table class="table-fixed border-r bg-white">
+            <thead>
+              <tr>
+                <th
+                  class="w-40 p-2 text-left cursor-pointer border-b"
+                  @click="sortBy('name')"
+                >
+                  Spieler
+                  <span v-if="sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="player in sortedPlayers"
+                :key="player.id"
+                class="odd:bg-white even:bg-gray-50"
               >
-                Loch {{ hole }}
-              </router-link>
-            </th>
-            <th
-              class="border-b p-2 text-center cursor-pointer select-none"
-              @click="sortBy('average')"
-            >
-              Ø
-              <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
-            </th>
-            <th
-              class="border-b p-2 text-center cursor-pointer select-none"
-              @click="sortBy('total')"
-            >
-              Total
-              <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="player in sortedPlayers"
-            :key="player.id"
-            class="odd:bg-white even:bg-gray-50"
-          >
-            <td class="p-2 font-medium text-left">{{ player.name }}</td>
-            <td
-              v-for="hole in holes"
-              :key="hole"
-              class="p-2 text-center"
-            >
-              {{ scores[player.id]?.[hole] ?? '–' }}
-            </td>
-            <td class="p-2 text-center text-sm">
-              {{ averageScore(player.id) }}
-            </td>
-            <td class="p-2 text-center font-semibold">
-              {{ totalScore(player.id) }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                <td class="p-2 font-medium text-left border-b">{{ player.name }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Scrollbarer Loch-Bereich -->
+          <div class="overflow-x-auto">
+            <table class="table-fixed">
+              <thead>
+                <tr>
+                  <th
+                    v-for="hole in holes"
+                    :key="hole"
+                    class="w-24 p-2 text-center border-b"
+                  >
+                    <router-link
+                      :to="`/hole/${gameId}/${hole}`"
+                      class="text-blue-600 hover:underline"
+                    >
+                      Loch {{ hole }}
+                    </router-link>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="player in sortedPlayers"
+                  :key="player.id"
+                  class="odd:bg-white even:bg-gray-50"
+                >
+                  <td
+                    v-for="hole in holes"
+                    :key="hole"
+                    class="p-2 text-center border-b"
+                  >
+                    {{ scores[player.id]?.[hole] ?? '–' }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Fixierte Ø und Total-Spalten -->
+          <table class="table-fixed border-l bg-white">
+            <thead>
+              <tr>
+                <th
+                  class="w-16 p-2 text-center cursor-pointer border-b"
+                  @click="sortBy('average')"
+                >
+                  Ø
+                  <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
+                </th>
+                <th
+                  class="w-20 p-2 text-center cursor-pointer border-b"
+                  @click="sortBy('total')"
+                >
+                  Total
+                  <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="player in sortedPlayers"
+                :key="player.id"
+                class="odd:bg-white even:bg-gray-50"
+              >
+                <td class="p-2 text-center border-b text-sm">
+                  {{ averageScore(player.id) }}
+                </td>
+                <td class="p-2 text-center border-b font-semibold">
+                  {{ totalScore(player.id) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -84,6 +123,7 @@ const gameId = route.params.id;
 const players = ref([]);
 const scores = ref({});
 const holes = ref([]);
+const gameName = ref('');
 
 const sortColumn = ref('name');
 const sortDirection = ref('asc');
@@ -140,6 +180,13 @@ function averageScore(playerId) {
 }
 
 onMounted(async () => {
+  // Spielname laden
+  const gameRes = await fetch(`https://api.sc.urban-golf.ch/api/games`);
+  const gameList = await gameRes.json();
+  const match = gameList.find(g => g.id === parseInt(gameId));
+  gameName.value = match?.name || `Spiel #${gameId}`;
+
+  // Spieler laden
   const res = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
   players.value = await res.json();
 

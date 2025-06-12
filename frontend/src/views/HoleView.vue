@@ -1,7 +1,6 @@
 <template>
   <div class="max-w-xl mx-auto px-4 text-center">
-    <h1 class="text-2xl font-bold mb-1">Urban-Golf.ch – ScoreCard</h1>
-    <p class="text-sm text-gray-600 mb-6">{{ gameName }} – Hole {{ hole }}</p>
+    <h1 class="text-2xl font-bold mb-1">{{ gameName }} – Hole {{ hole }}</h1>
 
     <div v-for="player in players" :key="player.id" class="mb-6 border-t pt-4">
       <div class="text-lg font-semibold mb-2">{{ player.name }}</div>
