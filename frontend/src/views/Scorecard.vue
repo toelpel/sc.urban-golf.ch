@@ -12,19 +12,44 @@
       <table class="w-full border-collapse mb-6">
         <thead>
           <tr>
-            <th class="border-b p-2 text-left">Spieler</th>
+            <th
+              class="border-b p-2 text-left cursor-pointer select-none"
+              @click="sortBy('name')"
+            >
+              Spieler
+              <span v-if="sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
+            </th>
             <th
               v-for="hole in holes"
               :key="hole"
               class="border-b p-2 text-center"
             >
-              Loch {{ hole }}
+              <router-link
+                :to="`/hole/${gameId}/${hole}`"
+                class="text-blue-600 hover:underline"
+              >
+                Loch {{ hole }}
+              </router-link>
+            </th>
+            <th
+              class="border-b p-2 text-center cursor-pointer select-none"
+              @click="sortBy('average')"
+            >
+              Ø
+              <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
+            </th>
+            <th
+              class="border-b p-2 text-center cursor-pointer select-none"
+              @click="sortBy('total')"
+            >
+              Total
+              <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="player in players"
+            v-for="player in sortedPlayers"
             :key="player.id"
             class="odd:bg-white even:bg-gray-50"
           >
@@ -34,30 +59,23 @@
               :key="hole"
               class="p-2 text-center"
             >
-              <input
-                type="number"
-                v-model="scores[player.id][hole]"
-                @blur="saveScore(player.id, hole)"
-                class="w-16 p-1 text-center border border-gray-300 rounded"
-                min="1"
-              />
+              {{ scores[player.id]?.[hole] ?? '–' }}
+            </td>
+            <td class="p-2 text-center text-sm">
+              {{ averageScore(player.id) }}
+            </td>
+            <td class="p-2 text-center font-semibold">
+              {{ totalScore(player.id) }}
             </td>
           </tr>
         </tbody>
       </table>
-
-      <button
-        @click="addHole"
-        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow"
-      >
-        + Loch hinzufügen
-      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -67,42 +85,68 @@ const players = ref([]);
 const scores = ref({});
 const holes = ref([]);
 
-function addHole() {
-  const nextHole = holes.value.length > 0 ? Math.max(...holes.value) + 1 : 1;
-  holes.value.push(nextHole);
+const sortColumn = ref('name');
+const sortDirection = ref('asc');
+
+function sortBy(column) {
+  if (sortColumn.value === column) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortColumn.value = column;
+    sortDirection.value = 'asc';
+  }
 }
 
-async function saveScore(playerId, hole) {
-  const strokes = scores.value[playerId][hole];
-  await fetch(`https://api.sc.urban-golf.ch/api/scores`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      game_id: gameId,
-      player_id: playerId,
-      hole,
-      strokes,
-    }),
+const sortDirectionSymbol = computed(() =>
+  sortDirection.value === 'asc' ? '↑' : '↓'
+);
+
+const sortedPlayers = computed(() => {
+  return [...players.value].sort((a, b) => {
+    let aValue, bValue;
+
+    if (sortColumn.value === 'name') {
+      aValue = a.name.toLowerCase();
+      bValue = b.name.toLowerCase();
+    } else if (sortColumn.value === 'total') {
+      aValue = totalScore(a.id);
+      bValue = totalScore(b.id);
+    } else if (sortColumn.value === 'average') {
+      aValue = averageScore(a.id);
+      bValue = averageScore(b.id);
+    }
+
+    if (aValue < bValue) return sortDirection.value === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortDirection.value === 'asc' ? 1 : -1;
+    return 0;
   });
+});
+
+function totalScore(playerId) {
+  const playerScores = scores.value[playerId] || {};
+  return Object.values(playerScores)
+    .map(n => parseInt(n) || 0)
+    .reduce((sum, val) => sum + val, 0);
+}
+
+function averageScore(playerId) {
+  const playerScores = scores.value[playerId] || {};
+  const numeric = Object.values(playerScores)
+    .map(n => parseInt(n))
+    .filter(n => !isNaN(n));
+  if (numeric.length === 0) return '–';
+  const avg = numeric.reduce((sum, val) => sum + val, 0) / numeric.length;
+  return avg.toFixed(1);
 }
 
 onMounted(async () => {
-  // Spieler laden
   const res = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
-  const data = await res.json();
-
-  if (!Array.isArray(data)) {
-    console.error('Unerwartete Spielerantwort:', data);
-    return;
-  }
-
-  players.value = data;
+  players.value = await res.json();
 
   for (const player of players.value) {
     scores.value[player.id] = {};
   }
 
-  // Scores laden
   const scoreRes = await fetch(`https://api.sc.urban-golf.ch/api/scores?game_id=${gameId}`);
   const scoreData = await scoreRes.json();
 
@@ -112,7 +156,6 @@ onMounted(async () => {
     scores.value[player_id][hole] = strokes;
   }
 
-  // Lochliste aufbauen
   holes.value = Array.from(
     new Set(scoreData.map(entry => entry.hole))
   ).sort((a, b) => a - b);
