@@ -28,18 +28,18 @@
 
     <div class="space-y-4 mt-6">
       <router-link
+        :to="`/hole/${gameId}/${hole + 1}`"
+        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold"
+      >
+        Weiter
+      </router-link>
+
+      <router-link
         :to="`/hole/${gameId}/${hole - 1}`"
         v-if="hole > 1"
         class="block w-full bg-gray-200 py-3 rounded-xl font-semibold"
       >
         Zurück
-      </router-link>
-
-      <router-link
-        :to="`/hole/${gameId}/${hole + 1}`"
-        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold"
-      >
-        Weiter
       </router-link>
 
       <router-link
@@ -81,7 +81,7 @@ async function loadHoleData() {
 
   // Spieler laden
   const res = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
-  players.value = (await res.json()).reverse();
+  players.value = (await res.json());
 
   for (const player of players.value) {
     scores.value[player.id] = '';
