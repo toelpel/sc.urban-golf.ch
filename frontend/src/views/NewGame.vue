@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-3xl mx-auto px-4">
-    <h1 class="text-2xl font-bold mb-4">Neues Spiel erstellen</h1>
+    <h1 class="text-2xl font-bold mb-4 text-center">Neues Spiel erstellen</h1>
     <div class="flex flex-col items-stretch gap-4 max-w-md mt-6 mx-auto">
       <input
         type="text"

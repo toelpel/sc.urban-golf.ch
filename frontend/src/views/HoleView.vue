@@ -43,7 +43,7 @@
         :to="`/hole/${gameId}/${hole + 1}`"
         class="button-primary w-full text-center"
       >
-        Weiter
+      ⏩ Weiter
       </router-link>
 
       <router-link
@@ -51,14 +51,14 @@
         v-if="hole > 1"
         class="button-primary w-full text-center"
       >
-        Zurück
+      ⏪ Zurück
       </router-link>
 
       <router-link
         :to="`/scorecard/${gameId}`"
         class="button-primary w-full text-center"
       >
-        Scorecard
+      📋 Scorecard
       </router-link>
     </div>
   </div>
