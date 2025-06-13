@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-full overflow-x-auto">
     <h1 class="text-2xl font-bold mb-6 text-center">
-      {{ gameId }} – {{ gameName }}
+      {{ gameName }}
     </h1>
 
     <div v-if="players.length === 0" class="text-gray-500 text-center">
@@ -9,106 +9,69 @@
     </div>
 
     <div v-else class="overflow-x-auto">
-      <div class="inline-block min-w-full">
-        <div class="flex w-full">
-          <!-- Fixierte Spieler-Spalte -->
-          <table class="table-fixed border-r bg-white">
-            <thead>
-              <tr>
-                <th
-                  class="w-40 p-2 text-left cursor-pointer border-b"
-                  @click="sortBy('name')"
-                >
-                  Spieler
-                  <span v-if="sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="player in sortedPlayers"
-                :key="player.id"
-                class="odd:bg-white even:bg-gray-50"
+      <table class="min-w-max w-full table-auto border-collapse relative">
+        <thead>
+          <tr class="bg-white">
+            <th
+              class="sticky left-0 bg-white z-10 p-2 text-left cursor-pointer border-r"
+              @click="sortBy('name')"
+            >
+              Spieler
+              <span v-if="sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
+            </th>
+            <th
+              v-for="hole in holes"
+              :key="hole"
+              class="p-2 text-center whitespace-nowrap"
+            >
+              <router-link
+                :to="`/hole/${gameId}/${hole}`"
+                class="text-blue-600 hover:underline"
               >
-                <td class="p-2 font-medium text-left border-b">{{ player.name }}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- Scrollbarer Loch-Bereich -->
-          <div class="overflow-x-auto">
-            <table class="table-fixed">
-              <thead>
-                <tr>
-                  <th
-                    v-for="hole in holes"
-                    :key="hole"
-                    class="w-24 p-2 text-center border-b"
-                  >
-                    <router-link
-                      :to="`/hole/${gameId}/${hole}`"
-                      class="text-blue-600 hover:underline"
-                    >
-                      Loch {{ hole }}
-                    </router-link>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="player in sortedPlayers"
-                  :key="player.id"
-                  class="odd:bg-white even:bg-gray-50"
-                >
-                  <td
-                    v-for="hole in holes"
-                    :key="hole"
-                    class="p-2 text-center border-b"
-                  >
-                    {{ scores[player.id]?.[hole] ?? '–' }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Fixierte Ø und Total-Spalten -->
-          <table class="table-fixed border-l bg-white">
-            <thead>
-              <tr>
-                <th
-                  class="w-16 p-2 text-center cursor-pointer border-b"
-                  @click="sortBy('average')"
-                >
-                  Ø
-                  <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
-                </th>
-                <th
-                  class="w-20 p-2 text-center cursor-pointer border-b"
-                  @click="sortBy('total')"
-                >
-                  Total
-                  <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="player in sortedPlayers"
-                :key="player.id"
-                class="odd:bg-white even:bg-gray-50"
-              >
-                <td class="p-2 text-center border-b text-sm">
-                  {{ averageScore(player.id) }}
-                </td>
-                <td class="p-2 text-center border-b font-semibold">
-                  {{ totalScore(player.id) }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+                Loch {{ hole }}
+              </router-link>
+            </th>
+            <th
+              class="sticky right-12 bg-white z-10 p-2 text-center cursor-pointer border-l"
+              @click="sortBy('average')"
+            >
+              Ø
+              <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
+            </th>
+            <th
+              class="sticky right-0 bg-white z-10 p-2 text-center cursor-pointer border-l"
+              @click="sortBy('total')"
+            >
+              Total
+              <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="player in sortedPlayers"
+            :key="player.id"
+            class="odd:bg-white even:bg-gray-50"
+          >
+            <td class="sticky left-0 bg-white z-10 p-2 font-medium text-left border-r">
+              {{ player.name }}
+            </td>
+            <td
+              v-for="hole in holes"
+              :key="hole"
+              class="p-2 text-center"
+            >
+              {{ scores[player.id]?.[hole] ?? '–' }}
+            </td>
+            <td class="sticky right-12 bg-white z-10 p-2 text-center text-sm border-l">
+              {{ averageScore(player.id) }}
+            </td>
+            <td class="sticky right-0 bg-white z-10 p-2 text-center font-semibold border-l">
+              {{ totalScore(player.id) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>

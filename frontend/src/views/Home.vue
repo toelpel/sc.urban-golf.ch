@@ -6,6 +6,10 @@
     <router-link to="/new-game" class="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">
       Neues Spiel starten
     </router-link>
+
+    <router-link to="/list-games" class="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">
+      Spiel öffnen
+    </router-link>
   </div>
 </template>
 
