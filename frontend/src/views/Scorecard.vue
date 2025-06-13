@@ -47,7 +47,7 @@
           <tr
             v-for="player in sortedPlayers"
             :key="player.id"
-            class="even:bg-gray-50 dark:even:bg-gray-800"
+            class="border-b border-gray-300 dark:border-gray-700"
           >
             <td class="sticky left-0 z-10 bg-white dark:bg-gray-900 text-left px-4 py-2 border-r border-gray-300 dark:border-gray-600 font-medium">
               {{ player.name }}
@@ -71,7 +71,7 @@
     </div>
 
     <div class="mt-6 text-center">
-      <button @click="$router.back()" class="button-primary">
+      <button @click="$router.back()" class="button-primary w-full text-center">
         ⏪ Zurück
       </button>
     </div>
