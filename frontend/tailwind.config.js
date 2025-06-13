@@ -1,16 +1,11 @@
-import { join } from 'path';
-
-export default {
+module.exports = {
+  darkMode: 'class', // ← wichtig für manuelle Umschaltung
   content: [
-    join(__dirname, 'index.html'),
-    join(__dirname, 'src/**/*.{vue,js,ts}')
+    './index.html',
+    './src/**/*.{vue,js,ts}',
   ],
   theme: {
-    extend: {
-      colors: {
-        golfgreen: '#2f855a',
-      },
-    },
+    extend: {},
   },
   plugins: [],
 };
