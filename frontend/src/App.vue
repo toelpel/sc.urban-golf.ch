@@ -31,20 +31,20 @@
             >
               <router-link
                 to="/new-game"
-                class="block py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-100"
+                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                 @click="isOpen = false"
               >
                 🆕 Neues Spiel
               </router-link>
               <router-link
                 to="/list-games"
-                class="block py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-100"
+                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                 @click="isOpen = false"
               >
                 📋 Spiele
               </router-link>
               <button
-                class="block w-full text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-100"
+                class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                 @click="toggleDark"
               >
                 {{ isDark ? '🌙 Darkmode' : '☀️ Lightmode' }}

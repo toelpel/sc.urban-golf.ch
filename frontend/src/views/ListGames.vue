@@ -10,7 +10,7 @@
       <li
         v-for="game in games"
         :key="game.id"
-        class="bg-white shadow-sm rounded py-3 flex justify-between items-center hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+        class="bg-white shadow-sm rounded py-3 flex justify-between items-center hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-600"
       >
         <div>
           <div class="font-semibold text-lg text-gray-800 dark:text-white">{{ game.name }}</div>
