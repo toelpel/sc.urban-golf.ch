@@ -1,17 +1,18 @@
 <template>
   <div class="text-center">
     <h1 class="text-2xl font-bold mb-1">{{ gameName }} – Hole {{ hole }}</h1>
-    <div class="flex flex-wrap justify-center gap-2 my-4">
+    <div class="flex flex-wrap justify-center gap-2 my-4 items-center text-sm text-gray-700 dark:text-gray-300">
+      <span class="mr-2 font-medium">Loch:</span>
       <router-link
         v-for="n in holes"
         :key="n"
         :to="`/hole/${gameId}/${n}`"
-        class="px-3 py-1 rounded text-sm font-medium border 
+        class="px-3 py-1 rounded border font-semibold 
               bg-gray-200 hover:bg-gray-300 text-gray-800 
               dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
         :class="{ 'ring-2 ring-green-500': n === parseInt(hole) }"
       >
-        Loch {{ n }}
+        {{ n }}
       </router-link>
     </div>
     <div v-for="player in players" :key="player.id" class="mb-6 border-t pt-4">
@@ -104,7 +105,7 @@ async function loadHoleData() {
   const allScores = await resScores.json();
 
   holes.value = Array.from(new Set(allScores.map(entry => entry.hole))).sort((a, b) => a - b);
-  if (holes.value.length === 0) holes.value.push(1);
+  // if (holes.value.length === 0) holes.value.push(1);
 
   for (const entry of allScores) {
     if (parseInt(entry.hole) === hole.value) {
