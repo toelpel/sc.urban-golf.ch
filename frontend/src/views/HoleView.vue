@@ -1,8 +1,6 @@
 <template>
   <div class="text-center">
     <h1 class="text-2xl font-bold mb-1">{{ gameName }} – Hole {{ hole }}</h1>
-    <pre class="text-xs text-left text-red-500">{{ holes }}</pre>
-    <pre class="text-xs text-left text-red-500">{{ Object.keys(scores) }}</pre>
     <div class="flex flex-wrap justify-center gap-2 my-4">
       <router-link
         v-for="n in holes"
@@ -76,15 +74,7 @@ const hole = computed(() => parseInt(route.params.hole));
 
 const players = ref([]);
 const scores = ref({});
-
-const holes = computed(() => {
-  const all = Object.values(scores.value).flatMap(score => Object.keys(score));
-  return [...new Set(all.map(Number))].sort((a, b) => a - b);
-});
-
-console.log('Geladene Scores:', scores.value);
-console.log('Geladene Löcher:', holes);
-
+const holes = ref([]);
 
 watch(() => hole.value, async () => {
   await loadHoleData();
@@ -95,7 +85,7 @@ onMounted(loadHoleData);
 async function loadHoleData() {
   scores.value = {};
 
-  // Spielname laden
+  // Spielndaten laden
   const resGame = await fetch(`https://api.sc.urban-golf.ch/api/games`);
   const games = await resGame.json();
   const match = games.find(g => g.id === parseInt(gameId));
@@ -112,6 +102,9 @@ async function loadHoleData() {
   // Scores für aktuelles Loch laden
   const resScores = await fetch(`https://api.sc.urban-golf.ch/api/scores?game_id=${gameId}`);
   const allScores = await resScores.json();
+
+  holes.value = Array.from(new Set(allScores.map(entry => entry.hole))).sort((a, b) => a - b);
+  if (holes.value.length === 0) holes.value.push(1);
 
   for (const entry of allScores) {
     if (parseInt(entry.hole) === hole.value) {

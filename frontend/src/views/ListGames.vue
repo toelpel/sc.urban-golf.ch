@@ -37,12 +37,10 @@ onMounted(async () => {
   const data = await res.json();
 
   if (!Array.isArray(data)) {
-    console.error('API-Antwort ist kein Array:', data);
+    alert('API-Antwort ist kein Array:', data);
     return;
   }
-
   games.value = data;
-  console.log('Geladene Spiele:', games.value);
 });
 
 function formatDate(ts) {

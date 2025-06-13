@@ -88,7 +88,6 @@ async function createGame() {
 
     router.push(`/hole/${game.id}/1`);
   } catch (err) {
-    console.error('Fehler beim Erstellen des Spiels:', err);
     alert('Es gab ein Problem beim Erstellen des Spiels.');
   }
 }
