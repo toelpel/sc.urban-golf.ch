@@ -36,14 +36,14 @@
       <router-link
         :to="`/hole/${gameId}/${hole - 1}`"
         v-if="hole > 1"
-        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold dark:bg-gray-0"
+        class="button-primary"
       >
         Zurück
       </router-link>
 
       <router-link
         :to="`/scorecard/${gameId}`"
-        class="block w-full bg-gray-100 py-3 rounded-xl font-semibold dark:bg-gray-100"
+        class="button-primary"
       >
         Scorecard
       </router-link>

@@ -7,7 +7,7 @@
         type="text"
         v-model="gameName"
         placeholder="Spielname"
-        class="w-full p-2 border rounded"
+        class="input-field"
       />
 
       <div v-for="(name, index) in players" :key="index">
@@ -15,21 +15,21 @@
           type="text"
           v-model="players[index]"
           :placeholder="`Spieler ${index + 1}`"
-          class="w-full p-2 border rounded"
+          class="input-field"
         />
       </div>
 
       <button
         @click="addPlayer"
         :disabled="players.length >= 10"
-        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold dark:bg-gray-0"
+        class="button-primary"
       >
         + Spieler hinzufügen
       </button>
 
       <button
         @click="createGame"
-        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold dark:bg-gray-0"
+        class="button-primary"
       >
         Spiel starten
       </button>

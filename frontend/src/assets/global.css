@@ -1,0 +1,30 @@
+
+/* Globale Komponenten für Darkmode-fähige Eingabefelder und Buttons */
+
+.input-field {
+  @apply w-full px-3 py-2 border rounded bg-white text-gray-900 border-gray-300
+          dark:bg-gray-800 dark:text-white dark:border-gray-600;
+}
+
+.textarea-field {
+  @apply w-full px-3 py-2 border rounded bg-white text-gray-900 border-gray-300
+          dark:bg-gray-800 dark:text-white dark:border-gray-600;
+}
+
+.select-field {
+  @apply w-full px-3 py-2 border rounded bg-white text-gray-900 border-gray-300
+          dark:bg-gray-800 dark:text-white dark:border-gray-600;
+}
+
+.button-primary {
+  @apply px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800
+          dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white;
+}
+
+.label {
+  @apply block mb-1 text-gray-800 dark:text-gray-200;
+}
+
+.helper-text {
+  @apply text-sm text-gray-500 dark:text-gray-400;
+}

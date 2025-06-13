@@ -7,15 +7,13 @@
     <div class="space-x-4">
       <router-link
         to="/new-game"
-        class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 
-               dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:bg-gray-0"
+        class="button-primary"
       >
         🆕 Neues Spiel
       </router-link>
       <router-link
         to="/list-games"
-        class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 
-               dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:bg-gray-0"
+        class="button-primary"
       >
         📋 Spiele
       </router-link>
