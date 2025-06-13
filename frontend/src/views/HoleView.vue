@@ -15,7 +15,7 @@
           @change="saveScore(player.id)"
           class="text-xl font-bold text-center bg-gray-100 rounded-lg p-2 border"
         >
-          <option v-for="n in 15" :key="n" :value="n">{{ n }}</option>
+          <option v-for="n in range(-3, 11)" :key="n" :value="n">{{ n }}</option>
         </select>
 
         <button
