@@ -9,7 +9,7 @@
         class="px-3 py-1 rounded text-sm font-medium border 
               bg-gray-200 hover:bg-gray-300 text-gray-800 
               dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
-        :class="{ 'ring-2 ring-green-500': n === hole }"
+        :class="{ 'ring-2 ring-green-500': n === parseInt(hole) }"
       >
         Loch {{ n }}
       </router-link>
