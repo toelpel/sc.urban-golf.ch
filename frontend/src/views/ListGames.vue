@@ -18,7 +18,7 @@
         </div>
         <router-link
           :to="`/scorecard/${game.id}`"
-          class="font-semibold hover:underline"
+          class="button-primary"
         >
           Öffnen →
         </router-link>

@@ -7,7 +7,7 @@
       <div class="flex items-center justify-center space-x-4">
         <button
           @click="changeStrokes(player.id, -1)"
-          class="w-10 h-10 text-xl border rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600"
+          class="w-10 h-10 text-xl border rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-100 dark:text-white dark:border-gray-600"
         >–</button>
 
         <select
@@ -20,7 +20,7 @@
 
         <button
           @click="changeStrokes(player.id, 1)"
-          class="w-10 h-10 text-xl border rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600"
+          class="w-10 h-10 text-xl border rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-100 dark:text-white dark:border-gray-600"
         >+</button>
       </div>
     </div>
@@ -118,4 +118,9 @@ async function saveScore(playerId) {
     })
   });
 }
+
+function range(start, end) {
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+}
+
 </script>
