@@ -80,6 +80,10 @@ const holes = computed(() => {
   return [...new Set(all.map(Number))].sort((a, b) => a - b);
 });
 
+console.log('Geladene Scores:', scores.value);
+console.log('Geladene Löcher:', holes);
+
+
 watch(() => hole.value, async () => {
   await loadHoleData();
 });
