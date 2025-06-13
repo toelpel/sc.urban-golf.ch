@@ -22,14 +22,14 @@
       <button
         @click="addPlayer"
         :disabled="players.length >= 10"
-        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold"
+        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold dark:bg-gray-0"
       >
         + Spieler hinzufügen
       </button>
 
       <button
         @click="createGame"
-        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold"
+        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold dark:bg-gray-0"
       >
         Spiel starten
       </button>

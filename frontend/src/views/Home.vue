@@ -1,21 +1,23 @@
 <template>
-  <div class="max-w-xl mx-auto p-8 text-center">
-    <h1 class="text-3xl font-bold mb-6">Urban Golf ScoreCard</h1>
-    <p class="mb-4 text-gray-600">Willkommen zur digitalen Scorekarte für Urban Golf Turniere.</p>
-
-    <div class="space-y-4 mt-6">
+  <div class="text-center mt-10">
+    <h1 class="text-3xl font-bold mb-4">Willkommen bei Urban Golf Scorecard</h1>
+    <p class="mb-6 text-gray-700 dark:text-gray-300">
+      Erstelle ein neues Spiel oder sieh dir bestehende Spiele an.
+    </p>
+    <div class="space-x-4">
       <router-link
-        to="new-game"
-        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold"
+        to="/new-game"
+        class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 
+               dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:bg-gray-0"
       >
-        Neues Spiel starten
+        🆕 Neues Spiel
       </router-link>
-
       <router-link
-        to="list-games"
-        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold"
+        to="/list-games"
+        class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 
+               dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:bg-gray-0"
       >
-        Spiel öffnen
+        📋 Spiele
       </router-link>
     </div>
   </div>
@@ -23,6 +25,3 @@
 
 <script setup>
 </script>
-
-<style scoped>
-</style>

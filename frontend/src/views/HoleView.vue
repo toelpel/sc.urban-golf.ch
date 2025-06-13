@@ -7,20 +7,20 @@
       <div class="flex items-center justify-center space-x-4">
         <button
           @click="changeStrokes(player.id, -1)"
-          class="w-10 h-10 text-xl border rounded-lg bg-white hover:bg-gray-100"
+          class="w-10 h-10 text-xl border rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600"
         >–</button>
 
         <select
           v-model="scores[player.id]"
           @change="saveScore(player.id)"
-          class="text-xl font-bold text-center bg-gray-100 rounded-lg p-2 border"
+          class="text-xl font-bold text-center bg-gray-100 rounded-lg p-2 border dark:bg-gray-100"
         >
           <option v-for="n in range(-3, 11)" :key="n" :value="n">{{ n }}</option>
         </select>
 
         <button
           @click="changeStrokes(player.id, 1)"
-          class="w-10 h-10 text-xl border rounded-lg bg-white hover:bg-gray-100"
+          class="w-10 h-10 text-xl border rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600"
         >+</button>
       </div>
     </div>
@@ -28,7 +28,7 @@
     <div class="space-y-4 mt-6">
       <router-link
         :to="`/hole/${gameId}/${hole + 1}`"
-        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold"
+        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold dark:bg-gray-0"
       >
         Weiter
       </router-link>
@@ -36,14 +36,14 @@
       <router-link
         :to="`/hole/${gameId}/${hole - 1}`"
         v-if="hole > 1"
-        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold"
+        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold dark:bg-gray-0"
       >
         Zurück
       </router-link>
 
       <router-link
         :to="`/scorecard/${gameId}`"
-        class="block w-full bg-gray-100 py-3 rounded-xl font-semibold"
+        class="block w-full bg-gray-100 py-3 rounded-xl font-semibold dark:bg-gray-100"
       >
         Scorecard
       </router-link>
