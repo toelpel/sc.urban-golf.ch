@@ -13,10 +13,10 @@
         class="input-field w-full"
       />
 
-      <div v-for="(player, index) in players" :key="index">
+      <div v-for="(name, index) in players" :key="index">
         <input
           type="text"
-          v-model="player.name"
+          v-model="players[index]"
           :placeholder="`Spieler ${index + 1}`"
           maxlength="30"
           class="input-field w-full"
@@ -50,76 +50,87 @@ const route = useRoute();
 const gameId = route.query.gameId;
 
 const gameName = ref('');
-const players = ref([{ id: null, name: '' }]);
+const players = ref(['']);
 const isEditing = ref(false);
+const existingPlayers = ref([]);
 
 onMounted(async () => {
   if (gameId) {
     isEditing.value = true;
-    const resGame = await fetch(`/api/games`);
+    const resGame = await fetch(`https://api.sc.urban-golf.ch/api/games`);
     const games = await resGame.json();
     const match = games.find(g => g.id === parseInt(gameId));
     if (match) {
       gameName.value = match.name || '';
     }
 
-    const resPlayers = await fetch(`/api/games/${gameId}/players`);
+    const resPlayers = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
     const existing = await resPlayers.json();
-    players.value = existing.map(p => ({ id: p.id, name: p.name }));
+    existingPlayers.value = existing.map(p => p.name);
+    players.value = [...existingPlayers.value];
   }
 });
 
 function addPlayer() {
   if (players.value.length < 10) {
-    players.value.push({ id: null, name: '' });
+    players.value.push('');
   }
 }
 
 async function saveGame() {
-  const validPlayers = players.value.map(p => ({ ...p, name: p.name.trim() })).filter(p => p.name);
-  if (!gameName.value || validPlayers.length === 0) {
+  const validNames = players.value.map(name => name.trim()).filter(Boolean);
+  if (!gameName.value || validNames.length === 0) {
     alert('Bitte Spielname und mindestens einen Spieler angeben.');
     return;
   }
 
   try {
-    const playerIds = [];
-
-    for (const player of validPlayers) {
-      if (player.id) {
-        await fetch(`/api/players/${player.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: player.name })
-        });
-        playerIds.push(player.id);
-      } else {
-        const res = await fetch('/api/players', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: player.name })
-        });
-        const newPlayer = await res.json();
-        playerIds.push(newPlayer.id);
-      }
-    }
-
     if (isEditing.value) {
-      await fetch(`/api/games/${gameId}`, {
+      // Nur neue Spieler speichern
+      const newNames = validNames.filter(name => !existingPlayers.value.includes(name));
+      const playerResponses = await Promise.all(
+        newNames.map(name =>
+          fetch('https://api.sc.urban-golf.ch/api/players', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name })
+          }).then(res => res.json())
+        )
+      );
+
+      const newPlayerIds = playerResponses.map(p => p.id);
+
+      // Spielname aktualisieren
+      await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: gameName.value })
       });
 
-      await fetch(`/api/games/${gameId}/players`, {
+      // Neue Spieler dem Spiel hinzufügen
+      await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ players: playerIds })
+        body: JSON.stringify({ players: newPlayerIds })
       });
 
-      router.go(-1);
+      router.go(-1); // zurück zur vorherigen Seite
+
     } else {
-      const resGame = await fetch('/api/games', {
+      // Neues Spiel erstellen
+      const playerResponses = await Promise.all(
+        validNames.map(name =>
+          fetch('https://api.sc.urban-golf.ch/api/players', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name })
+          }).then(res => res.json())
+        )
+      );
+
+      const playerIds = playerResponses.map(p => p.id);
+
+      const resGame = await fetch('https://api.sc.urban-golf.ch/api/games', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -138,7 +149,7 @@ async function saveGame() {
     }
   } catch (err) {
     console.error(err);
-    alert('Fehler beim Speichern: ' + err.message);
+    alert('Es gab ein Problem beim Speichern des Spiels.');
   }
 }
 </script>
