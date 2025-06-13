@@ -1,19 +1,17 @@
 <template>
   <div class="max-w-full overflow-x-auto">
-    <h1 class="text-2xl font-bold mb-6 text-center">
-      Scorecard – {{ gameName }}
-    </h1>
+    <h1 class="text-2xl font-bold mb-4 text-center">Scorecard – {{ gameName }}</h1>
 
     <div v-if="players.length === 0" class="text-gray-500 text-center dark:text-gray-300">
       Lade Spieler und Scores ...
     </div>
 
     <div v-else class="overflow-x-auto">
-      <table class="min-w-max w-full table-auto border-collapse relative bg-gray-50 dark:bg-gray-800">
-        <thead>
-          <tr class="dark:bg-gray-800">
+      <table class="min-w-max w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm">
+        <thead class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100">
+          <tr>
             <th
-              class="sticky left-0 bg-gray-50 dark:bg-gray-800 z-10 p-2 text-left cursor-pointer border-r"
+              class="sticky left-0 z-10 bg-gray-100 dark:bg-gray-800 text-left px-4 py-2 border-r border-gray-300 dark:border-gray-600 cursor-pointer"
               @click="sortBy('name')"
             >
               Spieler
@@ -22,28 +20,26 @@
             <th
               v-for="hole in holes"
               :key="hole"
-              class="p-2 text-center whitespace-nowrap"
+              class="text-center px-3 py-2 border-x border-gray-200 dark:border-gray-700 whitespace-nowrap"
             >
               <router-link
                 :to="`/hole/${gameId}/${hole}`"
-                class="text-blue-600 dark:text-blue-400 hover:underline"
+                class="hover:underline text-blue-600 dark:text-blue-400"
               >
-                Loch {{ hole }}
+                {{ hole }}
               </router-link>
             </th>
             <th
-              class="sticky right-12 bg-gray-50 dark:bg-gray-800 z-10 p-2 text-center cursor-pointer border-l"
+              class="sticky right-12 z-10 bg-gray-100 dark:bg-gray-800 text-center px-3 py-2 border-l border-gray-300 dark:border-gray-600 cursor-pointer"
               @click="sortBy('average')"
             >
-              Ø
-              <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
+              Ø <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
             </th>
             <th
-              class="sticky right-0 bg-gray-50 dark:bg-gray-800 z-10 p-2 text-center cursor-pointer border-l"
+              class="sticky right-0 z-10 bg-gray-100 dark:bg-gray-800 text-center px-3 py-2 border-l border-gray-300 dark:border-gray-600 cursor-pointer"
               @click="sortBy('total')"
             >
-              Total
-              <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
+              Total <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
             </th>
           </tr>
         </thead>
@@ -51,27 +47,33 @@
           <tr
             v-for="player in sortedPlayers"
             :key="player.id"
-            class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700"
+            class="even:bg-gray-50 dark:even:bg-gray-800"
           >
-            <td class="sticky left-0 bg-gray-50 dark:bg-gray-800 z-10 p-2 font-medium text-left border-r">
+            <td class="sticky left-0 z-10 bg-white dark:bg-gray-900 text-left px-4 py-2 border-r border-gray-300 dark:border-gray-600 font-medium">
               {{ player.name }}
             </td>
             <td
               v-for="hole in holes"
               :key="hole"
-              class="p-2 text-center"
+              class="text-center px-3 py-2 border-x border-gray-200 dark:border-gray-700"
             >
               {{ scores[player.id]?.[hole] ?? '–' }}
             </td>
-            <td class="sticky right-12 bg-gray-50 dark:bg-gray-800 z-10 p-2 text-center text-sm border-l">
+            <td class="sticky right-12 z-10 bg-white dark:bg-gray-900 text-center px-3 py-2 border-l border-gray-300 dark:border-gray-600 text-sm">
               {{ averageScore(player.id) }}
             </td>
-            <td class="sticky right-0 bg-gray-50 dark:bg-gray-800 z-10 p-2 text-center font-semibold border-l">
+            <td class="sticky right-0 z-10 bg-white dark:bg-gray-900 text-center px-3 py-2 border-l border-gray-300 dark:border-gray-600 font-semibold">
               {{ totalScore(player.id) }}
             </td>
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="mt-6 text-center">
+      <button @click="$router.back()" class="button-primary">
+        ⏪ Zurück
+      </button>
     </div>
   </div>
 </template>

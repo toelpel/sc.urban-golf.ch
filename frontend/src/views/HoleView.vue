@@ -21,7 +21,7 @@
         <button
           @click="changeStrokes(player.id, -1)"
           class="button-primary"
-        >–</button>
+        >➖</button>
 
         <select
           v-model="scores[player.id]"
@@ -34,7 +34,7 @@
         <button
           @click="changeStrokes(player.id, 1)"
           class="button-primary"
-        >+</button>
+        >➕</button>
       </div>
     </div>
 
