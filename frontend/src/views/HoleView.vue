@@ -70,14 +70,15 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const gameId = route.params.gameId;
 const hole = computed(() => parseInt(route.params.hole));
-const holes = computed(() => {
-  const all = Object.values(scores.value).flatMap(score => Object.keys(score));
-  return [...new Set(all.map(Number))].sort((a, b) => a - b);
-});
 
 const players = ref([]);
 const scores = ref({});
 const gameName = ref('');
+
+const holes = computed(() => {
+  const all = Object.values(scores.value).flatMap(score => Object.keys(score));
+  return [...new Set(all.map(Number))].sort((a, b) => a - b);
+});
 
 watch(() => hole.value, async () => {
   await loadHoleData();
