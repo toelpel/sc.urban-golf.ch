@@ -12,7 +12,7 @@
       </router-link>
 
       <router-link
-        to="new-game"
+        to="list-games"
         class="block w-full bg-gray-200 py-3 rounded-xl font-semibold"
       >
         Spiel öffnen
