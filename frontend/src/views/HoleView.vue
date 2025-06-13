@@ -1,6 +1,8 @@
 <template>
   <div class="text-center">
     <h1 class="text-2xl font-bold mb-1">{{ gameName }} – Hole {{ hole }}</h1>
+    <pre class="text-xs text-left text-red-500">{{ holes }}</pre>
+    <pre class="text-xs text-left text-red-500">{{ Object.keys(scores) }}</pre>
     <div class="flex flex-wrap justify-center gap-2 my-4">
       <router-link
         v-for="n in holes"
