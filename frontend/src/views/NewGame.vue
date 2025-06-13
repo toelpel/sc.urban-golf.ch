@@ -148,6 +148,7 @@ async function saveGame() {
       router.push(`/hole/${game.id}/1`);
     }
   } catch (err) {
+    console.error(err);
     alert('Es gab ein Problem beim Speichern des Spiels.');
   }
 }
