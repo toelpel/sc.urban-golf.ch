@@ -6,13 +6,13 @@
     </p>
     <div class="flex flex-col items-stretch gap-3 mt-6">
       <router-link
-        to="/new-game"
+        to="/newgame"
         class="button-primary w-full text-center"
       >
         🆕 Neues Spiel
       </router-link>
       <router-link
-        to="/list-games"
+        to="/listgames"
         class="button-primary w-full text-center"
       >
         📋 Spiele

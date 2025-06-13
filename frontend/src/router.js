@@ -3,19 +3,14 @@ import { createRouter, createWebHistory } from 'vue-router';
 // Automatischer Import aller Views
 const staticRoutes = Object.entries(import.meta.glob('./views/*.vue', { eager: true }))
   .map(([path, component]) => {
-    const name = path
-      .split('/')
-      .pop()
-      .replace('.vue', '')
-      .replace(/([A-Z])/g, '-$1')
-      .toLowerCase()
-      .replace(/^-/, '');
+    const fileName = path.split('/').pop().replace('.vue', '');
+    const name = fileName;
 
-    // Home.vue → /
-    const routePath = name === 'home' ? '/' : `/${name}`;
+    const routePath = fileName === 'Home' ? '/' : `/${fileName.toLowerCase()}`;
 
     return {
       path: routePath,
+      name, // <--- hier wird der Name hinzugefügt!
       component: component.default
     };
   });

@@ -8,8 +8,8 @@
 
         <!-- Desktop-Navigation -->
         <div class="space-x-4 hidden md:flex items-center">
-          <router-link to="/new-game" class="hover:underline">🆕 Neues Spiel</router-link>
-          <router-link to="/list-games" class="hover:underline">📋 Spiele</router-link>
+          <router-link to="/newgame" class="hover:underline">🆕 Neues Spiel</router-link>
+          <router-link to="/listgames" class="hover:underline">📋 Spiele</router-link>
           <button @click="toggleDark" class="ml-4 text-xl">
             {{ isDark ? '🌙' : '☀️' }}
           </button>
@@ -30,14 +30,14 @@
               class="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
             >
               <router-link
-                to="/new-game"
+                to="/newgame"
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                 @click="isOpen = false"
               >
                 🆕 Neues Spiel
               </router-link>
               <router-link
-                to="/list-games"
+                to="/listgames"
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                 @click="isOpen = false"
               >
