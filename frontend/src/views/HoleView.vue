@@ -7,28 +7,28 @@
       <div class="flex items-center justify-center space-x-4">
         <button
           @click="changeStrokes(player.id, -1)"
-          class="w-10 h-10 text-xl border rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-100 dark:text-white dark:border-gray-600"
+          class="button-primary"
         >–</button>
 
         <select
           v-model="scores[player.id]"
           @change="saveScore(player.id)"
-          class="text-xl font-bold text-center bg-gray-100 rounded-lg p-2 border dark:bg-gray-100"
+          class="select-field"
         >
           <option v-for="n in range(-3, 11)" :key="n" :value="n">{{ n }}</option>
         </select>
 
         <button
           @click="changeStrokes(player.id, 1)"
-          class="w-10 h-10 text-xl border rounded-lg bg-white hover:bg-gray-100 dark:bg-gray-100 dark:text-white dark:border-gray-600"
+          class="button-primary"
         >+</button>
       </div>
     </div>
 
-    <div class="space-y-4 mt-6">
+    <div class="flex flex-col items-stretch gap-3 mt-6">
       <router-link
         :to="`/hole/${gameId}/${hole + 1}`"
-        class="button-primary"
+        class="button-primary w-full text-center"
       >
         Weiter
       </router-link>
@@ -36,14 +36,14 @@
       <router-link
         :to="`/hole/${gameId}/${hole - 1}`"
         v-if="hole > 1"
-        class="button-primary"
+        class="button-primary w-full text-center"
       >
         Zurück
       </router-link>
 
       <router-link
         :to="`/scorecard/${gameId}`"
-        class="button-primary"
+        class="button-primary w-full text-center"
       >
         Scorecard
       </router-link>
