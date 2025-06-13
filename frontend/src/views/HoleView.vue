@@ -1,7 +1,19 @@
 <template>
   <div class="text-center">
     <h1 class="text-2xl font-bold mb-1">{{ gameName }} – Hole {{ hole }}</h1>
-
+    <div class="flex flex-wrap justify-center gap-2 my-4">
+      <router-link
+        v-for="n in holes"
+        :key="n"
+        :to="`/hole/${gameId}/${n}`"
+        class="px-3 py-1 rounded text-sm font-medium border 
+              bg-gray-200 hover:bg-gray-300 text-gray-800 
+              dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+        :class="{ 'ring-2 ring-green-500': n === hole }"
+      >
+        Loch {{ n }}
+      </router-link>
+    </div>
     <div v-for="player in players" :key="player.id" class="mb-6 border-t pt-4">
       <div class="text-lg font-semibold mb-2">{{ player.name }}</div>
       <div class="flex items-center justify-center space-x-4">
@@ -58,6 +70,10 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const gameId = route.params.gameId;
 const hole = computed(() => parseInt(route.params.hole));
+const holes = computed(() => {
+  const all = Object.values(scores.value).flatMap(score => Object.keys(score));
+  return [...new Set(all.map(Number))].sort((a, b) => a - b);
+});
 
 const players = ref([]);
 const scores = ref({});

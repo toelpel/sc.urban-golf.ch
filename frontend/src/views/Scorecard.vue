@@ -1,19 +1,19 @@
 <template>
   <div class="max-w-full overflow-x-auto">
     <h1 class="text-2xl font-bold mb-6 text-center">
-      {{ gameName }}
+      Scorecard – {{ gameName }}
     </h1>
 
-    <div v-if="players.length === 0" class="text-gray-500 text-center">
+    <div v-if="players.length === 0" class="text-gray-500 text-center dark:text-gray-300">
       Lade Spieler und Scores ...
     </div>
 
     <div v-else class="overflow-x-auto">
-      <table class="min-w-max w-full table-auto border-collapse relative dark:bg-gray-800 dark:text-white dark:border-gray-600">
+      <table class="min-w-max w-full table-auto border-collapse relative bg-gray-50 dark:bg-gray-800">
         <thead>
-          <tr class="bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600">
+          <tr class="dark:bg-gray-800">
             <th
-              class="sticky left-0 bg-white z-10 p-2 text-left cursor-pointer border-r dark:bg-gray-800 dark:text-white dark:border-gray-600"
+              class="sticky left-0 bg-gray-50 dark:bg-gray-800 z-10 p-2 text-left cursor-pointer border-r"
               @click="sortBy('name')"
             >
               Spieler
@@ -26,20 +26,20 @@
             >
               <router-link
                 :to="`/hole/${gameId}/${hole}`"
-                class="text-blue-600 hover:underline"
+                class="text-blue-600 dark:text-blue-400 hover:underline"
               >
                 Loch {{ hole }}
               </router-link>
             </th>
             <th
-              class="sticky right-12 bg-white z-10 p-2 text-center cursor-pointer border-l"
+              class="sticky right-12 bg-gray-50 dark:bg-gray-800 z-10 p-2 text-center cursor-pointer border-l"
               @click="sortBy('average')"
             >
               Ø
               <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
             </th>
             <th
-              class="sticky right-0 bg-white z-10 p-2 text-center cursor-pointer border-l "
+              class="sticky right-0 bg-gray-50 dark:bg-gray-800 z-10 p-2 text-center cursor-pointer border-l"
               @click="sortBy('total')"
             >
               Total
@@ -51,9 +51,9 @@
           <tr
             v-for="player in sortedPlayers"
             :key="player.id"
-            class="odd:bg-white even:bg-gray-50"
+            class="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-800 dark:even:bg-gray-700"
           >
-            <td class="sticky left-0 bg-white z-10 p-2 font-medium text-left border-r">
+            <td class="sticky left-0 bg-gray-50 dark:bg-gray-800 z-10 p-2 font-medium text-left border-r">
               {{ player.name }}
             </td>
             <td
@@ -63,10 +63,10 @@
             >
               {{ scores[player.id]?.[hole] ?? '–' }}
             </td>
-            <td class="sticky right-12 bg-white z-10 p-2 text-center text-sm border-l">
+            <td class="sticky right-12 bg-gray-50 dark:bg-gray-800 z-10 p-2 text-center text-sm border-l">
               {{ averageScore(player.id) }}
             </td>
-            <td class="sticky right-0 bg-white z-10 p-2 text-center font-semibold border-l">
+            <td class="sticky right-0 bg-gray-50 dark:bg-gray-800 z-10 p-2 text-center font-semibold border-l">
               {{ totalScore(player.id) }}
             </td>
           </tr>
