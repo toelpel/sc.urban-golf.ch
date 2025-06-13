@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto px-4">
+  <div class="max-w-4xl">
     <h1 class="text-2xl font-bold mb-6 text-center">Alle Spiele</h1>
 
     <div v-if="games.length === 0" class="text-center text-gray-500">
@@ -10,7 +10,7 @@
       <li
         v-for="game in games"
         :key="game.id"
-        class="bg-white shadow-sm rounded px-4 py-3 flex justify-between items-center hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-600"
+        class="bg-white shadow-sm rounded py-3 flex justify-between items-center hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-600"
       >
         <div>
           <div class="font-semibold text-lg text-gray-800">{{ game.name }}</div>

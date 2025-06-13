@@ -1,13 +1,12 @@
 <template>
-  <div class="max-w-3xl mx-auto px-4">
+  <div class="max-w-3xl">
     <h1 class="text-2xl font-bold mb-4">Neues Spiel erstellen</h1>
-
-    <div class="space-y-4">
+    <div class="flex flex-col items-stretch gap-4 max-w-md mt-6">
       <input
         type="text"
         v-model="gameName"
         placeholder="Spielname"
-        class="input-field"
+        class="input-field w-full"
       />
 
       <div v-for="(name, index) in players" :key="index">
@@ -15,21 +14,21 @@
           type="text"
           v-model="players[index]"
           :placeholder="`Spieler ${index + 1}`"
-          class="input-field"
+          class="input-field w-full"
         />
       </div>
 
       <button
         @click="addPlayer"
         :disabled="players.length >= 10"
-        class="button-primary"
+        class="button-primary w-full"
       >
         + Spieler hinzufügen
       </button>
 
       <button
         @click="createGame"
-        class="button-primary"
+        class="button-primary w-full"
       >
         Spiel starten
       </button>

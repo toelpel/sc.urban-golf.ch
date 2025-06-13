@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-xl mx-auto px-4 text-center">
+  <div class="text-center">
     <h1 class="text-2xl font-bold mb-1">{{ gameName }} – Hole {{ hole }}</h1>
 
     <div v-for="player in players" :key="player.id" class="mb-6 border-t pt-4">

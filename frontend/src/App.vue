@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-white dark:bg-gray-700">
-    <nav class="bg-white dark:bg-gray-800 border-b p-4 shadow-sm relative z-50 dark:bg-gray-600 dark:bg-gray-800 dark:text-white dark:border-gray-600">
-      <div class="max-w-6xl mx-auto flex justify-between items-center">
+  <div class="min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-800 dark:text-white">
+    <nav class="bg-white border-b p-4 shadow-sm relative z-50 dark:bg-gray-800 dark:text-white dark:border-gray-600">
+      <div class="max-w-6xl flex justify-between items-center">
         <router-link to="/" class="font-bold text-xl text-green-700 dark:text-green-300">
           Urban Golf
         </router-link>
@@ -27,24 +27,24 @@
           <transition name="fade-slide">
             <div
               v-if="isOpen"
-              class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border rounded shadow z-50 text-sm dark:bg-gray-600 dark:bg-gray-800 dark:text-white dark:border-gray-600"
+              class="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
             >
               <router-link
                 to="/new-game"
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-100"
+                class="block py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-100"
                 @click="isOpen = false"
               >
                 🆕 Neues Spiel
               </router-link>
               <router-link
                 to="/list-games"
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-100"
+                class="block py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-100"
                 @click="isOpen = false"
               >
                 📋 Spiele
               </router-link>
               <button
-                class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-100"
+                class="block w-full text-left py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:bg-gray-100"
                 @click="toggleDark"
               >
                 {{ isDark ? '🌙 Darkmode' : '☀️ Lightmode' }}
@@ -55,7 +55,10 @@
       </div>
     </nav>
 
-    <router-view class="mt-8" />
+    <main class="w-[95%] max-w-screen-lg mx-auto px-2">
+      <router-view class="mt-8" />
+    </main>
+
   </div>
 </template>
 
