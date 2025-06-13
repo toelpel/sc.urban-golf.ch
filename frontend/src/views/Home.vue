@@ -4,16 +4,16 @@
     <p class="mb-6 text-gray-700 dark:text-gray-300">
       Erstelle ein neues Spiel oder sieh dir bestehende Spiele an.
     </p>
-    <div class="space-x-4">
+    <div class="flex flex-col items-stretch gap-3 mt-6">
       <router-link
         to="/new-game"
-        class="button-primary"
+        class="button-primary w-full text-center"
       >
         🆕 Neues Spiel
       </router-link>
       <router-link
         to="/list-games"
-        class="button-primary"
+        class="button-primary w-full text-center"
       >
         📋 Spiele
       </router-link>
