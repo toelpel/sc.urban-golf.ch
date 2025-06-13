@@ -28,7 +28,7 @@
     <div class="space-y-4 mt-6">
       <router-link
         :to="`/hole/${gameId}/${hole + 1}`"
-        class="block w-full bg-gray-200 py-3 rounded-xl font-semibold dark:bg-gray-0"
+        class="button-primary"
       >
         Weiter
       </router-link>
