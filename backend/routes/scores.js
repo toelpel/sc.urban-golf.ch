@@ -31,7 +31,11 @@ export default async function (fastify, opts) {
     const client = await getClient();
     try {
       const result = await client.query(
-        'INSERT INTO scores (game_id, player_id, hole, strokes) VALUES ($1, $2, $3, $4) RETURNING id',
+        `INSERT INTO scores (game_id, player_id, hole, strokes)
+         VALUES ($1, $2, $3, $4)
+         ON CONFLICT (game_id, player_id, hole)
+         DO UPDATE SET strokes = EXCLUDED.strokes
+         RETURNING id`,
         [game_id, player_id, hole, strokes]
       );
       reply.code(200).send({ id: result.rows[0].id, game_id, player_id, hole, strokes });

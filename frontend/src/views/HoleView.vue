@@ -42,26 +42,28 @@
     </div>
 
     <div class="flex flex-col items-stretch gap-3 mt-6">
-      <router-link
-        :to="`/hole/${gameId}/${hole + 1}`"
-        class="button-primary w-full text-center"
-      >
-      ⏩ Weiter
-      </router-link>
+      <div class="flex flex-row gap-3">
+        <router-link
+          :to="`/hole/${gameId}/${hole - 1}`"
+          v-if="hole > 1"
+          class="button-primary flex-1 text-center"
+        >
+          ⏪ Zurück
+        </router-link>
 
-      <router-link
-        :to="`/hole/${gameId}/${hole - 1}`"
-        v-if="hole > 1"
-        class="button-primary w-full text-center"
-      >
-      ⏪ Zurück
-      </router-link>
+        <router-link
+          :to="`/hole/${gameId}/${hole + 1}`"
+          class="button-primary flex-1 text-center"
+        >
+          ⏩ Weiter
+        </router-link>
+      </div>
 
       <router-link
         :to="`/scorecard/${gameId}`"
         class="button-primary w-full text-center"
       >
-      📋 Scorecard
+        📋 Scorecard
       </router-link>
     </div>
   </div>
