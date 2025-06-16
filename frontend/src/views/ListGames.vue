@@ -40,7 +40,7 @@
           <div class="flex gap-2 items-center">
             <router-link :to="`/scorecard/${game.id}`" class="button-primary">📋</router-link>
             <button @click="toggleDetails(game.id)" class="text-xl">
-              {{ expandedGameId === game.id ? '⯆' : '⯈' }}
+              {{ expandedGameId === game.id ? '▼' : '▶' }}
             </button>
           </div>
         </div>
@@ -86,7 +86,7 @@ const gameMeta = ref({});
 const searchTerm = ref('');
 const expandedGameId = ref(null);
 const currentPage = ref(1);
-const perPage = 10;
+const perPage = 5;
 
 onMounted(async () => {
   const res = await fetch('https://api.sc.urban-golf.ch/api/games');

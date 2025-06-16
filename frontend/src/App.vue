@@ -55,7 +55,7 @@
       </div>
     </nav>
 
-    <main class="w-[95%] max-w-screen-lg mx-auto px-2">
+    <main class="w-[98%] max-w-screen-lg mx-auto px-2">
       <router-view class="mt-8" />
     </main>
 
