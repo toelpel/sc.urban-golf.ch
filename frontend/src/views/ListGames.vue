@@ -40,7 +40,7 @@
           <div class="flex gap-2 items-center">
             <router-link :to="`/scorecard/${game.id}`" class="button-primary">📋</router-link>
             <button @click="toggleDetails(game.id)" class="text-xl">
-              {{ expandedGameId === game.id ? '▼' : '▶' }}
+              {{ expandedGameId === game.id ? '➖' : '➕' }}
             </button>
           </div>
         </div>
@@ -68,7 +68,7 @@
 
       <button
         @click="nextPage"
-        :disabled="currentPage === totalPages"
+        :disabled="currentPage >= totalPages"
         class="button-primary flex-1 text-center"
       >
         ⏩ Weiter

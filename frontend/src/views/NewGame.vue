@@ -33,6 +33,7 @@
 
       <button
         @click="saveGame"
+        :disabled="isSaving"
         class="button-primary w-full"
       >
         {{ isEditing ? '💾 Änderungen speichern' : '🏁 Spiel starten' }}
@@ -52,6 +53,7 @@ const gameId = route.query.gameId;
 const gameName = ref('');
 const players = ref([{ id: null, name: '' }]);
 const isEditing = ref(false);
+const isSaving = ref(false);
 
 onMounted(async () => {
   if (gameId) {
@@ -76,9 +78,14 @@ function addPlayer() {
 }
 
 async function saveGame() {
+  if (isSaving.value) return; // Doppelklick-Schutz
+
+  isSaving.value = true; // Button deaktivieren
+
   const validPlayers = players.value.map(p => ({ ...p, name: p.name.trim() })).filter(p => p.name);
   if (!gameName.value || validPlayers.length === 0) {
     alert('Bitte Spielname und mindestens einen Spieler angeben.');
+    isSaving.value = false;
     return;
   }
 
@@ -139,6 +146,8 @@ async function saveGame() {
   } catch (err) {
     console.error(err);
     alert('Fehler beim Speichern: ' + err.message);
+  } finally {
+    isSaving.value = false; // Button wieder aktivieren – auch bei Fehlern
   }
 }
 </script>
