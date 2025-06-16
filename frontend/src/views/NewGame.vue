@@ -56,14 +56,14 @@ const isEditing = ref(false);
 onMounted(async () => {
   if (gameId) {
     isEditing.value = true;
-    const resGame = await fetch(`/api/games`);
+    const resGame = await fetch(`https://api.sc.urban-golf.ch/api/games`);
     const games = await resGame.json();
     const match = games.find(g => g.id === parseInt(gameId));
     if (match) {
       gameName.value = match.name || '';
     }
 
-    const resPlayers = await fetch(`/api/games/${gameId}/players`);
+    const resPlayers = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
     const existing = await resPlayers.json();
     players.value = existing.map(p => ({ id: p.id, name: p.name }));
   }
@@ -87,14 +87,14 @@ async function saveGame() {
 
     for (const player of validPlayers) {
       if (player.id) {
-        await fetch(`/api/players/${player.id}`, {
+        await fetch(`https://api.sc.urban-golf.ch/api/players/${player.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: player.name })
         });
         playerIds.push(player.id);
       } else {
-        const res = await fetch('/api/players', {
+        const res = await fetch('https://api.sc.urban-golf.ch/api/players', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: player.name })
@@ -105,13 +105,13 @@ async function saveGame() {
     }
 
     if (isEditing.value) {
-      await fetch(`/api/games/${gameId}`, {
+      await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: gameName.value })
       });
 
-      await fetch(`/api/games/${gameId}/players`, {
+      await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ players: playerIds })
@@ -119,7 +119,7 @@ async function saveGame() {
 
       router.go(-1);
     } else {
-      const resGame = await fetch('/api/games', {
+      const resGame = await fetch('https://api.sc.urban-golf.ch/api/games', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
