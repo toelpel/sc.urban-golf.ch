@@ -122,7 +122,7 @@ async function loadHoleData() {
 function changeStrokes(playerId, delta) {
   const current = parseInt(scores.value[playerId]) || 0;
   let updated = current + delta;
-  if (updated < 1) updated = 1;
+  if (updated < -3) updated = -3;
   if (updated > 15) updated = 15;
   scores.value[playerId] = updated;
   saveScore(playerId);
