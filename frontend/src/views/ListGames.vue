@@ -78,14 +78,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { watch } from 'vue';
-
-watch(totalPages, (newTotal) => {
-  if (currentPage.value > newTotal) {
-    currentPage.value = newTotal;
-  }
-});
+import { ref, computed, onMounted, watch } from 'vue';
 
 const games = ref([]);
 const playerMap = ref({});
@@ -121,7 +114,7 @@ function toggleDetails(gameId) {
 
   expandedGameId.value = gameId;
 
-  if (gameMeta.value[gameId]) return; // already loaded
+  if (gameMeta.value[gameId]) return;
 
   loadMeta(gameId);
 }
@@ -165,6 +158,13 @@ const totalPages = computed(() =>
   Math.max(1, Math.ceil(filteredGames.value.length / perPage))
 );
 
+watch(filteredGames, (filtered) => {
+  const pages = Math.max(1, Math.ceil(filtered.length / perPage));
+  if (currentPage.value > pages) {
+    currentPage.value = pages;
+  }
+});
+
 const paginatedGames = computed(() => {
   const start = (currentPage.value - 1) * perPage;
   return filteredGames.value.slice(start, start + perPage);
@@ -173,6 +173,7 @@ const paginatedGames = computed(() => {
 function nextPage() {
   if (currentPage.value < totalPages.value) currentPage.value++;
 }
+
 function prevPage() {
   if (currentPage.value > 1) currentPage.value--;
 }
