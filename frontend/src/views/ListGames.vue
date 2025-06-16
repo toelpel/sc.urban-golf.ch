@@ -57,18 +57,18 @@
       </li>
     </ul>
 
-    <div v-if="filteredGames.length > perPage" class="flex flex-row gap-3 mt-6">
+    <div v-if="totalPages > 1" class="flex flex-row gap-3 mt-6">
       <button
+        v-if="currentPage > 1"
         @click="prevPage"
-        :disabled="currentPage === 1"
         class="button-primary flex-1 text-center"
       >
         ⏪ Zurück
       </button>
 
       <button
+        v-if="currentPage < totalPages"
         @click="nextPage"
-        :disabled="currentPage >= totalPages"
         class="button-primary flex-1 text-center"
       >
         ⏩ Weiter
