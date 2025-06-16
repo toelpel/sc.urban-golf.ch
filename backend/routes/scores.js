@@ -24,7 +24,11 @@ export default async function (fastify, opts) {
 
   fastify.post('/', async (req, reply) => {
     const { game_id, player_id, strokes, hole } = req.body;
-    if (!game_id || !player_id || !strokes || !hole) {
+    if (
+      game_id === undefined || player_id === undefined ||
+      hole === undefined || strokes === undefined
+    )
+ {
       return reply.code(400).send({ error: 'Missing fields' });
     }
 
