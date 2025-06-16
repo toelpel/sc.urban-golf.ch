@@ -79,6 +79,13 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { watch } from 'vue';
+
+watch(totalPages, (newTotal) => {
+  if (currentPage.value > newTotal) {
+    currentPage.value = newTotal;
+  }
+});
 
 const games = ref([]);
 const playerMap = ref({});
@@ -154,7 +161,9 @@ const filteredGames = computed(() => {
   });
 });
 
-const totalPages = computed(() => Math.ceil(filteredGames.value.length / perPage));
+const totalPages = computed(() =>
+  Math.max(1, Math.ceil(filteredGames.value.length / perPage))
+);
 
 const paginatedGames = computed(() => {
   const start = (currentPage.value - 1) * perPage;
