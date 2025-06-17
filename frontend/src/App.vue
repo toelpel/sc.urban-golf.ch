@@ -10,6 +10,7 @@
         <div class="space-x-4 hidden md:flex items-center">
           <router-link to="/newgame" class="hover:underline">🆕 Neues Spiel</router-link>
           <router-link to="/listgames" class="hover:underline">📋 Spiele</router-link>
+          <router-link to="/feedback" class="hover:underline">💬 Feedback</router-link>
           <button @click="toggleDark" class="ml-4 text-xl">
             {{ isDark ? '🌙' : '☀️' }}
           </button>
@@ -27,7 +28,7 @@
           <transition name="fade-slide">
             <div
               v-if="isOpen"
-              class="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
+              class="absolute right-0 mt-1 w-48 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
             >
               <router-link
                 to="/newgame"
@@ -42,6 +43,13 @@
                 @click="isOpen = false"
               >
                 📋 Spiele
+              </router-link>
+              <router-link
+                to="/feedback"
+                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                @click="isOpen = false"
+              >
+                💬 Feedback
               </router-link>
               <button
                 class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"

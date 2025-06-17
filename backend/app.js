@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import scoreRoutes from './routes/scores.js';
 import gameRoutes from './routes/games.js';
 import playerRoutes from './routes/players.js';
+import feedbackRoutes from './routes/feedback.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ await fastify.register(cors, {
 fastify.register(scoreRoutes, { prefix: '/api/scores' });
 fastify.register(gameRoutes, { prefix: '/api/games' });
 fastify.register(playerRoutes, { prefix: '/api/players' });
+fastify.register(feedbackRoutes, { prefix: '/api/feedback' });
 
 fastify.get('/', async (req, reply) => {
   reply.send({ status: 'ok', service: 'Urban Golf API' });
