@@ -26,7 +26,7 @@
         <div class="md:hidden flex items-center gap-2 relative">
           <!-- Language Menu -->
           <div ref="langMenuWrapper" class="relative">
-            <button @click="isLangOpen = !isLangOpen" class="focus:outline-none text-xl -mt-[12px]">
+            <button @click="isLangOpen = !isLangOpen" class="inline-block align-middle -mt-[4px] text-xl">
               🌐
             </button>
 
