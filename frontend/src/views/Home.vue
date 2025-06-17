@@ -17,6 +17,12 @@
       >
         📋 Spiele
       </router-link>
+      <router-link
+        to="/feedback"
+        class="button-primary w-full text-center"
+      >
+        💬 Feedback
+      </router-link>
     </div>
   </div>
 </template>

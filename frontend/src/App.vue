@@ -28,7 +28,7 @@
           <transition name="fade-slide">
             <div
               v-if="isOpen"
-              class="absolute right-0 mt-1 w-48 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
+              class="absolute right-0 mt-0.5 w-48 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
             >
               <router-link
                 to="/newgame"
