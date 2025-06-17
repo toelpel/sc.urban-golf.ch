@@ -22,16 +22,18 @@
           </button>
         </div>
 
-        <!-- Mobile Language Menu -->
-          <div class="md:hidden relative mr-2" ref="langMenuWrapper">
-            <button @click="isLangOpen = !isLangOpen" class="focus:outline-none">
+        <!-- Mobile Menus: Language + Burger grouped -->
+        <div class="md:hidden flex items-center gap-2 relative">
+          <!-- Language Menu -->
+          <div ref="langMenuWrapper" class="relative">
+            <button @click="isLangOpen = !isLangOpen" class="focus:outline-none text-xl">
               🌐
             </button>
 
             <transition name="fade-slide">
               <div
                 v-if="isLangOpen"
-                class="absolute right-10 mt-0.5 w-32 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                class="absolute right-8 mt-0.5 w-32 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
               >
                 <button
                   v-for="(lang, code) in languages"
@@ -46,12 +48,12 @@
             </transition>
           </div>
 
-          <!-- Mobile Burger Menu -->
-          <div class="md:hidden relative" ref="menuWrapper">
+          <!-- Burger Menu -->
+          <div ref="menuWrapper" class="relative">
             <button @click="isOpen = !isOpen" class="focus:outline-none">
               <svg class="w-6 h-6 text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16" />
+                      d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
 
@@ -90,6 +92,7 @@
               </div>
             </transition>
           </div>
+        </div>
       </div>
     </nav>
 
