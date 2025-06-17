@@ -58,15 +58,30 @@ const captcha = ref('')
 const submitted = ref(false)
 
 const submitFeedback = async () => {
-  await axios.post('/feedback', {
-    rating: rating.value,
-    message: message.value,
-    name: name.value,
-    email: email.value
-  })
+  if (rating.value < 1 || rating.value > 5) {
+    alert('Bitte eine Bewertung von 1 bis 5 Sternen vergeben.');
+    return;
+  }
 
-  submitted.value = true
-}
+  if (!message.value.trim()) {
+    alert('Bitte ein Feedback eingeben.');
+    return;
+  }
+
+  try {
+    await axios.post('/feedback', {
+      rating: rating.value,
+      message: message.value,
+      name: name.value,
+      email: email.value
+    });
+
+    submitted.value = true;
+  } catch (err) {
+    console.error('Fehler beim Absenden:', err);
+    alert('Dein Feedback konnte leider nicht gesendet werden.');
+  }
+};
 
 const goBack = () => {
   router.back()
