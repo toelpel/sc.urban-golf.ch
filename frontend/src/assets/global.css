@@ -28,3 +28,7 @@
 .helper-text {
   @apply text-sm text-gray-500 dark:text-gray-400;
 }
+
+.lang-button {
+  @apply transition-opacity duration-200 ease-in-out text-xl;
+}

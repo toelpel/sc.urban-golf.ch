@@ -3,7 +3,7 @@
     <h1 class="text-2xl font-bold mb-4 text-center">Scorecard – {{ gameName }}</h1>
 
     <div v-if="players.length === 0" class="text-gray-500 text-center dark:text-gray-300">
-      Lade Spieler und Scores ...
+      {{ $t('ScorecardLoading') }}
     </div>
 
     <div v-else class="overflow-x-auto">
@@ -14,7 +14,7 @@
               class="sticky left-0 z-10 bg-gray-100 dark:bg-gray-800 text-left px-4 py-2 border-r border-gray-300 dark:border-gray-600 cursor-pointer"
               @click="sortBy('name')"
             >
-              Spieler
+              {{ $t('Player') }}
               <span v-if="sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
             </th>
             <th
@@ -39,7 +39,7 @@
               class="sticky right-0 z-10 bg-gray-100 dark:bg-gray-800 text-center px-3 py-2 border-l border-gray-300 dark:border-gray-600 cursor-pointer"
               @click="sortBy('total')"
             >
-              Total <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
+              {{ $t('Total') }} <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
             </th>
           </tr>
         </thead>
@@ -72,7 +72,7 @@
 
     <div class="mt-6 text-center">
       <button @click="$router.back()" class="button-primary w-full text-center">
-        ⏪ Zurück
+        ⏪ {{ $t('Back') }}
       </button>
     </div>
   </div>

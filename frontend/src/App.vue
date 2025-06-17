@@ -8,9 +8,15 @@
 
         <!-- Desktop-Navigation -->
         <div class="space-x-4 hidden md:flex items-center">
-          <router-link to="/newgame" class="hover:underline">🆕 Neues Spiel</router-link>
-          <router-link to="/listgames" class="hover:underline">📋 Spiele</router-link>
-          <router-link to="/feedback" class="hover:underline">💬 Feedback</router-link>
+          <router-link to="/newgame" class="hover:underline">🆕 {{ $t('NewGames') }}</router-link>
+          <router-link to="/listgames" class="hover:underline">📋 {{ $t('Games') }}</router-link>
+          <router-link to="/feedback" class="hover:underline">💬 {{ $t('Feedback') }}</router-link>
+          <div class="flex items-center space-x-2">
+            <button @click="setLanguage('de')" :class="{ 'lang-button': locale === 'de', 'opacity-50': locale !== 'de' }">🇩🇪</button>
+            <button @click="setLanguage('en')" :class="{ 'lang-button': locale === 'en', 'opacity-50': locale !== 'en' }">🇬🇧</button>
+            <button @click="setLanguage('fr')" :class="{ 'lang-button': locale === 'fr', 'opacity-50': locale !== 'fr' }">🇫🇷</button>
+            <button @click="setLanguage('nl')" :class="{ 'lang-button': locale === 'nl', 'opacity-50': locale !== 'nl' }">🇳🇱</button>
+          </div>
           <button @click="toggleDark" class="ml-4 text-xl">
             {{ isDark ? '🌙' : '☀️' }}
           </button>
@@ -35,22 +41,28 @@
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                 @click="isOpen = false"
               >
-                🆕 Neues Spiel
+                🆕 {{ $t('NewGames') }}
               </router-link>
               <router-link
                 to="/listgames"
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                 @click="isOpen = false"
               >
-                📋 Spiele
+                📋 {{ $t('Games') }}
               </router-link>
               <router-link
                 to="/feedback"
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                 @click="isOpen = false"
               >
-                💬 Feedback
+                💬 {{ $t('Feedback') }}
               </router-link>
+              <div class="flex justify-around px-4 py-2">
+                <button @click="setLanguage('de')" :class="{ 'lang-button': locale === 'de', 'opacity-50': locale !== 'de' }">🇩🇪</button>
+                <button @click="setLanguage('en')" :class="{ 'lang-button': locale === 'en', 'opacity-50': locale !== 'en' }">🇬🇧</button>
+                <button @click="setLanguage('fr')" :class="{ 'lang-button': locale === 'fr', 'opacity-50': locale !== 'fr' }">🇫🇷</button>
+                <button @click="setLanguage('nl')" :class="{ 'lang-button': locale === 'nl', 'opacity-50': locale !== 'nl' }">🇳🇱</button>
+              </div>
               <button
                 class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                 @click="toggleDark"
@@ -72,6 +84,12 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useI18n } from 'vue-i18n';
+const { locale } = useI18n();
+
+function setLanguage(lang) {
+  locale.value = lang;
+}
 
 const isOpen = ref(false);
 const isDark = ref(false);

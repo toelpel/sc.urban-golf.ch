@@ -1,11 +1,11 @@
 <template>
   <div class="text-center">
     <h1 class="text-2xl font-bold mb-1">
-      {{ gameName }} – Hole {{ hole }} –
+      {{ gameName }} – {{ $t('Hole') }} {{ hole }} –
       <router-link :to="{ name: 'NewGame', query: { gameId: gameId } }" class="text-blue-500">✏️</router-link>
     </h1>
     <div class="flex flex-wrap justify-center gap-2 my-4 items-center text-sm text-gray-700 dark:text-gray-300">
-      <span class="mr-2 font-medium">Loch:</span>
+      <span class="mr-2 font-medium">{{ $t('Hole') }}:</span>
       <router-link
         v-for="n in holes"
         :key="n"
@@ -48,14 +48,14 @@
           v-if="hole > 1"
           class="button-primary flex-1 text-center"
         >
-          ⏪ Zurück
+          ⏪ {{ $t('Back') }}
         </router-link>
 
         <router-link
           :to="`/hole/${gameId}/${hole + 1}`"
           class="button-primary flex-1 text-center"
         >
-          ⏩ Weiter
+          ⏩ {{ $t('Forward') }}
         </router-link>
       </div>
 
@@ -63,7 +63,7 @@
         :to="`/scorecard/${gameId}`"
         class="button-primary w-full text-center"
       >
-        📋 Scorecard
+        📋 {{ $t('Scorecard') }}
       </router-link>
     </div>
   </div>

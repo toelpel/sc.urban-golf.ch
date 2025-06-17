@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-4xl mx-auto px-4">
-    <h1 class="text-2xl font-bold mb-6 text-center">Alle Spiele</h1>
+    <h1 class="text-2xl font-bold mb-6 text-center">{{ $t('AllGames') }}</h1>
 
     <!-- Suchfeld mit Lösch-Icon -->
     <div class="relative mb-4">
@@ -20,7 +20,7 @@
     </div>
 
     <div v-if="paginatedGames.length === 0" class="text-center text-gray-500">
-      Keine Spiele gefunden.
+      {{ $t('NoGamesFound') }}
     </div>
 
     <ul v-else class="space-y-3">
@@ -47,7 +47,7 @@
 
         <!-- Detailbereich -->
         <div v-if="expandedGameId === game.id" class="mt-3 border-t pt-3 text-sm text-gray-700 dark:text-gray-300">
-          <div class="mb-2">🕳️ Gespielte Löcher: {{ gameMeta[game.id]?.holes?.length || 0 }}</div>
+          <div class="mb-2">🕳️ {{ $t('HolesPlayed') }}: {{ gameMeta[game.id]?.holes?.length || 0 }}</div>
           <div>
             <div v-for="player in gameMeta[game.id]?.players || []" :key="player.id" class="mb-1">
               {{ player.name }} – Ø {{ player.avg.toFixed(2) }} – Σ {{ player.total }}
@@ -63,7 +63,7 @@
         @click="prevPage"
         class="button-primary flex-1 text-center"
       >
-        ⏪ Zurück
+        ⏪ {{ $t('Back') }}
       </button>
 
       <button
@@ -71,7 +71,7 @@
         @click="nextPage"
         class="button-primary flex-1 text-center"
       >
-        ⏩ Weiter
+        ⏩ {{ $t('Forward') }}
       </button>
     </div>
   </div>
