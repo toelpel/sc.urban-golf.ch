@@ -30,12 +30,6 @@
         <input id="email" type="email" v-model="email" class="input-field" />
       </div>
 
-      <div>
-        <label class="label" for="captcha">Wie viel ist 3 + 2?</label>
-        <input id="captcha" v-model="captcha" class="input-field" required />
-        <span class="helper-text">Kleiner Captcha gegen Spam 🧠</span>
-      </div>
-
       <button type="submit" class="button-primary">Absenden</button>
     </form>
   </div>
@@ -53,9 +47,8 @@ const captcha = ref('')
 const submitted = ref(false)
 
 const submitFeedback = async () => {
-  if (captcha.value.trim() !== '5') return alert('Captcha falsch! 😅')
 
-  await axios.post('https://api.sc.urban-golf.ch/feedback', {
+  await axios.post('/feedback', {
     rating: rating.value,
     message: message.value,
     name: name.value,
