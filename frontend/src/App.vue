@@ -8,7 +8,7 @@
 
         <!-- Desktop-Navigation -->
         <div class="space-x-4 hidden md:flex items-center">
-          <router-link to="/newgame" class="hover:underline">🆕 {{ $t('NewGames') }}</router-link>
+          <router-link to="/newgame" class="hover:underline">🆕 {{ $t('NewGame') }}</router-link>
           <router-link to="/listgames" class="hover:underline">📋 {{ $t('Games') }}</router-link>
           <router-link to="/feedback" class="hover:underline">💬 {{ $t('Feedback') }}</router-link>
           <div class="flex items-center space-x-2">
@@ -41,7 +41,7 @@
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                 @click="isOpen = false"
               >
-                🆕 {{ $t('NewGames') }}
+                🆕 {{ $t('NewGame') }}
               </router-link>
               <router-link
                 to="/listgames"
