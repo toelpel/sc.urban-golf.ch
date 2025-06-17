@@ -5,9 +5,10 @@
     <div v-if="submitted" class="text-green-600 dark:text-green-400">
       Vielen Dank für dein Feedback! 🍀
 
-      <div class="flex justify-center mt-6">
-        <button @click="goBack" class="button-primary">⏪ Zurück</button>
-      </div>
+      <div class="flex w-full mt-6">
+      <button @click="goBack" class="button-primary flex-1">⏪ Zurück</button>
+    </div>
+
     </div>
     
     <form v-else @submit.prevent="submitFeedback" class="space-y-4">
@@ -48,6 +49,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 
+const router = useRouter()
 const rating = ref(0)
 const message = ref('')
 const name = ref('')
