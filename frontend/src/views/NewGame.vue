@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-3xl mx-auto px-4">
     <h1 class="text-2xl font-bold mb-4 text-center">
-      {{ isEditing ? '{{ $t('NewGameTitleEdit') }}' : '{{ $t('NewGameTitleNew') }}' }}
+      {{ isEditing ? $t('NewGameTitleEdit') : $t('NewGameTitleNew') }}
     </h1>
 
     <div class="flex flex-col items-stretch gap-4 max-w-md mt-6 mx-auto">
@@ -36,7 +36,7 @@
         :disabled="isSaving"
         class="button-primary w-full"
       >
-        {{ isEditing ? '💾 {{ $t('NewGameSaveChanges') }}' : '🏁 {{ $t('NewGameStartGame') }}' }}
+        {{ isEditing ? `💾 ${$t('NewGameSaveChanges')}` : `🏁 ${$t('NewGameStartGame')}` }}
       </button>
     </div>
   </div>
