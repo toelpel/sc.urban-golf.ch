@@ -34,9 +34,9 @@
         <input id="email" type="email" v-model="email" class="input-field" />
       </div>
 
-      <div class="flex justify-end gap-4 mt-6">
-        <button @click="goBack" type="button" class="button-primary">⏪ Zurück</button>
-        <button type="submit" class="button-primary">📤 Absenden</button>
+      <div class="flex w-full gap-4 mt-6">
+        <button @click="goBack" type="button" class="button-primary flex-1">⏪ Zurück</button>
+        <button type="submit" class="button-primary flex-1">📤 Absenden</button>
       </div>
 
     </form>
