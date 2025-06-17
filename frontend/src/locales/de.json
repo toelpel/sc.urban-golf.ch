@@ -21,10 +21,12 @@
   "ListGames-NoGamesFound": "Keine Spiele gefunden",
   "ListGames-HolesPlayed": "Gespielte Löcher",
   "ListGames-SearchText": "Spiel- oder Spielername",
-  "NewGameTitleNew": "Neues Spiel erstellen",
-  "NewGameTitleEdit": "Spiel bearbeiten",
-  "NewGameSaveChanges": "Änderungen speichern",
-  "NewGameStartGame": "Spiel starten",
-  "NewGameAddPlayer": "Spieler hinzufügen",
+  "NewGame-TitleNew": "Neues Spiel erstellen",
+  "NewGame-TitleEdit": "Spiel bearbeiten",
+  "NewGame-GameName": "Spielname",
+  "NewGame-PlayerName": "Spieler",
+  "NewGame-SaveChanges": "Änderungen speichern",
+  "NewGame-StartGame": "Spiel starten",
+  "NewGame-AddPlayer": "Spieler hinzufügen",
   "ScorecardLoading": "Lade Spieler und Scores ..."
 }
