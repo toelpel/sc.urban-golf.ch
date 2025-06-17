@@ -4,6 +4,10 @@
     
     <div v-if="submitted" class="text-green-600 dark:text-green-400">
       Vielen Dank für dein Feedback! 🍀
+
+      <div class="flex justify-center mt-6">
+        <button @click="goBack" class="button-primary">⏪ Zurück</button>
+      </div>
     </div>
     
     <form v-else @submit.prevent="submitFeedback" class="space-y-4">
@@ -30,13 +34,18 @@
         <input id="email" type="email" v-model="email" class="input-field" />
       </div>
 
-      <button type="submit" class="button-primary">Absenden</button>
+      <div class="flex justify-end gap-4 mt-6">
+        <button @click="goBack" type="button" class="button-primary">⏪ Zurück</button>
+        <button type="submit" class="button-primary">📤 Absenden</button>
+      </div>
+
     </form>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 
 const rating = ref(0)
@@ -47,7 +56,6 @@ const captcha = ref('')
 const submitted = ref(false)
 
 const submitFeedback = async () => {
-
   await axios.post('/feedback', {
     rating: rating.value,
     message: message.value,
@@ -57,4 +65,9 @@ const submitFeedback = async () => {
 
   submitted.value = true
 }
+
+const goBack = () => {
+  router.back()
+}
+
 </script>
