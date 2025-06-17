@@ -22,56 +22,74 @@
           </button>
         </div>
 
-        <!-- Mobile Burger -->
-        <div class="md:hidden relative" ref="menuWrapper">
-          <button @click="isOpen = !isOpen" class="focus:outline-none">
-            <svg class="w-6 h-6 text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
+        <!-- Mobile Language Menu -->
+          <div class="md:hidden relative mr-2" ref="langMenuWrapper">
+            <button @click="isLangOpen = !isLangOpen" class="focus:outline-none">
+              🌐
+            </button>
 
-          <transition name="fade-slide">
-            <div
-              v-if="isOpen"
-              class="absolute right-0 mt-0.5 w-48 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
-            >
-              <router-link
-                to="/newgame"
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                @click="isOpen = false"
+            <transition name="fade-slide">
+              <div
+                v-if="isLangOpen"
+                class="absolute right-10 mt-0.5 w-32 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
               >
-                🆕 {{ $t('NewGame') }}
-              </router-link>
-              <router-link
-                to="/listgames"
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                @click="isOpen = false"
-              >
-                📋 {{ $t('Games') }}
-              </router-link>
-              <router-link
-                to="/feedback"
-                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                @click="isOpen = false"
-              >
-                💬 {{ $t('Feedback') }}
-              </router-link>
-              <div class="flex justify-around px-4 py-2">
-                <button @click="setLanguage('de')" :class="{ 'lang-button': locale === 'de', 'opacity-50': locale !== 'de' }">🇩🇪</button>
-                <button @click="setLanguage('en')" :class="{ 'lang-button': locale === 'en', 'opacity-50': locale !== 'en' }">🇬🇧</button>
-                <button @click="setLanguage('fr')" :class="{ 'lang-button': locale === 'fr', 'opacity-50': locale !== 'fr' }">🇫🇷</button>
-                <button @click="setLanguage('nl')" :class="{ 'lang-button': locale === 'nl', 'opacity-50': locale !== 'nl' }">🇳🇱</button>
+                <button
+                  v-for="(lang, code) in languages"
+                  :key="code"
+                  @click="() => { setLanguage(code); isLangOpen = false; }"
+                  class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  :class="{ 'opacity-100': locale === code, 'opacity-50': locale !== code }"
+                >
+                  {{ lang.flag }} {{ lang.label }}
+                </button>
               </div>
-              <button
-                class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                @click="toggleDark"
+            </transition>
+          </div>
+
+          <!-- Mobile Burger Menu -->
+          <div class="md:hidden relative" ref="menuWrapper">
+            <button @click="isOpen = !isOpen" class="focus:outline-none">
+              <svg class="w-6 h-6 text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
+            <transition name="fade-slide">
+              <div
+                v-if="isOpen"
+                class="absolute right-0 mt-0.5 w-48 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
               >
-                {{ isDark ? '🌙 Darkmode' : '☀️ Lightmode' }}
-              </button>
-            </div>
-          </transition>
-        </div>
+                <router-link
+                  to="/newgame"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  @click="isOpen = false"
+                >
+                  🆕 {{ $t('NewGame') }}
+                </router-link>
+                <router-link
+                  to="/listgames"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  @click="isOpen = false"
+                >
+                  📋 {{ $t('Games') }}
+                </router-link>
+                <router-link
+                  to="/feedback"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  @click="isOpen = false"
+                >
+                  💬 {{ $t('Feedback') }}
+                </router-link>
+                <button
+                  class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  @click="toggleDark"
+                >
+                  {{ isDark ? '🌙 Darkmode' : '☀️ Lightmode' }}
+                </button>
+              </div>
+            </transition>
+          </div>
       </div>
     </nav>
 
@@ -89,11 +107,22 @@ const { locale } = useI18n();
 
 function setLanguage(lang) {
   locale.value = lang;
+  localStorage.setItem('language', lang); // Sprache merken
 }
 
 const isOpen = ref(false);
+const isLangOpen = ref(false); // Für Sprachmenü
 const isDark = ref(false);
+
 const menuWrapper = ref(null);
+const langMenuWrapper = ref(null); // Referenz für Sprachmenü
+
+const languages = {
+  de: { label: 'Deutsch', flag: '🇩🇪' },
+  en: { label: 'English', flag: '🇬🇧' },
+  fr: { label: 'Français', flag: '🇫🇷' },
+  nl: { label: 'Nederlands', flag: '🇳🇱' },
+};
 
 function toggleDark() {
   isDark.value = !isDark.value;
@@ -105,19 +134,29 @@ function handleClickOutside(event) {
   if (menuWrapper.value && !menuWrapper.value.contains(event.target)) {
     isOpen.value = false;
   }
+  if (langMenuWrapper.value && !langMenuWrapper.value.contains(event.target)) {
+    isLangOpen.value = false;
+  }
 }
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
 
-  const saved = localStorage.getItem('theme');
+  // Darkmode-Ladeverhalten
+  const savedTheme = localStorage.getItem('theme');
   const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-  if (saved === 'dark' || (!saved && systemPrefersDark)) {
+  if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
     isDark.value = true;
     document.documentElement.classList.add('dark');
   } else {
     document.documentElement.classList.remove('dark');
+  }
+
+  // 🌐 Sprache laden
+  const savedLang = localStorage.getItem('language');
+  if (savedLang) {
+    locale.value = savedLang;
   }
 });
 

@@ -7,7 +7,7 @@
       <input
         type="text"
         v-model="searchTerm"
-        placeholder="🔍 {{ $t('ListGames-SearchText') }}"
+        :placeholder="`🔍 ${$t('ListGames-SearchText')}`"
         class="input-field w-full pr-10"
       />
       <button

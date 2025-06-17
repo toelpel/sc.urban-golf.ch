@@ -1,9 +1,9 @@
 <template>
   <div class="p-4 max-w-xl mx-auto">
-    <h1 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">{{ $t('FeedbackTitle') }}</h1>
+    <h1 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">{{ $t('Feedback-Title') }}</h1>
     
     <div v-if="submitted" class="text-green-600 dark:text-green-400">
-      {{ $t('FeedbackThankYou') }}
+      {{ $t('Feedback-ThankYou') }}
 
       <div class="flex w-full mt-6">
       <button @click="goBack" class="button-primary flex-1">⏪ {{ $t('Back') }}</button>
@@ -12,7 +12,7 @@
     </div>
     
     <form v-else @submit.prevent="submitFeedback" class="space-y-4">
-      <label class="label">{{ $t('FeedbackRatingTitle') }}</label>
+      <label class="label">{{ $t('Feedback-RatingTitle') }}</label>
       <div class="flex space-x-2">
         <button v-for="n in 5" :key="n" type="button" @click="rating = n" class="text-2xl"
                 :class="rating >= n ? 'text-yellow-400' : 'text-gray-300'">
@@ -21,17 +21,17 @@
       </div>
 
       <div>
-        <label class="label" for="message">{{ $t('FeedbackText') }}</label>
+        <label class="label" for="message">{{ $t('Feedback-Text') }}</label>
         <textarea id="message" v-model="message" class="textarea-field" required></textarea>
       </div>
 
       <div>
-        <label class="label" for="name">{{ $t('FeedbackName') }}</label>
+        <label class="label" for="name">{{ $t('Feedback-Name') }}</label>
         <input id="name" v-model="name" class="input-field" />
       </div>
 
       <div>
-        <label class="label" for="email">{{ $t('FeedbackEmail') }}</label>
+        <label class="label" for="email">{{ $t('Feedback-Email') }}</label>
         <input id="email" type="email" v-model="email" class="input-field" />
       </div>
 

@@ -1,14 +1,14 @@
 <template>
   <div class="max-w-3xl mx-auto px-4">
     <h1 class="text-2xl font-bold mb-4 text-center">
-      {{ isEditing ? $t('NewGameTitleEdit') : $t('NewGameTitleNew') }}
+      {{ isEditing ? $t('NewGame-TitleEdit') : $t('NewGame-TitleNew') }}
     </h1>
 
     <div class="flex flex-col items-stretch gap-4 max-w-md mt-6 mx-auto">
       <input
         type="text"
         v-model="gameName"
-        placeholder="Spielname"
+        :placeholder="$t('NewGame-GameName')"
         maxlength="30"
         class="input-field w-full"
       />
@@ -17,7 +17,7 @@
         <input
           type="text"
           v-model="player.name"
-          :placeholder="`Spieler ${index + 1}`"
+          :placeholder="`${$t('NewGame-PlayerName')} ${index + 1}`"
           maxlength="30"
           class="input-field w-full"
         />
@@ -28,7 +28,7 @@
         :disabled="players.length >= 10"
         class="button-primary w-full"
       >
-        ➕ {{ $t('NewGameAddPlayer') }}
+        ➕ {{ $t('NewGame-AddPlayer') }}
       </button>
 
       <button
@@ -36,7 +36,7 @@
         :disabled="isSaving"
         class="button-primary w-full"
       >
-        {{ isEditing ? `💾 ${$t('NewGameSaveChanges')}` : `🏁 ${$t('NewGameStartGame')}` }}
+        {{ isEditing ? `💾 ${$t('NewGame-SaveChanges')}` : `🏁 ${$t('NewGame-StartGame')}` }}
       </button>
     </div>
   </div>
