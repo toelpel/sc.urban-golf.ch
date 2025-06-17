@@ -79,6 +79,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
+import axios from 'axios';
 
 const games = ref([]);
 const playerMap = ref({});
@@ -89,20 +90,22 @@ const currentPage = ref(1);
 const perPage = 5;
 
 onMounted(async () => {
-  const res = await fetch('https://api.sc.urban-golf.ch/api/games');
-  const data = await res.json();
+  try {
+    const { data } = await axios.get('/games');
+    if (!Array.isArray(data)) {
+      alert('API-Antwort ist kein Array');
+      return;
+    }
 
-  if (!Array.isArray(data)) {
-    alert('API-Antwort ist kein Array');
-    return;
-  }
+    games.value = data;
 
-  games.value = data;
-
-  for (const game of games.value) {
-    const resPlayers = await fetch(`https://api.sc.urban-golf.ch/api/games/${game.id}/players`);
-    const players = await resPlayers.json();
-    playerMap.value[game.id] = players.map(p => p.name);
+    for (const game of games.value) {
+      const { data: players } = await axios.get(`/games/${game.id}/players`);
+      playerMap.value[game.id] = players.map(p => p.name);
+    }
+  } catch (err) {
+    console.error('Fehler beim Laden der Spiele:', err);
+    alert('Fehler beim Laden der Spieldaten.');
   }
 });
 
@@ -120,27 +123,32 @@ function toggleDetails(gameId) {
 }
 
 async function loadMeta(gameId) {
-  const resScores = await fetch(`https://api.sc.urban-golf.ch/api/scores?game_id=${gameId}`);
-  const scores = await resScores.json();
+  try {
+    const { data: scores } = await axios.get('/scores', {
+      params: { game_id: gameId }
+    });
 
-  const holes = [...new Set(scores.map(s => s.hole))];
-  const players = {};
+    const holes = [...new Set(scores.map(s => s.hole))];
+    const players = {};
 
-  for (const s of scores) {
-    if (!players[s.player_id]) {
-      players[s.player_id] = { id: s.player_id, name: s.player_name, total: 0, count: 0 };
+    for (const s of scores) {
+      if (!players[s.player_id]) {
+        players[s.player_id] = { id: s.player_id, name: s.player_name, total: 0, count: 0 };
+      }
+      players[s.player_id].total += s.strokes;
+      players[s.player_id].count += 1;
     }
-    players[s.player_id].total += s.strokes;
-    players[s.player_id].count += 1;
-  }
 
-  gameMeta.value[gameId] = {
-    holes,
-    players: Object.values(players).map(p => ({
-      ...p,
-      avg: p.count ? p.total / p.count : 0
-    }))
-  };
+    gameMeta.value[gameId] = {
+      holes,
+      players: Object.values(players).map(p => ({
+        ...p,
+        avg: p.count ? p.total / p.count : 0
+      }))
+    };
+  } catch (err) {
+    console.error(`Fehler beim Laden der Metadaten für Spiel ${gameId}:`, err);
+  }
 }
 
 const filteredGames = computed(() => {

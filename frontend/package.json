@@ -7,14 +7,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.10.0",
     "vue": "^3.4.15",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
-    "vite": "^5.2.0",
     "@vitejs/plugin-vue": "^5.0.4",
-    "tailwindcss": "^3.4.1",
     "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.38"
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.2.0"
   }
 }

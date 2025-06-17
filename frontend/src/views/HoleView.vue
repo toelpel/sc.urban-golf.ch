@@ -72,6 +72,7 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 
 const route = useRoute();
 const gameId = route.params.gameId;
@@ -91,26 +92,25 @@ onMounted(loadHoleData);
 async function loadHoleData() {
   scores.value = {};
 
-  // Spielndaten laden
-  const resGame = await fetch(`https://api.sc.urban-golf.ch/api/games`);
-  const games = await resGame.json();
+  // Spieldaten laden
+  const { data: games } = await axios.get('/games');
   const match = games.find(g => g.id === parseInt(gameId));
   gameName.value = match?.name || `Spiel #${gameId}`;
 
   // Spieler laden
-  const res = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
-  players.value = (await res.json());
+  const { data: playerList } = await axios.get(`/games/${gameId}/players`);
+  players.value = playerList;
 
   for (const player of players.value) {
     scores.value[player.id] = '';
   }
 
   // Scores für aktuelles Loch laden
-  const resScores = await fetch(`https://api.sc.urban-golf.ch/api/scores?game_id=${gameId}`);
-  const allScores = await resScores.json();
+  const { data: allScores } = await axios.get(`/scores`, {
+    params: { game_id: gameId }
+  });
 
   holes.value = Array.from(new Set(allScores.map(entry => entry.hole))).sort((a, b) => a - b);
-  // if (holes.value.length === 0) holes.value.push(1);
 
   for (const entry of allScores) {
     if (parseInt(entry.hole) === hole.value) {
@@ -129,20 +129,15 @@ function changeStrokes(playerId, delta) {
 }
 
 async function saveScore(playerId) {
-  await fetch(`https://api.sc.urban-golf.ch/api/scores`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      game_id: gameId,
-      player_id: playerId,
-      hole: hole.value,
-      strokes: scores.value[playerId]
-    })
+  await axios.post('/scores', {
+    game_id: gameId,
+    player_id: playerId,
+    hole: hole.value,
+    strokes: scores.value[playerId]
   });
 }
 
 function range(start, end) {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 }
-
 </script>

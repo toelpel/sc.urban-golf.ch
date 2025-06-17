@@ -81,6 +81,7 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 
 const route = useRoute();
 const gameId = route.params.id;
@@ -145,35 +146,38 @@ function averageScore(playerId) {
 }
 
 onMounted(async () => {
-  // Spielname laden
-  const gameRes = await fetch(`https://api.sc.urban-golf.ch/api/games`);
-  const gameList = await gameRes.json();
-  const match = gameList.find(g => g.id === parseInt(gameId));
-  gameName.value = match?.name || `Spiel #${gameId}`;
+  try {
+    const { data: gameList } = await axios.get('/games');
+    const match = gameList.find(g => g.id === parseInt(gameId));
+    gameName.value = match?.name || `Spiel #${gameId}`;
 
-  // Spieler laden
-  const res = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
-  players.value = await res.json();
+    const { data: playerList } = await axios.get(`/games/${gameId}/players`);
+    players.value = playerList;
 
-  for (const player of players.value) {
-    scores.value[player.id] = {};
-  }
+    for (const player of players.value) {
+      scores.value[player.id] = {};
+    }
 
-  const scoreRes = await fetch(`https://api.sc.urban-golf.ch/api/scores?game_id=${gameId}`);
-  const scoreData = await scoreRes.json();
+    const { data: scoreData } = await axios.get('/scores', {
+      params: { game_id: gameId }
+    });
 
-  for (const entry of scoreData) {
-    const { player_id, hole, strokes } = entry;
-    if (!scores.value[player_id]) scores.value[player_id] = {};
-    scores.value[player_id][hole] = strokes;
-  }
+    for (const entry of scoreData) {
+      const { player_id, hole, strokes } = entry;
+      if (!scores.value[player_id]) scores.value[player_id] = {};
+      scores.value[player_id][hole] = strokes;
+    }
 
-  holes.value = Array.from(
-    new Set(scoreData.map(entry => entry.hole))
-  ).sort((a, b) => a - b);
+    holes.value = Array.from(
+      new Set(scoreData.map(entry => entry.hole))
+    ).sort((a, b) => a - b);
 
-  if (holes.value.length === 0) {
-    holes.value.push(1);
+    if (holes.value.length === 0) {
+      holes.value.push(1);
+    }
+  } catch (err) {
+    console.error('Fehler beim Laden der Scorecard:', err);
+    alert('Fehler beim Laden der Scorecard-Daten.');
   }
 });
 </script>

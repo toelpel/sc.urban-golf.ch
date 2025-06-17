@@ -45,6 +45,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import axios from 'axios';
 
 const router = useRouter();
 const route = useRoute();
@@ -58,15 +59,13 @@ const isSaving = ref(false);
 onMounted(async () => {
   if (gameId) {
     isEditing.value = true;
-    const resGame = await fetch(`https://api.sc.urban-golf.ch/api/games`);
-    const games = await resGame.json();
+    const { data: games } = await axios.get('/games');
     const match = games.find(g => g.id === parseInt(gameId));
     if (match) {
       gameName.value = match.name || '';
     }
 
-    const resPlayers = await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`);
-    const existing = await resPlayers.json();
+    const { data: existing } = await axios.get(`/games/${gameId}/players`);
     players.value = existing.map(p => ({ id: p.id, name: p.name }));
   }
 });
@@ -78,11 +77,14 @@ function addPlayer() {
 }
 
 async function saveGame() {
-  if (isSaving.value) return; // Doppelklick-Schutz
+  if (isSaving.value) return;
 
-  isSaving.value = true; // Button deaktivieren
+  isSaving.value = true;
 
-  const validPlayers = players.value.map(p => ({ ...p, name: p.name.trim() })).filter(p => p.name);
+  const validPlayers = players.value
+    .map(p => ({ ...p, name: p.name.trim() }))
+    .filter(p => p.name);
+
   if (!gameName.value || validPlayers.length === 0) {
     alert('Bitte Spielname und mindestens einen Spieler angeben.');
     isSaving.value = false;
@@ -94,48 +96,24 @@ async function saveGame() {
 
     for (const player of validPlayers) {
       if (player.id) {
-        await fetch(`https://api.sc.urban-golf.ch/api/players/${player.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: player.name })
-        });
+        await axios.put(`/players/${player.id}`, { name: player.name });
         playerIds.push(player.id);
       } else {
-        const res = await fetch('https://api.sc.urban-golf.ch/api/players', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: player.name })
-        });
-        const newPlayer = await res.json();
+        const { data: newPlayer } = await axios.post('/players', { name: player.name });
         playerIds.push(newPlayer.id);
       }
     }
 
     if (isEditing.value) {
-      await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: gameName.value })
-      });
-
-      await fetch(`https://api.sc.urban-golf.ch/api/games/${gameId}/players`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ players: playerIds })
-      });
-
+      await axios.put(`/games/${gameId}`, { name: gameName.value });
+      await axios.post(`/games/${gameId}/players`, { players: playerIds });
       router.go(-1);
     } else {
-      const resGame = await fetch('https://api.sc.urban-golf.ch/api/games', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: gameName.value,
-          players: playerIds
-        })
+      const { data: game } = await axios.post('/games', {
+        name: gameName.value,
+        players: playerIds
       });
 
-      const game = await resGame.json();
       if (!game?.id) {
         alert('Fehler beim Erstellen des Spiels.');
         return;
@@ -147,7 +125,7 @@ async function saveGame() {
     console.error(err);
     alert('Fehler beim Speichern: ' + err.message);
   } finally {
-    isSaving.value = false; // Button wieder aktivieren – auch bei Fehlern
+    isSaving.value = false;
   }
 }
 </script>
