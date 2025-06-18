@@ -25,16 +25,8 @@
       </router-link>
     </div>
     <div class="mt-8 max-w-md mx-auto p-4 bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 rounded shadow">
-      <i18n-t keypath="Home-BetaText">
-        <strong><strong class="font-semibold" /></strong>
-        <linebreak><br /></linebreak>
-        <feedbackLink>
-          <router-link
-            to="/feedback"
-            class="underline hover:text-yellow-700 dark:hover:text-yellow-200"
-          />
-        </feedbackLink>
-      </i18n-t>
+      {{ $t('Home-BetaText-Title') }}<br />
+      {{ $t('Home-BetaText-Text') }} <router-link to="/feedback" class="underline hover:text-yellow-700 dark:hover:text-yellow-200">{{ $t('Feedback') }}</router-link>!
     </div>
   </div>
 </template>
