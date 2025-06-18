@@ -3,7 +3,7 @@
     <nav class="bg-white border-b p-4 shadow-sm relative z-50 dark:bg-gray-800 dark:text-white dark:border-gray-600">
       <div class="max-w-6xl mx-auto flex justify-between items-center">
         <router-link to="/" class="font-bold text-xl text-green-700 dark:text-green-300">
-          Urban Golf
+          Urban-Golf.ch - ScoreCard
         </router-link>
 
         <!-- Desktop-Navigation -->
