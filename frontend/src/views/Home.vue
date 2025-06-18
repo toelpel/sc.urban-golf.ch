@@ -24,7 +24,7 @@
         💬 {{ $t('Feedback') }}
       </router-link>
     </div>
-    <div class="mt-8 max-w-md mx-auto p-2 bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 rounded shadow">
+    <div class="mt-8 max-w-md mx-auto p-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 rounded shadow">
       {{ $t('Home-BetaText-Title') }}<br />
       {{ $t('Home-BetaText-Text') }} <router-link to="/feedback" class="underline hover:text-yellow-700 dark:hover:text-yellow-200">{{ $t('Feedback') }}</router-link>!
     </div>
