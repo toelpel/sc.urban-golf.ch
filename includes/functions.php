@@ -119,6 +119,8 @@ function freegame_menu($id): string
 	/* $content .= '<input class="button" type="submit" name="submit" id="submit" value="Spiel öffnen" style="width: 82%";">';    //$content .= '</form>'; */
 	/* $content .= '<a href="/"><div class="button">Zurück</div></a>'; */
 
+	$content .= '<div class="infobox" style="margin-top: 1em; padding: 0.75em; background-color: #f0f0f0; border-left: 4px solid #007acc; border-radius: 4px; font-size: 0.9em;">🎉 <strong>Betatest:</strong> Probiere jetzt die neue Version der ScoreCard-App unter <a href="https://sc-test.urban-golf.ch/new/" target="_blank" style="color: #007acc; text-decoration: underline;">sc-test.urban-golf.ch/new/</a> aus!</div>';
+
 	return $content;
 }
 
