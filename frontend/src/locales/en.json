@@ -10,7 +10,7 @@
   "Hole": "Hole",
   "Home-Title": "Welcome to Urban Golf Scorecard",
   "Home-Text": "Create a new game or view existing games.",
-  "Home-BetaText": "⚠️ This app is still in {strong}beta{strong}.{br}We appreciate your {feedbackLink}feedback{feedbackLink}!",
+  "Home-BetaText": "⚠️ This app is still in {strong}beta{strong}.{linebreak}We appreciate your {feedbackLink}feedback{feedbackLink}!",
   "Feedback-Title": "Feedback on the Scorecard",
   "Feedback-ThankYou": "Thank you for your feedback! 🍀",
   "Feedback-RatingTitle": "Rating",
