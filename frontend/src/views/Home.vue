@@ -27,8 +27,12 @@
     <div class="mt-8 max-w-md mx-auto p-4 bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 rounded shadow">
       <i18n-t keypath="Home-BetaText">
         <strong class="font-semibold" />
+        <br />
         <feedbackLink>
-          <router-link to="/feedback" class="underline hover:text-yellow-700 dark:hover:text-yellow-200" />
+          <router-link
+            to="/feedback"
+            class="underline hover:text-yellow-700 dark:hover:text-yellow-200"
+          />
         </feedbackLink>
       </i18n-t>
     </div>
