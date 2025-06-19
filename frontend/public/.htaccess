@@ -27,10 +27,10 @@
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
   # Optional for cross-origin isolation.
-  Header always set Cross-Origin-Embedder-Policy "unsafe-none"
+  Header always set Cross-Origin-Embedder-Policy "require-corp"
 
   # Protects resources from unauthorized cross-origin requests
-  Header always set Cross-Origin-Resource-Policy "cross-origin"
+  Header always set Cross-Origin-Resource-Policy "same-origin"
 
   # Helps with cross-origin isolation
   Header always set Cross-Origin-Opener-Policy "same-origin"
