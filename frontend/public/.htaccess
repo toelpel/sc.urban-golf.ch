@@ -6,3 +6,23 @@
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /new/index.html [L]
 </IfModule>
+
+<IfModule mod_headers.c>
+  # Schutz vor Clickjacking
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # MIME Sniffing verhindern
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Referrer-Policy
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Permissions Policy (ehemals Feature Policy)
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  # Content Security Policy (anpassen je nach externem JS/CSS/CDN)
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co"
+
+  # HTTPS erzwingen via HSTS
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>
