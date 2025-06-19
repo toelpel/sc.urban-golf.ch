@@ -15,11 +15,11 @@ A sleek and responsive web app to track scores during Urban Golf tournaments. Bu
 - **Axios** – For HTTP communication with the backend
 
 ### 🔧 Backend
-- **Fastify** – High-performance HTTP server for Node.js.
-- **@fastify/cors** – Cross-Origin Resource Sharing (CORS) support for Fastify.
-- **dotenv** – Environment variable management from `.env` files.
-- **pg** – Native PostgreSQL client for Node.js.
-- **Modular Route Structure** – Organized via separate route files for `games`, `scores`, `players`, and `feedback`.
+- **Fastify** – High-performance HTTP server for Node.js
+- **@fastify/cors** – Cross-Origin Resource Sharing (CORS) support for Fastify
+- **dotenv** – Environment variable management from `.env` files
+- **pg** – Native PostgreSQL client for Node.js
+- **Modular Route Structure** – Organized via separate route files for `games`, `scores`, `players`, and `feedback`
 - **PostgreSQL** – Managed via **Supabase**
 
 ### 🔄 Tooling
@@ -28,8 +28,8 @@ A sleek and responsive web app to track scores during Urban Golf tournaments. Bu
 - **GitHub Actions** – For CI workflows in `.github/workflows`
 
 ### 🚀 Deployment
-- **Render.com** – Hosting for the Fastify backend and optionally the frontend.
-- **Supabase** – Database + potential API backend (currently used for PostgreSQL hosting).
+- **Render.com** – Hosting for the Fastify backend and optionally the frontend
+- **Supabase** – Database + potential API backend (currently used for PostgreSQL hosting)
 
 ---
 
