@@ -1,4 +1,6 @@
 import Fastify from 'fastify';
+import fastifyHelmet from '@fastify/helmet';
+import fastifyRateLimit from '@fastify/rate-limit';
 import cors from '@fastify/cors';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -17,11 +19,37 @@ const __dirname = path.dirname(__filename);
 const fastify = Fastify({ logger: true });
 
 await fastify.register(cors, {
-  origin: true,
+  origin: (origin, cb) => {
+    const allowedOrigins = [
+      'https://sc.urban-golf.ch',
+      'https://sc-test.urban-golf.ch'
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type'],
   preflightContinue: false,
   optionsSuccessStatus: 200
+});
+
+await fastify.register(fastifyHelmet, {
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", 'https://cdn.jsdelivr.net'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+    },
+  }
+});
+
+await fastify.register(fastifyRateLimit, {
+  max: 100,
+  timeWindow: '1 minute'
 });
 
 fastify.register(scoreRoutes, { prefix: '/api/scores' });
