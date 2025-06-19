@@ -7,8 +7,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fastify/helmet": "^13.0.1",
-    "@fastify/rate-limit": "^10.3.0",
     "axios": "^1.10.0",
     "vue": "^3.4.15",
     "vue-i18n": "^11.1.6",
