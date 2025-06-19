@@ -96,7 +96,7 @@
       </div>
     </nav>
 
-    <main class="w-[98%] max-w-screen-lg mx-auto px-2">
+    <main class="max-w-4xl mx-auto px-4 py-6">
       <router-view class="mt-8" />
     </main>
 

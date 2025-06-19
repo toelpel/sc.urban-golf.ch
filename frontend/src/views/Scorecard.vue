@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-full overflow-x-auto">
+  <div class="px-4 overflow-x-auto">
     <h1 class="text-2xl font-bold mb-4 text-center">Scorecard – {{ gameName }}</h1>
 
     <div v-if="players.length === 0" class="text-gray-500 text-center dark:text-gray-300">
