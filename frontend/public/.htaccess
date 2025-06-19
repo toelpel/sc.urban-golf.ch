@@ -21,7 +21,7 @@
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 
   # Content Security Policy (anpassen je nach externem JS/CSS/CDN)
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co https://api.sc.urban-golf.ch"
 
   # HTTPS erzwingen via HSTS
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
