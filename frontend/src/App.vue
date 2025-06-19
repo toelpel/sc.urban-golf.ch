@@ -2,9 +2,8 @@
   <div class="min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-800 dark:text-white">
     <nav class="bg-white border-b p-4 shadow-sm relative z-50 dark:bg-gray-800 dark:text-white dark:border-gray-600">
       <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <router-link to="/" class="flex items-center space-x-2 font-bold text-xl text-green-700 dark:text-green-300">
-          <img src="/logo.png" alt="Urban-Golf.ch - ScoreCard" class="w-6 h-6" />
-          <span>Urban-Golf.ch - ScoreCard</span>
+        <router-link to="/" class="font-bold text-xl text-green-700 dark:text-green-300">
+          Urban-Golf.ch - ScoreCard
         </router-link>
 
         <!-- Desktop-Navigation -->
