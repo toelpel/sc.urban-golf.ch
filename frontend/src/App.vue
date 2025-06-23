@@ -1,49 +1,64 @@
 <template>
   <div class="min-h-screen text-gray-800 dark:text-white bg-white/40 dark:bg-gray-800/60">
-    <BackgroundImage
-      class="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat"
-    />
-    <nav class="bg-white border-b p-4 shadow-sm relative z-50 dark:bg-gray-800 dark:text-white dark:border-gray-600">
+    <BackgroundImage />
+    <nav class="sticky top-0 bg-white border-b p-4 shadow-sm z-50 dark:bg-gray-800 dark:text-white dark:border-gray-600 backdrop-blur-md bg-opacity-50 dark:bg-opacity-50">
       <div class="max-w-6xl mx-auto flex justify-between items-center">
         <router-link to="/" class="font-bold text-xl text-green-700 dark:text-green-300">
           Urban-Golf.ch - ScoreCard
         </router-link>
 
-        <!-- Desktop-Navigation -->
-        <div class="space-x-4 hidden md:flex items-center">
-          <router-link to="/newgame" class="hover:underline">🆕 {{ $t('NewGame') }}</router-link>
-          <router-link to="/listgames" class="hover:underline">📋 {{ $t('Games') }}</router-link>
-          <router-link to="/feedback" class="hover:underline">💬 {{ $t('Feedback') }}</router-link>
-          <div class="flex items-center space-x-2">
-            <button @click="setLanguage('de')" :class="{ 'lang-button': locale === 'de', 'opacity-50': locale !== 'de' }">🇩🇪</button>
-            <button @click="setLanguage('en')" :class="{ 'lang-button': locale === 'en', 'opacity-50': locale !== 'en' }">🇬🇧</button>
-            <button @click="setLanguage('fr')" :class="{ 'lang-button': locale === 'fr', 'opacity-50': locale !== 'fr' }">🇫🇷</button>
-            <button @click="setLanguage('nl')" :class="{ 'lang-button': locale === 'nl', 'opacity-50': locale !== 'nl' }">🇳🇱</button>
+        <!-- Top-Navigation: Desktop -->
+        <div class="hidden md:flex items-center gap-3">
+          <router-link
+            to="/newgame"
+            class="material-nav-link"
+            :class="{ 'material-nav-link--active': $route.path === '/newgame' }"
+          >
+            🆕 {{ $t('NewGame') }}
+          </router-link>
+          <router-link
+            to="/listgames"
+            class="material-nav-link"
+            :class="{ 'material-nav-link--active': $route.path === '/listgames' }"
+          >
+            📋 {{ $t('Games') }}
+          </router-link>
+          <router-link
+            to="/feedback"
+            class="material-nav-link"
+            :class="{ 'material-nav-link--active': $route.path === '/feedback' }"
+          >
+            💬 {{ $t('Feedback') }}
+          </router-link>
+
+          <div class="flex items-center gap-2 ml-2">
+            <button @click="setLanguage('de')" :class="langButtonClass('de')">🇩🇪</button>
+            <button @click="setLanguage('en')" :class="langButtonClass('en')">🇬🇧</button>
+            <button @click="setLanguage('fr')" :class="langButtonClass('fr')">🇫🇷</button>
+            <button @click="setLanguage('nl')" :class="langButtonClass('nl')">🇳🇱</button>
           </div>
-          <button @click="toggleDark" class="ml-4 text-xl">
+
+          <button @click="toggleDark" class="text-2xl ml-3 hover:scale-110 transition">
             {{ isDark ? '🌙' : '☀️' }}
           </button>
         </div>
 
         <!-- Mobile Menus: Language + Burger grouped -->
-        <div class="md:hidden flex items-center gap-2 relative">
+        <div class="md:hidden flex items-center gap-0.5 relative">
           <!-- Language Menu -->
           <div ref="langMenuWrapper" class="relative">
-            <button @click="isLangOpen = !isLangOpen" class="inline-block align-middle -mt-[10px] text-xl">
-              🌐
-            </button>
-
+            <button @click="isLangOpen = !isLangOpen" class="icon-button">🌐</button>
             <transition name="fade-slide">
               <div
                 v-if="isLangOpen"
-                class="absolute right-8 mt-0.5 w-32 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                class="absolute right-0 mt-2 w-36 rounded-xl bg-white shadow-lg ring-1 ring-black/10 text-sm dark:bg-gray-800 dark:text-white"
               >
                 <button
                   v-for="(lang, code) in languages"
                   :key="code"
                   @click="() => { setLanguage(code); isLangOpen = false; }"
-                  class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  :class="{ 'opacity-100': locale === code, 'opacity-50': locale !== code }"
+                  class="dropdown-item"
+                  :class="{ 'dropdown-item--active': locale === code }"
                 >
                   {{ lang.flag }} {{ lang.label }}
                 </button>
@@ -53,41 +68,43 @@
 
           <!-- Burger Menu -->
           <div ref="menuWrapper" class="relative">
-            <button @click="isOpen = !isOpen" class="focus:outline-none">
-              <svg class="w-6 h-6 text-gray-800 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button @click="isOpen = !isOpen" class="icon-button">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-
             <transition name="fade-slide">
               <div
                 v-if="isOpen"
-                class="absolute right-0 mt-0.5 w-48 bg-white border rounded shadow z-50 text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                class="absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-lg ring-1 ring-black/10 text-sm dark:bg-gray-800 dark:text-white"
               >
                 <router-link
                   to="/newgame"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  class="dropdown-item"
+                  :class="{ 'dropdown-item--active': $route.path === '/newgame' }"
                   @click="isOpen = false"
                 >
                   🆕 {{ $t('NewGame') }}
                 </router-link>
                 <router-link
                   to="/listgames"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  class="dropdown-item"
+                  :class="{ 'dropdown-item--active': $route.path === '/listgames' }"
                   @click="isOpen = false"
                 >
                   📋 {{ $t('Games') }}
                 </router-link>
                 <router-link
                   to="/feedback"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  class="dropdown-item"
+                  :class="{ 'dropdown-item--active': $route.path === '/feedback' }"
                   @click="isOpen = false"
                 >
                   💬 {{ $t('Feedback') }}
                 </router-link>
                 <button
-                  class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  class="dropdown-item"
                   @click="toggleDark"
                 >
                   {{ isDark ? '🌙 Darkmode' : '☀️ Lightmode' }}
@@ -98,8 +115,8 @@
         </div>
       </div>
     </nav>
-    <main class="max-w-4xl mx-auto px-4 py-6">
-      <router-view class="mt-8" />
+    <main class="max-w-4xl mx-auto px-4 py-3">
+      <router-view class="mt-4" />
     </main>
   </div>
 </template>
@@ -128,6 +145,10 @@ const languages = {
   fr: { label: 'Français', flag: '🇫🇷' },
   nl: { label: 'Nederlands', flag: '🇳🇱' },
 };
+
+function langButtonClass(code) {
+  return `text-xl transition-opacity ${locale.value === code ? 'opacity-100' : 'opacity-50 hover:opacity-80'}`;
+}
 
 function toggleDark() {
   isDark.value = !isDark.value;
