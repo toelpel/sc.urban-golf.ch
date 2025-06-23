@@ -1,5 +1,8 @@
 <template>
-  <div class="min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-800 dark:text-white">
+  <div class="min-h-screen text-gray-800 dark:text-white bg-white/40 dark:bg-gray-800/60">
+    <BackgroundImage
+      class="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat"
+    />
     <nav class="bg-white border-b p-4 shadow-sm relative z-50 dark:bg-gray-800 dark:text-white dark:border-gray-600">
       <div class="max-w-6xl mx-auto flex justify-between items-center">
         <router-link to="/" class="font-bold text-xl text-green-700 dark:text-green-300">
@@ -95,11 +98,9 @@
         </div>
       </div>
     </nav>
-
     <main class="max-w-4xl mx-auto px-4 py-6">
       <router-view class="mt-8" />
     </main>
-
   </div>
 </template>
 
@@ -107,6 +108,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useI18n } from 'vue-i18n';
 const { locale } = useI18n();
+import BackgroundImage from './components/BackgroundImage.vue'
 
 function setLanguage(lang) {
   locale.value = lang;

@@ -9,19 +9,19 @@
         to="/newgame"
         class="button-primary w-full text-center"
       >
-        🆕 {{ $t('NewGame') }}
+        {{ $t('NewGame') }}
       </router-link>
       <router-link
         to="/listgames"
         class="button-primary w-full text-center"
       >
-        📋 {{ $t('Games') }}
+        {{ $t('Games') }}
       </router-link>
       <router-link
         to="/feedback"
         class="button-primary w-full text-center"
       >
-        💬 {{ $t('Feedback') }}
+        {{ $t('Feedback') }}
       </router-link>
     </div>
     <div class="mt-8 max-w-md mx-auto p-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 rounded shadow">

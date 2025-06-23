@@ -36,8 +36,8 @@
       </div>
 
       <div class="flex w-full gap-4 mt-6">
-        <button @click="goBack" type="button" class="button-primary flex-1">⏪ {{ $t('Back') }}</button>
-        <button type="submit" class="button-primary flex-1">📤 {{ $t('Send') }}</button>
+        <button @click="goBack" type="button" class="button-primary flex-1">{{ $t('Back') }}</button>
+        <button type="submit" class="button-primary flex-1">{{ $t('Send') }}</button>
       </div>
 
     </form>

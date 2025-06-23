@@ -63,7 +63,7 @@
         @click="prevPage"
         class="button-primary flex-1 text-center"
       >
-        ⏪ {{ $t('Back') }}
+        {{ $t('Back') }}
       </button>
 
       <button
@@ -71,7 +71,7 @@
         @click="nextPage"
         class="button-primary flex-1 text-center"
       >
-        ⏩ {{ $t('Forward') }}
+        {{ $t('Forward') }}
       </button>
     </div>
   </div>

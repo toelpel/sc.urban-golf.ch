@@ -28,7 +28,7 @@
         :disabled="players.length >= 10"
         class="button-primary w-full"
       >
-        ➕ {{ $t('NewGame-AddPlayer') }}
+        {{ $t('NewGame-AddPlayer') }}
       </button>
 
       <button
@@ -36,7 +36,7 @@
         :disabled="isSaving"
         class="button-primary w-full"
       >
-        {{ isEditing ? `💾 ${$t('NewGame-SaveChanges')}` : `🏁 ${$t('NewGame-StartGame')}` }}
+        {{ isEditing ? `${$t('NewGame-SaveChanges')}` : `${$t('NewGame-StartGame')}` }}
       </button>
     </div>
   </div>

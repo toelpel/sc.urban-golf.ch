@@ -72,7 +72,7 @@
 
     <div class="mt-6 text-center">
       <button @click="$router.back()" class="button-primary w-full text-center">
-        ⏪ {{ $t('Back') }}
+        {{ $t('Back') }}
       </button>
     </div>
   </div>

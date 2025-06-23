@@ -48,14 +48,14 @@
           v-if="hole > 1"
           class="button-primary flex-1 text-center"
         >
-          ⏪ {{ $t('Back') }}
+          {{ $t('Back') }}
         </router-link>
 
         <router-link
           :to="`/hole/${gameId}/${hole + 1}`"
           class="button-primary flex-1 text-center"
         >
-          ⏩ {{ $t('Forward') }}
+          {{ $t('Forward') }}
         </router-link>
       </div>
 
@@ -63,7 +63,7 @@
         :to="`/scorecard/${gameId}`"
         class="button-primary w-full text-center"
       >
-        📋 {{ $t('Scorecard') }}
+        {{ $t('Scorecard') }}
       </router-link>
     </div>
   </div>
