@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen text-gray-800 dark:text-white bg-white/40 dark:bg-gray-800/60">
     <BackgroundImage />
-    <nav class="sticky top-0 bg-white border-b p-4 shadow-sm z-50 dark:bg-gray-800 dark:text-white dark:border-gray-600 backdrop-blur-md bg-opacity-50 dark:bg-opacity-50">
+    <nav class="sticky top-0 bg-gray-400 border-b p-4 shadow-sm z-50 dark:bg-gray-800 dark:text-white dark:border-gray-600 backdrop-blur-md bg-opacity-50 dark:bg-opacity-50">
       <div class="max-w-6xl mx-auto flex justify-between items-center">
         <router-link to="/" class="font-bold text-xl text-green-700 dark:text-green-300">
           Urban-Golf.ch - ScoreCard

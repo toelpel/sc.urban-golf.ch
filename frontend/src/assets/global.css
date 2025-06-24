@@ -18,10 +18,10 @@
 
 .button-primary {
   @apply inline-block px-5 py-3 rounded-lg font-medium transition
-          text-white bg-blue-600 shadow-md
-          hover:bg-blue-700 hover:shadow-lg hover:-translate-y-[1px]
-          active:translate-y-0 active:shadow
-          focus:outline-none focus:ring focus:ring-blue-400 focus:ring-offset-1
+          text-white bg-blue-500 shadow-md
+          hover:bg-blue-600 hover:shadow-lg
+          active:shadow
+          focus:outline-none focus:ring focus:ring-blue-400
           dark:bg-blue-400 dark:text-gray-900
           dark:hover:bg-blue-300 dark:focus:ring-blue-300
           transform;
