@@ -22,7 +22,8 @@ await fastify.register(cors, {
   origin: (origin, cb) => {
     const allowedOrigins = [
       'https://sc.urban-golf.ch',
-      'https://sc-test.urban-golf.ch'
+      'https://sc-test.urban-golf.ch',
+      'http://localhost:4173'
     ];
     if (!origin || allowedOrigins.includes(origin)) {
       cb(null, true);
@@ -45,7 +46,7 @@ await fastify.register(fastifyHelmet, {
       styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       imgSrc: ["'self'", 'data:'],
-      connectSrc: ["'self'", 'https://*.supabase.co'],
+      connectSrc: ["'self'", 'https://*.supabase.co', 'http://localhost:4173']
     }
   }
 });
