@@ -23,9 +23,8 @@
       <div class="flex items-center justify-center space-x-4">
         <button
           @click="changeStrokes(player.id, -1)"
-          class="button-primary w-10 h-10 flex items-center justify-center text-xl font-bold"
-          aria-label="Weniger Schläge"
-        >–</button>
+          class="button-primary"
+        >➖</button>
 
         <select
           v-model="scores[player.id]"
@@ -37,9 +36,8 @@
 
         <button
           @click="changeStrokes(player.id, 1)"
-          class="button-primary w-10 h-10 flex items-center justify-center text-xl font-bold"
-          aria-label="Mehr Schläge"
-        >+</button>
+          class="button-primary"
+        >➕</button>
       </div>
     </div>
 
