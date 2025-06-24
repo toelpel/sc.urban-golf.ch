@@ -2,7 +2,6 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 import { VitePWA } from 'vite-plugin-pwa';
-import { viteSitemapPlugin } from 'vite-plugin-sitemap';
 
 export default defineConfig({
   plugins: [
@@ -43,15 +42,6 @@ export default defineConfig({
           }
         ]
       }
-    }),
-    viteSitemapPlugin({
-      hostname: 'https://sc-test.urban-golf.ch',
-      routes: [
-        '/new/',
-        '/new/newgame',
-        '/new/listgames',
-        '/new/feedback',
-      ],
     })
   ],
   resolve: {
