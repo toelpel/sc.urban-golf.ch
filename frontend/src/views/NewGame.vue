@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4">
+  <div>
     <h1 class="text-2xl font-bold mb-4 text-center">
       {{ isEditing ? $t('NewGame-TitleEdit') : $t('NewGame-TitleNew') }}
     </h1>

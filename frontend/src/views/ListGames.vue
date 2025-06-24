@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4">
+  <div>
     <h1 class="text-2xl font-bold mb-6 text-center">{{ $t('ListGames-AllGames') }}</h1>
 
     <!-- Suchfeld mit Lösch-Icon -->
