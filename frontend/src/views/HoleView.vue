@@ -23,8 +23,19 @@
       <div class="flex items-center justify-center space-x-4">
         <button
           @click="changeStrokes(player.id, -1)"
-          class="button-primary"
-        >➖</button>
+          class="button-primary w-10 h-10 flex items-center justify-center"
+          aria-label="Weniger Schläge"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5 -translate-y-[1px] -translate-x-[10px]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="4"
+              stroke-linecap="butt">
+            <path d="M5 12h14" />
+          </svg>
+        </button>
 
         <select
           v-model="scores[player.id]"
@@ -33,11 +44,21 @@
         >
           <option v-for="n in range(-3, 15)" :key="n" :value="n">{{ n }}</option>
         </select>
-
         <button
           @click="changeStrokes(player.id, 1)"
-          class="button-primary"
-        >➕</button>
+          class="button-primary w-10 h-10 flex items-center justify-center"
+          aria-label="Mehr Schläge"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 -translate-y-[1px] -translate-x-[10px]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="4"
+            stroke-linecap="butt">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </button>
       </div>
     </div>
 
