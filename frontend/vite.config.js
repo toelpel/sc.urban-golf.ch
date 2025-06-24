@@ -1,14 +1,20 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
-import { VitePWA } from 'vite-plugin-pwa'
+import { VitePWA } from 'vite-plugin-pwa';
+import { viteSitemapPlugin } from 'vite-plugin-sitemap';
 
 export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'icons/web-app-manifest-192x192.png', 'icons/web-app-manifest-512x512.png'],
+      includeAssets: [
+        'favicon.ico',
+        'robots.txt',
+        'icons/web-app-manifest-192x192.png',
+        'icons/web-app-manifest-512x512.png'
+      ],
       manifest: {
         name: 'Urban-Golf.ch ScoreCard',
         short_name: 'ScoreCard',
@@ -37,6 +43,15 @@ export default defineConfig({
           }
         ]
       }
+    }),
+    viteSitemapPlugin({
+      hostname: 'https://sc-test.urban-golf.ch',
+      routes: [
+        '/new/',
+        '/new/newgame',
+        '/new/listgames',
+        '/new/feedback',
+      ],
     })
   ],
   resolve: {
@@ -45,5 +60,5 @@ export default defineConfig({
     },
   },
   base: '/new/',
-  publicDir: resolve(__dirname, 'public') // ← sorgt dafür, dass .htaccess beim Build nach dist/ kopiert wird
+  publicDir: resolve(__dirname, 'public')
 });
