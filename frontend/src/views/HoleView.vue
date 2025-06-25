@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1 class="text-2xl font-bold mb-1">
+    <h1 class="text-2xl font-bold mb-1 text-center">
       {{ gameName }} – {{ $t('Hole') }} {{ hole }} –
-      <router-link :to="{ name: 'NewGame', query: { gameId: gameId } }" class="text-blue-500">✏️</router-link>
+      <router-link :to="{ name: 'NewGame', query: { gameId: gameId } }" class="text-blue-500">🖉</router-link>
     </h1>
     <div class="flex flex-wrap justify-center gap-2 my-4 items-center text-sm text-gray-700 dark:text-gray-300">
       <span class="mr-2 font-medium">{{ $t('Hole') }}:</span>
