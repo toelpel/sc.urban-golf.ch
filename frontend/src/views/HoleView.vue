@@ -5,7 +5,6 @@
       <router-link :to="{ name: 'NewGame', query: { gameId: gameId } }" class="text-blue-500">✏️</router-link>
     </h1>
     <div class="flex flex-wrap justify-center gap-2 my-4 items-center text-sm text-gray-700 dark:text-gray-300">
-      <span class="mr-2 font-medium">{{ $t('Hole') }}:</span>
       <router-link
         v-for="n in holes"
         :key="n"
@@ -19,8 +18,10 @@
       </router-link>
     </div>
     <div v-for="player in players" :key="player.id" class="mb-6 border-t pt-4">
-      <div class="text-lg font-semibold mb-2">{{ player.name }}</div>
-      <div class="flex items-center justify-center space-x-4">
+      <div class="flex items-center space-x-4">
+        <div class="w-48 truncate self-center text-left text-lg font-bold text-gray-800 dark:text-gray-100 leading-tight pr-2" :title="player.name">
+          {{ player.name }}
+        </div>
         <button
           @click="changeStrokes(player.id, -1)"
           class="button-primary w-10 h-10 flex items-center justify-center"
@@ -40,28 +41,28 @@
         <select
           v-model="scores[player.id]"
           @change="saveScore(player.id)"
-          class="select-field"
+          class="select-field w-16 text-center"
         >
           <option v-for="n in range(-3, 15)" :key="n" :value="n">{{ n }}</option>
         </select>
+
         <button
           @click="changeStrokes(player.id, 1)"
           class="button-primary w-10 h-10 flex items-center justify-center"
           aria-label="Mehr Schläge"
         >
           <svg xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5 -translate-y-[1px] -translate-x-[10px]"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="4"
-            stroke-linecap="butt">
+              class="w-5 h-5 -translate-y-[1px] -translate-x-[10px]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="4"
+              stroke-linecap="butt">
             <path d="M12 5v14M5 12h14" />
           </svg>
         </button>
       </div>
     </div>
-
     <div class="flex flex-col items-stretch gap-3 mt-6">
       <div class="flex flex-row gap-3">
         <router-link

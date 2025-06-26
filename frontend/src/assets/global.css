@@ -55,6 +55,11 @@
   dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:bg-opacity-50
 }
 
+.responsive-footer {
+  font-size: clamp(10px, 1.2vw, 0.875rem); /* 0.875rem = text-sm */
+  white-space: nowrap;
+}
+
 .material-nav-link {
   @apply px-4 py-2 rounded-md font-medium transition
           text-gray-700 dark:text-white

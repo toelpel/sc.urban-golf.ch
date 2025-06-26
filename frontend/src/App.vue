@@ -3,9 +3,12 @@
     <BackgroundImage />
     <nav class="nav-bar">
       <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <router-link to="/" class="font-bold text-xl text-green-700 dark:text-green-300">
-          Urban-Golf.ch - ScoreCard
-        </router-link>
+        <div class="flex items-center space-x-4">
+          <img src="/icons/web-app-manifest-192x192.png" alt="ScoreCard" class="w-8 h-8" />
+          <router-link to="/" class="font-bold text-xl text-green-700 dark:text-green-300">
+            ScoreCard
+          </router-link>
+        </div>
 
         <!-- Top-Navigation: Desktop -->
         <div class="hidden md:flex items-center gap-3">
