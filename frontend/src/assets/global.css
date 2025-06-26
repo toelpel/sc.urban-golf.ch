@@ -51,8 +51,13 @@
 }
 
 .nav-bar {
-  @apply sticky top-0 bg-gray-400 border-b border-gray-300 p-4 shadow-sm z-50  backdrop-blur-md bg-opacity-50 
+  @apply z-10 sticky top-0 bg-gray-400 border-b border-gray-400 p-4 shadow-sm z-50 backdrop-blur-md bg-opacity-50 
   dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:bg-opacity-50
+}
+
+.footer-bar {
+  @apply z-10 text-center text-sm text-gray-500 py-1 border-t responsive-footer bg-gray-400 border-gray-400 shadow-sm z-50 backdrop-blur-md bg-opacity-50
+  dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:bg-opacity-50
 }
 
 .responsive-footer {

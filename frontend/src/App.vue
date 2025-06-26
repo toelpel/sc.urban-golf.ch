@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen text-gray-800 dark:text-white bg-white/40 dark:bg-gray-800/60">
+  <div class="h-screen grid grid-rows-[auto_1fr_auto] text-gray-800 dark:text-white bg-white/40 dark:bg-gray-800/60">
     <BackgroundImage />
     <nav class="nav-bar">
       <div class="max-w-6xl mx-auto flex justify-between items-center">
@@ -12,25 +12,16 @@
 
         <!-- Top-Navigation: Desktop -->
         <div class="hidden md:flex items-center gap-3">
-          <router-link
-            to="/newgame"
-            class="material-nav-link"
-            :class="{ 'material-nav-link--active': $route.path === '/newgame' }"
-          >
+          <router-link to="/newgame" class="material-nav-link"
+            :class="{ 'material-nav-link--active': $route.path === '/newgame' }">
             🆕 {{ $t('NewGame') }}
           </router-link>
-          <router-link
-            to="/listgames"
-            class="material-nav-link"
-            :class="{ 'material-nav-link--active': $route.path === '/listgames' }"
-          >
+          <router-link to="/listgames" class="material-nav-link"
+            :class="{ 'material-nav-link--active': $route.path === '/listgames' }">
             📋 {{ $t('Games') }}
           </router-link>
-          <router-link
-            to="/feedback"
-            class="material-nav-link"
-            :class="{ 'material-nav-link--active': $route.path === '/feedback' }"
-          >
+          <router-link to="/feedback" class="material-nav-link"
+            :class="{ 'material-nav-link--active': $route.path === '/feedback' }">
             💬 {{ $t('Feedback') }}
           </router-link>
 
@@ -52,17 +43,11 @@
           <div ref="langMenuWrapper" class="relative">
             <button @click="isLangOpen = !isLangOpen" class="icon-button">🌐</button>
             <transition name="fade-slide">
-              <div
-                v-if="isLangOpen"
-                class="absolute right-0 mt-2 w-36 rounded-xl bg-white shadow-lg ring-1 ring-black/10 text-sm dark:bg-gray-800 dark:text-white"
-              >
-                <button
-                  v-for="(lang, code) in languages"
-                  :key="code"
-                  @click="() => { setLanguage(code); isLangOpen = false; }"
-                  class="dropdown-item"
-                  :class="{ 'dropdown-item--active': locale === code }"
-                >
+              <div v-if="isLangOpen"
+                class="absolute right-0 mt-2 w-36 rounded-xl bg-white shadow-lg ring-1 ring-black/10 text-sm dark:bg-gray-800 dark:text-white">
+                <button v-for="(lang, code) in languages" :key="code"
+                  @click="() => { setLanguage(code); isLangOpen = false; }" class="dropdown-item"
+                  :class="{ 'dropdown-item--active': locale === code }">
                   {{ lang.flag }} {{ lang.label }}
                 </button>
               </div>
@@ -73,43 +58,25 @@
           <div ref="menuWrapper" class="relative">
             <button @click="isOpen = !isOpen" class="icon-button">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
             <transition name="fade-slide">
-              <div
-                v-if="isOpen"
-                class="absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-lg ring-1 ring-black/10 text-sm dark:bg-gray-800 dark:text-white"
-              >
-                <router-link
-                  to="/newgame"
-                  class="dropdown-item"
-                  :class="{ 'dropdown-item--active': $route.path === '/newgame' }"
-                  @click="isOpen = false"
-                >
+              <div v-if="isOpen"
+                class="absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-lg ring-1 ring-black/10 text-sm dark:bg-gray-800 dark:text-white">
+                <router-link to="/newgame" class="dropdown-item"
+                  :class="{ 'dropdown-item--active': $route.path === '/newgame' }" @click="isOpen = false">
                   🆕 {{ $t('NewGame') }}
                 </router-link>
-                <router-link
-                  to="/listgames"
-                  class="dropdown-item"
-                  :class="{ 'dropdown-item--active': $route.path === '/listgames' }"
-                  @click="isOpen = false"
-                >
+                <router-link to="/listgames" class="dropdown-item"
+                  :class="{ 'dropdown-item--active': $route.path === '/listgames' }" @click="isOpen = false">
                   📋 {{ $t('Games') }}
                 </router-link>
-                <router-link
-                  to="/feedback"
-                  class="dropdown-item"
-                  :class="{ 'dropdown-item--active': $route.path === '/feedback' }"
-                  @click="isOpen = false"
-                >
+                <router-link to="/feedback" class="dropdown-item"
+                  :class="{ 'dropdown-item--active': $route.path === '/feedback' }" @click="isOpen = false">
                   💬 {{ $t('Feedback') }}
                 </router-link>
-                <button
-                  class="dropdown-item"
-                  @click="toggleDark"
-                >
+                <button class="dropdown-item" @click="toggleDark">
                   {{ isDark ? '🌙 Darkmode' : '☀️ Lightmode' }}
                 </button>
               </div>
@@ -118,9 +85,14 @@
         </div>
       </div>
     </nav>
-    <main class="max-w-4xl mx-auto px-4 py-3">
-      <router-view class="mt-4" />
+    <main class="overflow-y-auto overflow-x-hidden">
+      <div class="max-w-4xl mx-auto px-4 py-3">
+        <router-view />
+      </div>
     </main>
+    <footer class="footer-bar">
+      © {{ new Date().getFullYear() }} Urban Golf ScoreCard – made with ♥ in Winterthur by urban-golf.ch
+    </footer>
   </div>
 </template>
 
@@ -199,6 +171,7 @@ onBeforeUnmount(() => {
 .fade-slide-leave-active {
   transition: all 0.2s ease;
 }
+
 .fade-slide-enter-from,
 .fade-slide-leave-to {
   opacity: 0;
