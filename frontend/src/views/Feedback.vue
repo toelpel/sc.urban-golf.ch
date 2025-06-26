@@ -6,7 +6,7 @@
       {{ $t('Feedback-ThankYou') }}
 
       <div class="flex w-full mt-6">
-      <button @click="goBack" class="button-primary flex-1">⏪ {{ $t('Back') }}</button>
+      <button @click="goBack" class="button-primary flex-1">{{ $t('Back') }}</button>
     </div>
 
     </div>
