@@ -4,17 +4,10 @@
 
     <!-- Suchfeld mit Lösch-Icon -->
     <div class="relative mb-4">
-      <input
-        type="text"
-        v-model="searchTerm"
-        :placeholder="`🔍 ${$t('ListGames-SearchText')}`"
-        class="input-field w-full pr-10"
-      />
-      <button
-        v-if="searchTerm"
-        @click="searchTerm = ''"
-        class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white"
-      >
+      <input type="text" v-model="searchTerm" :placeholder="`🔍 ${$t('ListGames-SearchText')}`"
+        class="input-field w-full pr-10" />
+      <button v-if="searchTerm" @click="searchTerm = ''"
+        class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white">
         ✕
       </button>
     </div>
@@ -24,11 +17,8 @@
     </div>
 
     <ul v-else class="space-y-3">
-      <li
-        v-for="game in paginatedGames"
-        :key="game.id"
-        class="bg-white shadow-sm rounded py-3 px-4 hover:bg-gray-50 dark:bg-gray-800 dark:text-white"
-      >
+      <li v-for="game in paginatedGames" :key="game.id"
+        class="bg-white shadow-sm rounded py-3 px-4 hover:bg-gray-50 dark:bg-gray-800 dark:text-white">
         <div class="flex justify-between items-center">
           <div>
             <div class="font-semibold text-lg">{{ game.name }}</div>
@@ -58,19 +48,11 @@
     </ul>
 
     <div v-if="totalPages > 1" class="flex flex-row gap-3 mt-6">
-      <button
-        v-if="currentPage > 1"
-        @click="prevPage"
-        class="button-primary flex-1 text-center"
-      >
+      <button v-if="currentPage > 1" @click="prevPage" class="button-primary flex-1 text-center">
         {{ $t('Back') }}
       </button>
 
-      <button
-        v-if="currentPage < totalPages"
-        @click="nextPage"
-        class="button-primary flex-1 text-center"
-      >
+      <button v-if="currentPage < totalPages" @click="nextPage" class="button-primary flex-1 text-center">
         {{ $t('Forward') }}
       </button>
     </div>

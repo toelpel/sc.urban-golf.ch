@@ -4,7 +4,7 @@
       {{ isEditing ? $t('NewGame-TitleEdit') : $t('NewGame-TitleNew') }}
     </h1>
 
-    <div class="flex flex-col items-stretch gap-4 max-w-md mt-6 mx-auto">
+    <div class="flex flex-col items-stretch gap-4 mt-6">
       <input
         type="text"
         v-model="gameName"

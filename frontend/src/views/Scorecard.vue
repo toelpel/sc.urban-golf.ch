@@ -7,62 +7,38 @@
     </div>
 
     <div v-else class="overflow-x-auto">
-      <table class="min-w-max w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm">
+      <table class="scorecard-table">
         <thead class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100">
           <tr>
-            <th
-              class="sticky left-0 z-10 bg-gray-100 dark:bg-gray-800 text-left px-4 py-2 border-r border-gray-300 dark:border-gray-600 cursor-pointer"
-              @click="sortBy('name')"
-            >
+            <th class="scorecard-header-cell sticky left-0 cursor-pointer z-10" @click="sortBy('name')">
               {{ $t('Player') }}
               <span v-if="sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
             </th>
-            <th
-              v-for="hole in holes"
-              :key="hole"
-              class="text-center px-3 py-2 border-x border-gray-200 dark:border-gray-700 whitespace-nowrap"
-            >
-              <router-link
-                :to="`/hole/${gameId}/${hole}`"
-                class="hover:underline text-blue-600 dark:text-blue-400"
-              >
+            <th v-for="hole in holes" :key="hole" class="scorecard-header-cell">
+              <router-link :to="`/hole/${gameId}/${hole}`" class="hover:underline text-blue-600 dark:text-blue-400">
                 {{ hole }}
               </router-link>
             </th>
-            <th
-              class="sticky right-12 z-10 bg-gray-100 dark:bg-gray-800 text-center px-3 py-2 border-l border-gray-300 dark:border-gray-600 cursor-pointer"
-              @click="sortBy('average')"
-            >
+            <th class="scorecard-header-cell sticky right-12 z-10 cursor-pointer" @click="sortBy('average')">
               Ø <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
             </th>
-            <th
-              class="sticky right-0 z-10 bg-gray-100 dark:bg-gray-800 text-center px-3 py-2 border-l border-gray-300 dark:border-gray-600 cursor-pointer"
-              @click="sortBy('total')"
-            >
+            <th class="scorecard-header-cell sticky right-0 z-10 cursor-pointer" @click="sortBy('total')">
               {{ $t('Total') }} <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="player in sortedPlayers"
-            :key="player.id"
-            class="border-b border-gray-300 dark:border-gray-700"
-          >
-            <td class="sticky left-0 z-10 bg-white dark:bg-gray-900 text-left px-4 py-2 border-r border-gray-300 dark:border-gray-600 font-medium">
+          <tr v-for="player in sortedPlayers" :key="player.id" class="scorecard-hover-row">
+            <td class="scorecard-player-cell">
               {{ player.name }}
             </td>
-            <td
-              v-for="hole in holes"
-              :key="hole"
-              class="text-center px-3 py-2 border-x border-gray-200 dark:border-gray-700"
-            >
+            <td v-for="hole in holes" :key="hole" class="scorecard-cell">
               {{ scores[player.id]?.[hole] ?? '–' }}
             </td>
-            <td class="sticky right-12 z-10 bg-white dark:bg-gray-900 text-center px-3 py-2 border-l border-gray-300 dark:border-gray-600 text-sm">
+            <td class="scorecard-metric-cell right-12">
               {{ averageScore(player.id) }}
             </td>
-            <td class="sticky right-0 z-10 bg-white dark:bg-gray-900 text-center px-3 py-2 border-l border-gray-300 dark:border-gray-600 font-semibold">
+            <td class="scorecard-metric-cell right-0">
               {{ totalScore(player.id) }}
             </td>
           </tr>

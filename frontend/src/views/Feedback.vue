@@ -1,21 +1,21 @@
 <template>
   <div>
     <h1 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">{{ $t('Feedback-Title') }}</h1>
-    
+
     <div v-if="submitted" class="text-green-600 dark:text-green-400">
       {{ $t('Feedback-ThankYou') }}
 
       <div class="flex w-full mt-6">
-      <button @click="goBack" class="button-primary flex-1">{{ $t('Back') }}</button>
-    </div>
+        <button @click="goBack" class="button-primary flex-1">{{ $t('Back') }}</button>
+      </div>
 
     </div>
-    
+
     <form v-else @submit.prevent="submitFeedback" class="space-y-4">
       <label class="label">{{ $t('Feedback-RatingTitle') }}</label>
       <div class="flex space-x-2">
         <button v-for="n in 5" :key="n" type="button" @click="rating = n" class="text-2xl"
-                :class="rating >= n ? 'text-yellow-400' : 'text-gray-300'">
+          :class="rating >= n ? 'text-yellow-400' : 'text-gray-300'">
           ★
         </button>
       </div>
