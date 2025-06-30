@@ -7,5 +7,10 @@ module.exports = {
   theme: {
     extend: {},
   },
+  safelist: [
+    {
+      pattern: /^(sticky|min-w-max|left|right)-/,
+    },
+  ],
   plugins: [],
 };
