@@ -35,7 +35,7 @@ export default async function (fastify, opts) {
 
       // Benachrichtigung senden
       await transporter.sendMail({
-        from: '"Urban-Golf.ch ScoreCard" <909864001@smtp-brevo.com>',
+        from: '"Urban-Golf.ch ScoreCard" <spam@teevau3.ch>',
         to: process.env.ADMIN_EMAIL,
         subject: '🎉 Neues Feedback eingegangen',
         text: `Bewertung: ${rating}/5\nVon: ${name || 'Anonym'} <${email || 'keine Email'}>\n\n${message}`,
