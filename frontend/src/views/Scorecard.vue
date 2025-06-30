@@ -29,16 +29,16 @@
         </thead>
         <tbody>
           <tr v-for="player in sortedPlayers" :key="player.id" class="scorecard-hover-row">
-            <td class="scorecard-player-cell">
+            <td class="scorecard-player-cell sticky left-0">
               {{ player.name }}
             </td>
             <td v-for="hole in holes" :key="hole" class="scorecard-cell">
               {{ scores[player.id]?.[hole] ?? '–' }}
             </td>
-            <td class="scorecard-metric-cell right-12">
+            <td class="scorecard-metric-cell sticky right-12">
               {{ averageScore(player.id) }}
             </td>
-            <td class="scorecard-metric-cell right-0">
+            <td class="scorecard-metric-cell sticky right-0">
               {{ totalScore(player.id) }}
             </td>
           </tr>

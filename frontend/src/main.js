@@ -28,3 +28,39 @@ createApp(App)
   .use(router)
   .use(i18n)
   .mount('#app');
+
+import { registerSW } from 'virtual:pwa-register';
+
+const updateSW = registerSW({
+  onNeedRefresh() {
+    showUpdateToast();
+  },
+  onOfflineReady() {
+    console.log('App ist bereit für Offline-Nutzung.');
+  }
+});
+
+function showUpdateToast() {
+  const toast = document.createElement('div');
+  toast.className = `
+    fixed bottom-4 left-1/2 transform -translate-x-1/2
+    bg-gray-800 text-white px-4 py-3 rounded-2xl shadow-lg z-50
+    flex items-center space-x-4 animate-fade-in
+  `;
+  toast.innerHTML = `
+    <span class="text-sm">🔄 Neue Version verfügbar.</span>
+    <button class="ml-auto text-sm underline hover:text-gray-300">Neu laden</button>
+  `;
+
+  const button = toast.querySelector('button');
+  button.addEventListener('click', () => {
+    updateSW(true); // aktiviert neuen Service Worker & lädt neu
+  });
+
+  document.body.appendChild(toast);
+
+  // Optional: nach 20 Sekunden automatisch entfernen
+  setTimeout(() => {
+    toast.remove();
+  }, 20000);
+}

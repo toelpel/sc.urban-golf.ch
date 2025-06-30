@@ -93,11 +93,11 @@
 }
 
 .scorecard-player-cell {
-  @apply sticky left-0 bg-white dark:bg-gray-900 text-left px-4 py-2 font-medium border-r border-gray-300 dark:border-gray-600 z-10;
+  @apply bg-white dark:bg-gray-900 text-left px-4 py-2 font-medium border-r border-gray-300 dark:border-gray-600 z-10;
 }
 
 .scorecard-metric-cell {
-  @apply sticky z-10 text-center px-3 py-2 font-semibold border-l border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900;
+  @apply z-10 text-center px-3 py-2 font-semibold border-l border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900;
 }
 
 .scorecard-hover-row:hover {
