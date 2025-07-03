@@ -33,7 +33,7 @@
           </div>
 
           <button @click="toggleDark" class="text-2xl ml-3 hover:scale-110 transition">
-            {{ isDark ? '🌙' : '☀️' }}
+            {{ isDark ? '☀️' : '🌙' }}
           </button>
         </div>
 
@@ -77,7 +77,7 @@
                   💬 {{ $t('Feedback') }}
                 </router-link>
                 <button class="dropdown-item" @click="toggleDark">
-                  {{ isDark ? '🌙 Darkmode' : '☀️ Lightmode' }}
+                  {{ isDark ? '☀️ Lightmode' : '🌙 Darkmode' }}
                 </button>
               </div>
             </transition>

@@ -12,7 +12,7 @@
         {{ n }}
       </router-link>
     </div>
-    <div v-for="player in players" :key="player.id" class="mb-6 border-t pt-4">
+    <div v-for="player in players" :key="player.id" class="mb-2 border-t pt-2">
       <div class="flex items-center space-x-4">
         <div
           class="w-48 truncate self-center text-left text-lg font-bold text-gray-800 dark:text-gray-100 leading-tight pr-2"
