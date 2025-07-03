@@ -1,49 +1,57 @@
 <template>
   <div>
-    <h1 class="text-2xl font-bold mb-6 text-center">{{ $t('ListGames-AllGames') }}</h1>
+    <h1 class="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
+      {{ $t('ListGames-AllGames') }}
+    </h1>
 
     <!-- Suchfeld mit Lösch-Icon -->
     <div class="relative mb-4">
       <input type="text" v-model="searchTerm" :placeholder="`🔍 ${$t('ListGames-SearchText')}`"
         class="input-field w-full pr-10" />
       <button v-if="searchTerm" @click="searchTerm = ''"
-        class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white">
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white">
         ✕
       </button>
     </div>
 
-    <div v-if="paginatedGames.length === 0" class="text-center text-gray-500">
+    <div v-if="paginatedGames.length === 0" class="text-center text-gray-500 dark:text-gray-400">
       {{ $t('ListGames-NoGamesFound') }}
     </div>
 
-    <ul v-else class="space-y-3">
+    <ul v-else class="space-y-2">
       <li v-for="game in paginatedGames" :key="game.id"
-        class="bg-white shadow-sm rounded py-3 px-4 hover:bg-gray-50 dark:bg-gray-800 dark:text-white">
+        class="bg-white/80 dark:bg-gray-900/80 shadow-md rounded-2xl px-5 py-4 transition-transform transform hover:scale-[1.01] border border-gray-200 dark:border-gray-700">
         <div class="flex justify-between items-center">
-          <div>
-            <div class="font-semibold text-lg">{{ game.name }}</div>
-            <div class="text-sm text-gray-500">
+          <div class="flex flex-col">
+            <div class="font-medium text-lg text-gray-800 dark:text-white">{{ game.name }}</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate"
+              :title="playerMap[game.id]?.join(', ')">
               {{ formatDate(game.created_at) }}
               <span v-if="playerMap[game.id]">– {{ playerMap[game.id].join(', ') }}</span>
             </div>
           </div>
-          <div class="flex gap-2 items-center">
-            <router-link :to="`/scorecard/${game.id}`" class="button-primary">📋</router-link>
-            <button @click="toggleDetails(game.id)" class="text-xl">
+          <div class="flex gap-3 items-center">
+            <router-link :to="`/scorecard/${game.id}`" class="button-primary text-sm">📋</router-link>
+            <button @click="toggleDetails(game.id)"
+              class="text-xl text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white">
               {{ expandedGameId === game.id ? '▾' : '▸' }}
             </button>
           </div>
         </div>
 
         <!-- Detailbereich -->
-        <div v-if="expandedGameId === game.id" class="mt-3 border-t pt-3 text-sm text-gray-700 dark:text-gray-300">
-          <div class="mb-2">🕳️ {{ $t('ListGames-HolesPlayed') }}: {{ gameMeta[game.id]?.holes?.length || 0 }}</div>
-          <div>
-            <div v-for="player in gameMeta[game.id]?.players || []" :key="player.id" class="mb-1">
-              {{ player.name }} – Ø {{ player.avg.toFixed(2) }} – Σ {{ player.total }}
+        <transition name="fade">
+          <div v-if="expandedGameId === game.id"
+            class="mt-4 pt-3 border-t border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300">
+            <div class="mb-2">🕳️ {{ $t('ListGames-HolesPlayed') }}: {{ gameMeta[game.id]?.holes?.length || 0 }}</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
+              <div v-for="player in gameMeta[game.id]?.players || []" :key="player.id" class="truncate"
+                :title="player.name">
+                {{ player.name }} – Ø {{ player.avg.toFixed(2) }} – Σ {{ player.total }}
+              </div>
             </div>
           </div>
-        </div>
+        </transition>
       </li>
     </ul>
 
@@ -51,7 +59,6 @@
       <button v-if="currentPage > 1" @click="prevPage" class="button-primary flex-1 text-center">
         {{ $t('Back') }}
       </button>
-
       <button v-if="currentPage < totalPages" @click="nextPage" class="button-primary flex-1 text-center">
         {{ $t('Forward') }}
       </button>
