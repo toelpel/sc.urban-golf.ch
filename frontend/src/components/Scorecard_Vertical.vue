@@ -1,6 +1,6 @@
 <template>
     <div
-        class="rounded-lg shadow-lg border border-gray-300 dark:border-gray-700 overflow-y-auto max-h-[calc(100dvh-11rem)] md:max-h-[calc(100dvh-13rem)]">
+        class="relative rounded-lg shadow-lg border border-gray-300 dark:border-gray-700 overflow-y-auto max-h-[calc(100dvh-11rem)] md:max-h-[calc(100dvh-13rem)]">
         <table class="scorecard-table w-full">
             <thead class="bg-white/80 dark:bg-gray-900/80">
                 <tr>
@@ -24,7 +24,8 @@
                             {{ hole }}
                         </router-link>
                     </td>
-                    <td v-for="player in sortedPlayers" :key="player.id" class="scorecard-cell bg-white/80 dark:bg-gray-900/80 max-w-[10rem] truncate">
+                    <td v-for="player in sortedPlayers" :key="player.id"
+                        class="scorecard-cell bg-white/80 dark:bg-gray-900/80 max-w-[10rem] truncate">
                         {{ scores[player.id]?.[hole] ?? '–' }}
                     </td>
                 </tr>

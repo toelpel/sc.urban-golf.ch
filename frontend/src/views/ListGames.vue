@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
+    <h1 class="maintitle">
       {{ $t('ListGames-AllGames') }}
     </h1>
 

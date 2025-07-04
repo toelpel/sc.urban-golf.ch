@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <h1 class="text-2xl sm:text-3xl font-bold mb-4 whitespace-nowrap">{{ $t('Home-Title') }}</h1>
+    <h1 class="maintitle">{{ $t('Home-Title') }}</h1>
     <p class="mb-6 text-gray-700 dark:text-gray-300">
       {{ $t('Home-Text') }}
     </p>

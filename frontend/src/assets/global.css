@@ -13,6 +13,10 @@
           dark:focus:ring-blue-300 dark:focus:border-blue-400;
 }
 
+.maintitle {
+  @apply text-2xl font-semibold mb-4 text-gray-800 dark:text-white text-center whitespace-nowrap;
+}
+
 .button-primary {
   @apply inline-block px-5 py-3 rounded-lg font-medium transition
           text-white bg-blue-500 shadow-md

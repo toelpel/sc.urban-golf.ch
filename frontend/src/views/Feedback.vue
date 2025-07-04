@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">{{ $t('Feedback-Title') }}</h1>
+    <h1 class="maintitle">{{ $t('Feedback-Title') }}</h1>
 
     <div v-if="submitted" class="text-green-600 dark:text-green-400">
       {{ $t('Feedback-ThankYou') }}
