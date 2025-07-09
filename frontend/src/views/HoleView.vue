@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-2xl font-bold mb-1 text-center">
+    <h1 class="maintitle">
       {{ gameName }} – {{ $t('Hole') }} {{ hole }} –
       <router-link :to="{ name: 'NewGame', query: { gameId: gameId } }" class="text-blue-500">✏️</router-link>
     </h1>

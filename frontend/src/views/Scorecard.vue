@@ -2,7 +2,7 @@
   <div class="flex flex-col max-w-6xl mx-auto">
     <!-- HEADER -->
     <div class="shrink-0">
-      <h1 class="text-2xl font-bold mb-4 text-center">Scorecard – {{ gameName }}</h1>
+      <h1 class="maintitle">Scorecard – {{ gameName }}</h1>
     </div>
 
     <!-- LOADING -->
@@ -12,7 +12,7 @@
 
     <!-- MAIN (scrollable Tabelle) -->
     <div v-else>
-      <ScorecardVertical :players="sortedPlayers" :holes="holes" :scores="scores" :game-id="gameId"
+      <ScorecardHorizontal :players="sortedPlayers" :holes="holes" :scores="scores" :game-id="gameId"
         :sort-column="sortColumn" :sort-direction="sortDirection" :sorted-players="sortedPlayers"
         :average-score="averageScore" :total-score="totalScore" @sort="sortBy" />
     </div>
@@ -23,7 +23,7 @@
 import { onMounted, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
-import ScorecardVertical from '../components/Scorecard_Vertical.vue';
+import ScorecardHorizontal from '../components/Scorecard_Horizontal.vue';
 
 const route = useRoute();
 const gameId = route.params.id;
