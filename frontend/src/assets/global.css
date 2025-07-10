@@ -85,13 +85,13 @@
 
 .scorecard-table {
   @apply w-full min-w-max rounded-xl shadow-lg border border-gray-300 dark:border-gray-700
-          bg-white/90 dark:bg-gray-900/90 backdrop-blur-md overflow-hidden;
+          bg-white dark:bg-gray-900 overflow-hidden;
 }
 
 /* Workaround für sticky table cells auf mobilen Browsern */
 .scorecard-table th,
 .scorecard-table td {
-  @apply bg-white/90 dark:bg-gray-900/90;
+  @apply bg-white dark:bg-gray-900;
 }
 
 .scorecard-header-cell {
@@ -103,11 +103,11 @@
 }
 
 .scorecard-player-cell {
-  @apply text-left px-4 py-2 font-medium border-r border-gray-300 dark:border-gray-600 z-20 bg-white/90 dark:bg-gray-900/90;
+  @apply text-left px-4 py-2 font-medium border-r border-gray-300 dark:border-gray-600 z-20 bg-white dark:bg-gray-900;
 }
 
 .scorecard-metric-cell {
-  @apply text-center px-3 py-2 font-semibold border-l border-gray-300 dark:border-gray-600 z-20 bg-white/90 dark:bg-gray-900/90;
+  @apply text-center px-3 py-2 font-semibold border-l border-gray-300 dark:border-gray-600 z-20 bg-white dark:bg-gray-900;
 }
 
 .scorecard-hover-row:hover {
