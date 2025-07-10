@@ -7,7 +7,7 @@
                         <th class="scorecard-header-cell sticky left-0 cursor-pointer z-10"
                             @click="$emit('sort', 'name')">
                             {{ $t('Player') }}
-                            <span v-if="sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
+                            <span v-if="props.sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
                         </th>
                         <th v-for="hole in holes" :key="hole" class="scorecard-header-cell">
                             <router-link :to="`/hole/${gameId}/${hole}`"
@@ -17,11 +17,11 @@
                         </th>
                         <th class="scorecard-header-cell sticky right-12 z-10 cursor-pointer"
                             @click="$emit('sort', 'average')">
-                            Ø <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
+                            Ø <span v-if="props.sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
                         </th>
                         <th class="scorecard-header-cell sticky right-0 z-10 cursor-pointer"
                             @click="$emit('sort', 'total')">
-                            {{ $t('Total') }} <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
+                            {{ $t('Total') }} <span v-if="props.sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
                         </th>
                     </tr>
                 </thead>
@@ -47,7 +47,7 @@
 <script setup>
 import { computed } from 'vue';
 
-defineProps({
+const props = defineProps({
     players: Array,
     holes: Array,
     scores: Object,
@@ -60,6 +60,6 @@ defineProps({
 });
 
 const sortDirectionSymbol = computed(() =>
-    sortDirection === 'asc' ? '↑' : '↓'
+    props.sortDirection === 'asc' ? '↑' : '↓'
 );
 </script>

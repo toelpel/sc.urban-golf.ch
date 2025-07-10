@@ -1,8 +1,12 @@
 <template>
   <div class="flex flex-col max-w-6xl mx-auto">
     <!-- HEADER -->
-    <div class="shrink-0">
+    <div class="shrink-0 flex justify-between items-center">
       <h1 class="maintitle">Scorecard – {{ gameName }}</h1>
+      <button @click="toggleView" class="flex items-center justify-center w-8 h-8 -mt-2 rounded-md bg-gray-200 text-sm text-gray-800 shadow hover:bg-gray-300
+         dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 transition" title="Ansicht wechseln">
+        <ArrowPathIcon class="w-5 h-5" />
+      </button>
     </div>
 
     <!-- LOADING -->
@@ -10,20 +14,22 @@
       {{ $t('ScorecardLoading') }}
     </div>
 
-    <!-- MAIN (scrollable Tabelle) -->
+    <!-- MAIN -->
     <div v-else>
-      <ScorecardHorizontal :players="sortedPlayers" :holes="holes" :scores="scores" :game-id="gameId"
-        :sort-column="sortColumn" :sort-direction="sortDirection" :sorted-players="sortedPlayers"
-        :average-score="averageScore" :total-score="totalScore" @sort="sortBy" />
+      <component :is="viewMode === 'horizontal' ? ScorecardHorizontal : ScorecardVertical" :players="sortedPlayers"
+        :holes="holes" :scores="scores" :game-id="gameId" :sort-column="sortColumn" :sort-direction="sortDirection"
+        :sorted-players="sortedPlayers" :average-score="averageScore" :total-score="totalScore" @sort="sortBy" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, watch, nextTick } from 'vue';
+import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import ScorecardHorizontal from '../components/Scorecard_Horizontal.vue';
+import ScorecardVertical from '../components/Scorecard_Vertical.vue';
 
 const route = useRoute();
 const gameId = route.params.id;
@@ -35,6 +41,7 @@ const gameName = ref('');
 
 const sortColumn = ref('name');
 const sortDirection = ref('asc');
+const viewMode = ref('horizontal'); // default, wird überschrieben
 
 function sortBy(column) {
   if (sortColumn.value === column) {
@@ -44,10 +51,6 @@ function sortBy(column) {
     sortDirection.value = 'asc';
   }
 }
-
-const sortDirectionSymbol = computed(() =>
-  sortDirection.value === 'asc' ? '↑' : '↓'
-);
 
 const sortedPlayers = computed(() => {
   return [...players.value].sort((a, b) => {
@@ -87,6 +90,14 @@ function averageScore(playerId) {
   return avg.toFixed(1);
 }
 
+function toggleView() {
+  viewMode.value = viewMode.value === 'horizontal' ? 'vertical' : 'horizontal';
+}
+
+watch(viewMode, (val) => {
+  localStorage.setItem('scorecardView', val);
+});
+
 onMounted(async () => {
   try {
     const { data: gameList } = await axios.get('/games');
@@ -116,6 +127,15 @@ onMounted(async () => {
 
     if (holes.value.length === 0) {
       holes.value.push(1);
+    }
+
+    // Entscheidung über Ansicht treffen, nachdem alle Daten geladen sind
+    await nextTick();
+    const saved = localStorage.getItem('scorecardView');
+    if (saved === 'horizontal' || saved === 'vertical') {
+      viewMode.value = saved;
+    } else {
+      viewMode.value = (players.value.length > 4 && holes.value.length > 4) ? 'vertical' : 'horizontal';
     }
   } catch (err) {
     console.error('Fehler beim Laden der Scorecard:', err);

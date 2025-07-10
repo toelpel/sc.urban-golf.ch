@@ -22,15 +22,20 @@
       <li v-for="game in paginatedGames" :key="game.id"
         class="bg-white/80 dark:bg-gray-900/80 shadow-md rounded-2xl px-5 py-4 transition-transform transform hover:scale-[1.01] border border-gray-200 dark:border-gray-700">
         <div class="flex justify-between items-center">
-          <div class="flex flex-col">
-            <div class="font-medium text-lg text-gray-800 dark:text-white">{{ game.name }}</div>
-            <div class="text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate"
+          <!-- LINKSBLOCK (Name + Datum + Spieler) -->
+          <div class="flex flex-col min-w-0">
+            <div class="font-medium text-lg text-gray-800 dark:text-white truncate">
+              {{ game.name }}
+            </div>
+            <div class="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap overflow-hidden text-ellipsis"
               :title="playerMap[game.id]?.join(', ')">
               {{ formatDate(game.created_at) }}
-              <span v-if="playerMap[game.id]">– {{ playerMap[game.id].join(', ') }}</span>
+              <span v-if="playerMap[game.id]"> – {{ getPlayerListShort(game.id) }}</span>
             </div>
           </div>
-          <div class="flex gap-3 items-center">
+
+          <!-- RECHTSBLOCK (Buttons) -->
+          <div class="flex gap-3 items-center flex-shrink-0">
             <router-link :to="`/scorecard/${game.id}`" class="button-primary text-sm">📋</router-link>
             <button @click="toggleDetails(game.id)"
               class="text-xl text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white">
@@ -180,5 +185,10 @@ function formatDate(timestamp) {
     dateStyle: 'medium',
     timeStyle: 'short',
   });
+}
+
+function getPlayerListShort(gameId) {
+  const list = (playerMap.value[gameId] || []).join(', ');
+  return list.length > 40 ? list.slice(0, 40) + '…' : list;
 }
 </script>
