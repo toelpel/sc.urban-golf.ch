@@ -9,17 +9,17 @@
                             {{ $t('Player') }}
                             <span v-if="props.sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
                         </th>
-                        <th v-for="hole in holes" :key="hole" class="scorecard-header-cell">
+                        <th v-for="hole in holes" :key="hole" class="scorecard-header-cell sticky">
                             <router-link :to="`/hole/${gameId}/${hole}`"
                                 class="hover:underline text-blue-600 dark:text-blue-400">
                                 {{ hole }}
                             </router-link>
                         </th>
-                        <th class="scorecard-header-cell sticky right-12 z-10 cursor-pointer"
+                        <th class="scorecard-header-cell sticky right-12 cursor-pointer z-10"
                             @click="$emit('sort', 'average')">
                             Ø <span v-if="props.sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
                         </th>
-                        <th class="scorecard-header-cell sticky right-0 z-10 cursor-pointer"
+                        <th class="scorecard-header-cell sticky right-0 cursor-pointer z-10"
                             @click="$emit('sort', 'total')">
                             {{ $t('Total') }} <span v-if="props.sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
                         </th>

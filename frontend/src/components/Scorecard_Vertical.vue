@@ -1,11 +1,9 @@
 <template>
-    <div
-        class="relative rounded-lg shadow-lg border border-gray-300 dark:border-gray-700 overflow-y-auto max-h-[calc(100dvh-11rem)] md:max-h-[calc(100dvh-13rem)]">
+    <div class="relative rounded-lg shadow-lg border border-gray-300 dark:border-gray-700 overflow-y-auto max-h-[calc(100dvh-11rem)] md:max-h-[calc(100dvh-13rem)]">
         <table class="scorecard-table w-full">
             <thead class="bg-white/80 dark:bg-gray-900/80">
                 <tr>
-                    <th
-                        class="scorecard-header-cell text-left left-0 sticky top-0 z-30 w-20 bg-white/90 dark:bg-gray-900/90">
+                    <th class="scorecard-header-cell text-left left-0 sticky top-0 z-30 w-20 bg-white/90 dark:bg-gray-900/90">
                         {{ $t('Hole') }}
                     </th>
                     <th v-for="player in sortedPlayers" :key="player.id"
