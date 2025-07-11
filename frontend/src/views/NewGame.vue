@@ -1,48 +1,31 @@
 <template>
-  <div>
+  <DefaultTemplate>
     <h1 class="maintitle">
       {{ isEditing ? $t('NewGame-TitleEdit') : $t('NewGame-TitleNew') }}
     </h1>
 
     <div class="flex flex-col items-stretch gap-4 mt-6">
-      <input
-        type="text"
-        v-model="gameName"
-        :placeholder="$t('NewGame-GameName')"
-        maxlength="30"
-        class="input-field w-full"
-      />
+      <input type="text" v-model="gameName" :placeholder="$t('NewGame-GameName')" maxlength="30"
+        class="input-field w-full" />
 
       <div v-for="(player, index) in players" :key="index">
-        <input
-          type="text"
-          v-model="player.name"
-          :placeholder="`${$t('NewGame-PlayerName')} ${index + 1}`"
-          maxlength="30"
-          class="input-field w-full"
-        />
+        <input type="text" v-model="player.name" :placeholder="`${$t('NewGame-PlayerName')} ${index + 1}`"
+          maxlength="30" class="input-field w-full" />
       </div>
 
-      <button
-        @click="addPlayer"
-        :disabled="players.length >= 10"
-        class="button-primary w-full"
-      >
+      <button @click="addPlayer" :disabled="players.length >= 10" class="button-primary w-full">
         {{ $t('NewGame-AddPlayer') }}
       </button>
 
-      <button
-        @click="saveGame"
-        :disabled="isSaving"
-        class="button-primary w-full"
-      >
+      <button @click="saveGame" :disabled="isSaving" class="button-primary w-full">
         {{ isEditing ? `${$t('NewGame-SaveChanges')}` : `${$t('NewGame-StartGame')}` }}
       </button>
     </div>
-  </div>
+  </DefaultTemplate>
 </template>
 
 <script setup>
+import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';

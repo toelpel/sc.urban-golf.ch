@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <DefaultTemplate>
     <h1 class="maintitle">
       {{ $t('ListGames-AllGames') }}
     </h1>
@@ -68,10 +68,11 @@
         {{ $t('Forward') }}
       </button>
     </div>
-  </div>
+  </DefaultTemplate>
 </template>
 
 <script setup>
+import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
 import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
 

@@ -1,25 +1,31 @@
 <template>
-  <div class="text-center">
-    <h1 class="maintitle">{{ $t('Home-Title') }}</h1>
-    <p class="mb-6 text-gray-700 dark:text-gray-300">
-      {{ $t('Home-Text') }}
-    </p>
-    <div class="flex flex-col items-stretch gap-3 mt-6">
-      <router-link to="/newgame" class="button-primary w-full text-center">
-        {{ $t('NewGame') }}
-      </router-link>
-      <router-link to="/listgames" class="button-primary w-full text-center">
-        {{ $t('Games') }}
-      </router-link>
-      <router-link to="/feedback" class="button-primary w-full text-center">
-        {{ $t('Feedback') }}
-      </router-link>
+  <DefaultTemplate>
+    <div class="text-center">
+      <h1 class="maintitle">{{ $t('Home-Title') }}</h1>
+      <p class="mb-6 text-gray-700 dark:text-gray-300">
+        {{ $t('Home-Text') }}
+      </p>
+      <div class="flex flex-col items-stretch gap-3 mt-6">
+        <router-link to="/newgame" class="button-primary w-full text-center">
+          {{ $t('NewGame') }}
+        </router-link>
+        <router-link to="/listgames" class="button-primary w-full text-center">
+          {{ $t('Games') }}
+        </router-link>
+        <router-link to="/feedback" class="button-primary w-full text-center">
+          {{ $t('Feedback') }}
+        </router-link>
+      </div>
+      <div
+        class="mt-8 max-w-md mx-auto p-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 rounded shadow">
+        {{ $t('Home-BetaText-Title') }}<br />
+        {{ $t('Home-BetaText-Text') }} <router-link to="/feedback"
+          class="underline hover:text-yellow-700 dark:hover:text-yellow-200">{{ $t('Feedback') }}</router-link>!
+      </div>
     </div>
-    <div
-      class="mt-8 max-w-md mx-auto p-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 rounded shadow">
-      {{ $t('Home-BetaText-Title') }}<br />
-      {{ $t('Home-BetaText-Text') }} <router-link to="/feedback"
-        class="underline hover:text-yellow-700 dark:hover:text-yellow-200">{{ $t('Feedback') }}</router-link>!
-    </div>
-  </div>
+  </DefaultTemplate>
 </template>
+
+<script setup>
+import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
+</script>

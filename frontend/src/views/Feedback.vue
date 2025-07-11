@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <DefaultTemplate>
     <h1 class="maintitle">{{ $t('Feedback-Title') }}</h1>
 
     <div v-if="submitted" class="text-green-600 dark:text-green-400">
@@ -8,7 +8,6 @@
       <div class="flex w-full mt-6">
         <button @click="goBack" class="button-primary flex-1">{{ $t('Back') }}</button>
       </div>
-
     </div>
 
     <form v-else @submit.prevent="submitFeedback" class="space-y-4">
@@ -19,32 +18,28 @@
           ★
         </button>
       </div>
-
       <div>
         <label class="label" for="message">{{ $t('Feedback-Text') }}</label>
         <textarea id="message" v-model="message" class="textarea-field" required></textarea>
       </div>
-
       <div>
         <label class="label" for="name">{{ $t('Feedback-Name') }}</label>
         <input id="name" v-model="name" class="input-field" />
       </div>
-
       <div>
         <label class="label" for="email">{{ $t('Feedback-Email') }}</label>
         <input id="email" type="email" v-model="email" class="input-field" />
       </div>
-
       <div class="flex w-full gap-4 mt-6">
         <button @click="goBack" type="button" class="button-primary flex-1">{{ $t('Back') }}</button>
         <button type="submit" class="button-primary flex-1">{{ $t('Send') }}</button>
       </div>
-
     </form>
-  </div>
+  </DefaultTemplate>
 </template>
 
 <script setup>
+import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'

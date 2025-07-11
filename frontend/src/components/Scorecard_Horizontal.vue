@@ -1,5 +1,5 @@
 <template>
-    <div class="relative w-full overflow-x-auto max-w-6xl mx-auto">
+    <div class="relative w-full overflow-x-auto">
         <table class="scorecard-table min-w-[42rem] relative">
             <thead class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100">
                 <tr>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <DefaultTemplate>
     <h1 class="maintitle">
       {{ gameName }} – {{ $t('Hole') }} {{ hole }} –
       <router-link :to="{ name: 'NewGame', query: { gameId: gameId } }" class="text-blue-500">✏️</router-link>
@@ -55,10 +55,11 @@
         {{ $t('Scorecard') }}
       </router-link>
     </div>
-  </div>
+  </DefaultTemplate>
 </template>
 
 <script setup>
+import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
 import { ref, onMounted, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col max-w-6xl mx-auto">
+  <DefaultTemplate>
     <!-- HEADER -->
     <div class="shrink-0 flex justify-between items-center">
       <h1 class="maintitle">Scorecard – {{ gameName }}</h1>
@@ -20,18 +20,23 @@
         :holes="holes" :scores="scores" :game-id="gameId" :sort-column="sortColumn" :sort-direction="sortDirection"
         :sorted-players="sortedPlayers" :average-score="averageScore" :total-score="totalScore" @sort="sortBy" />
     </div>
-  </div>
+    <div class="mt-4">
+      <button @click="goBack" class="button-primary w-full text-center">{{ $t('Back') }}</button>
+    </div>
+  </DefaultTemplate>
 </template>
 
 <script setup>
-import { onMounted, ref, computed, watch, nextTick } from 'vue';
-import { ArrowPathIcon } from '@heroicons/vue/24/solid';
-import { useRoute } from 'vue-router';
-import axios from 'axios';
+import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
 import ScorecardHorizontal from '../components/Scorecard_Horizontal.vue';
 import ScorecardVertical from '../components/Scorecard_Vertical.vue';
+import { onMounted, ref, computed, watch, nextTick } from 'vue';
+import { ArrowPathIcon } from '@heroicons/vue/24/solid';
+import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
 
 const route = useRoute();
+const router = useRouter()
 const gameId = route.params.id;
 
 const players = ref([]);
@@ -42,6 +47,10 @@ const gameName = ref('');
 const sortColumn = ref('name');
 const sortDirection = ref('asc');
 const viewMode = ref('horizontal'); // default, wird überschrieben
+
+function goBack() {
+  router.back()
+}
 
 function sortBy(column) {
   if (sortColumn.value === column) {
