@@ -14,7 +14,7 @@
   <div v-for="player in players" :key="player.id" class="mb-2 border-t pt-2">
     <div class="flex items-center space-x-4">
       <div
-        class="w-48 truncate self-center text-left text-lg font-bold text-gray-800 dark:text-gray-100 leading-tight pr-2"
+        class="w-64 truncate self-center text-left text-lg font-bold text-gray-800 dark:text-gray-100 leading-tight pr-2"
         :title="player.name">
         {{ player.name }}
       </div>
@@ -26,7 +26,7 @@
         </svg>
       </button>
 
-      <select v-model="scores[player.id]" @change="saveScore(player.id)" class="select-field w-16 text-center">
+      <select v-model="scores[player.id]" @change="saveScore(player.id)" class="select-field w-12 text-center">
         <option v-for="n in range(-3, 15)" :key="n" :value="n">{{ n }}</option>
       </select>
 
