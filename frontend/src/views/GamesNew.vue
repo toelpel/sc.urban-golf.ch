@@ -79,18 +79,13 @@ async function saveGame() {
     const playerIds = []
 
     for (const player of validPlayers) {
-      // Spieler bereits vorhanden → aktualisieren
-      if (player.id && player.id.length > 0) {
+      player.name = player.name.trim()
+      try {
         await axios.put(`/players/${player.id}`, { name: player.name })
-        playerIds.push(player.id)
-      } else {
-        // (theoretisch nicht mehr notwendig mit nanoid)
-        const { data: newPlayer } = await axios.post('/players', {
-          id: nanoid(),
-          name: player.name,
-        })
-        playerIds.push(newPlayer.id)
+      } catch (err) {
+        await axios.post('/players', { id: player.id, name: player.name })
       }
+      playerIds.push(player.id)
     }
 
     if (isEditing.value) {

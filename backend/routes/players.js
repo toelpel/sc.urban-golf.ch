@@ -22,7 +22,7 @@ export default async function (fastify, opts) {
     const client = await getClient();
     try {
       await client.query(
-        'INSERT INTO players (id, name) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+        'INSERT INTO players (id, name) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name',
         [playerId, name]
       );
       reply.code(200).send({ id: playerId, name });
