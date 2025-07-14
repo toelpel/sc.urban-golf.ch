@@ -8,10 +8,14 @@
   "Forward": "Suivant",
   "Send": "Envoyer",
   "Hole": "Trou",
-  "Home-Title": "Urban-Golf.ch - ScoreCard",
-  "Home-Text": "Crée une nouvelle partie ou consulte les parties existantes.",
-  "Home-BetaText-Title": "⚠️ Cette application est encore en phase bêta.",
-  "Home-BetaText-Text": "Nous apprécions ton",
+  "Home": {
+    "Title": "Urban-Golf.ch - ScoreCard",
+    "Text": "Crée une nouvelle partie ou consulte les parties existantes.",
+    "Beta": {
+      "Title": "⚠️ Cette application est encore en phase bêta.",
+      "Text": "Nous apprécions ton"
+    }
+  },
   "Feedback-Title": "Retour sur la scorecard",
   "Feedback-ThankYou": "Merci pour ton retour ! 🍀",
   "Feedback-RatingTitle": "Évaluation",

@@ -1,6 +1,6 @@
 <template>
   <BackgroundImage />
-  <router-view />
+  <router-view :key="$route.fullPath" />
 </template>
 
 <script setup>

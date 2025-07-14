@@ -102,7 +102,7 @@ async function saveGame() {
         return;
       }
 
-      router.push(`/hole/${game.id}/1`);
+      router.push(`/games/${game.id}/1`);
     }
   } catch (err) {
     console.error(err);

@@ -6,21 +6,21 @@
                     <th class="scorecard-header-cell sticky left-0 top-0 bg-gray-100 z-10 cursor-pointer"
                         @click="$emit('sort', 'name')">
                         {{ $t('Player') }}
-                        <span v-if="props.sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
+                        <span v-if="sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
                     </th>
                     <th v-for="hole in holes" :key="hole" class="scorecard-header-cell">
-                        <router-link :to="`/hole/${gameId}/${hole}`"
+                        <router-link :to="`/games/${gameId}/${hole}`"
                             class="hover:underline text-blue-600 dark:text-blue-400">
                             {{ hole }}
                         </router-link>
                     </th>
                     <th class="scorecard-header-cell sticky right-12 top-0 bg-gray-100 z-10 cursor-pointer"
                         @click="$emit('sort', 'average')">
-                        Ø <span v-if="props.sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
+                        Ø <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
                     </th>
                     <th class="scorecard-header-cell sticky right-0 top-0 bg-gray-100 z-10 cursor-pointer"
                         @click="$emit('sort', 'total')">
-                        {{ $t('Total') }} <span v-if="props.sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
+                        {{ $t('Total') }} <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
                     </th>
                 </tr>
             </thead>
@@ -45,9 +45,19 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 
-const props = defineProps({
+const {
+    players,
+    holes,
+    scores,
+    gameId,
+    sortColumn,
+    sortDirection,
+    sortedPlayers,
+    averageScore,
+    totalScore
+} = defineProps({
     players: Array,
     holes: Array,
     scores: Object,
@@ -57,9 +67,9 @@ const props = defineProps({
     sortedPlayers: Array,
     averageScore: Function,
     totalScore: Function
-});
+})
 
 const sortDirectionSymbol = computed(() =>
-    props.sortDirection === 'asc' ? '↑' : '↓'
-);
+    sortDirection === 'asc' ? '↑' : '↓'
+)
 </script>

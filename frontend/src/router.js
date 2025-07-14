@@ -1,35 +1,62 @@
-import { createRouter, createWebHistory } from 'vue-router';
-
-// Automatischer Import aller Views
-const staticRoutes = Object.entries(import.meta.glob('./views/*.vue', { eager: true }))
-  .map(([path, component]) => {
-    const fileName = path.split('/').pop().replace('.vue', '');
-    const name = fileName;
-
-    const routePath = fileName === 'Home' ? '/' : `/${fileName.toLowerCase()}`;
-
-    return {
-      path: routePath,
-      name, // <--- hier wird der Name hinzugefügt!
-      component: component.default
-    };
-  });
-
-// Manuell ergänzte, dynamische Routen
-const dynamicRoutes = [
-  {
-    path: '/scorecard/:id',
-    component: () => import('./views/Scorecard.vue')
-  },
-  {
-    path: '/hole/:gameId/:hole',
-    component: () => import('./views/HoleView.vue')
-  }
-];
+import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory('/new/'),
-  routes: [...staticRoutes, ...dynamicRoutes]
-});
+  routes: [
+    {
+      path: '/',
+      name: 'Home',
+      component: () => import('./views/Home.vue'),
+      meta: {
+        title: 'Home'
+      }
+    },
+    {
+      path: '/feedback',
+      name: 'Feedback',
+      component: () => import('./views/Feedback.vue'),
+      meta: {
+        title: 'Feedback',
+        parent: 'Home'
+      }
+    },
+    {
+      path: '/games',
+      name: 'GamesList',
+      component: () => import('./views/Games.vue'),
+      meta: {
+        title: 'Spiele',
+        parent: 'Home'
+      }
+    },
+    {
+      path: '/games/new',
+      name: 'GamesNew',
+      component: () => import('./views/GamesNew.vue'),
+      meta: {
+        title: 'Neues Spiel',
+        parent: 'Home'
+      }
+    },
+    {
+      path: '/games/:gameId',
+      name: 'GamesDetail',
+      component: () => import('./views/Games.vue'),
+      meta: {
+        title: 'Scorecard',
+        parent: 'GamesList'
+      }
+    },
+    {
+      path: '/Games/:gameId/:holeId',
+      name: 'GamesHole',
+      component: () => import('./views/Games.vue'),
+      meta: {
+        title: 'Loch',
+        parent: 'GamesDetail'
+      }
+    }
+  ]
+})
 
-export default router;
+export default router

@@ -8,10 +8,14 @@
   "Forward": "Next",
   "Send": "Submit",
   "Hole": "Hole",
-  "Home-Title": "Urban-Golf.ch - ScoreCard",
-  "Home-Text": "Create a new game or view existing games.",
-  "Home-BetaText-Title": "⚠️ This app is still in beta.",
-  "Home-BetaText-Text": "We appreciate your",
+  "Home": {
+    "Title": "Urban-Golf.ch - ScoreCard",
+    "Text": "Create a new game or view existing games.",
+    "Beta": {
+      "Title": "⚠️ This app is still in beta.",
+      "Text": "We appreciate your"
+    }
+  },
   "Feedback-Title": "Feedback on the Scorecard",
   "Feedback-ThankYou": "Thank you for your feedback! 🍀",
   "Feedback-RatingTitle": "Rating",

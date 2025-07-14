@@ -1,12 +1,12 @@
 <template>
     <!-- Top-Navigation: Desktop -->
     <div class="hidden md:flex items-center gap-3">
-        <router-link to="/newgame" class="material-nav-link"
-            :class="{ 'material-nav-link--active': $route.path === '/newgame' }">
+        <router-link to="/games/new" class="material-nav-link"
+            :class="{ 'material-nav-link--active': $route.path === '/games/new' }">
             🆕 {{ $t('NewGame') }}
         </router-link>
-        <router-link to="/listgames" class="material-nav-link"
-            :class="{ 'material-nav-link--active': $route.path === '/listgames' }">
+        <router-link to="/games" class="material-nav-link"
+            :class="{ 'material-nav-link--active': $route.path === '/games' }">
             📋 {{ $t('Games') }}
         </router-link>
         <router-link to="/feedback" class="material-nav-link"
@@ -53,12 +53,12 @@
             <transition name="fade-slide">
                 <div v-if="isOpen"
                     class="absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-lg ring-1 ring-black/10 text-sm dark:bg-gray-800 dark:text-white">
-                    <router-link to="/newgame" class="dropdown-item"
-                        :class="{ 'dropdown-item--active': $route.path === '/newgame' }" @click="isOpen = false">
+                    <router-link to="/games/new" class="dropdown-item"
+                        :class="{ 'dropdown-item--active': $route.path === '/games/new' }" @click="isOpen = false">
                         🆕 {{ $t('NewGame') }}
                     </router-link>
-                    <router-link to="/listgames" class="dropdown-item"
-                        :class="{ 'dropdown-item--active': $route.path === '/listgames' }" @click="isOpen = false">
+                    <router-link to="/games" class="dropdown-item"
+                        :class="{ 'dropdown-item--active': $route.path === '/games' }" @click="isOpen = false">
                         📋 {{ $t('Games') }}
                     </router-link>
                     <router-link to="/feedback" class="dropdown-item"

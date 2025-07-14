@@ -8,10 +8,14 @@
   "Forward": "Volgende",
   "Send": "Verzenden",
   "Hole": "Hole",
-  "Home-Title": "Urban-Golf.ch - ScoreCard",
-  "Home-Text": "Maak een nieuw spel aan of bekijk bestaande spellen.",
-  "Home-BetaText-Title": "⚠️ Deze app bevindt zich nog in de bètafase.",
-  "Home-BetaText-Text": "We horen graag jouw",
+  "Home": {
+    "Title": "Urban-Golf.ch - ScoreCard",
+    "Text": "Maak een nieuw spel aan of bekijk bestaande spellen.",
+    "Beta": {
+      "Title": "⚠️ Deze app bevindt zich nog in de bètafase.",
+      "Text": "We horen graag jouw"
+    }
+  },
   "Feedback-Title": "Feedback over de scorecard",
   "Feedback-ThankYou": "Bedankt voor je feedback! 🍀",
   "Feedback-RatingTitle": "Beoordeling",

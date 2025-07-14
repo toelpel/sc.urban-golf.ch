@@ -1,56 +1,67 @@
 <template>
   <DefaultTemplate>
-    <!-- HEADER -->
-    <div class="shrink-0 flex justify-between items-center">
-      <h1 class="maintitle">Scorecard – {{ gameName }}</h1>
-      <button @click="toggleView" class="flex items-center justify-center w-8 h-8 -mt-2 rounded-md bg-gray-200 text-sm text-gray-800 shadow hover:bg-gray-300
-         dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 transition" title="Ansicht wechseln">
-        <ArrowPathIcon class="w-5 h-5" />
-      </button>
-    </div>
+    <template v-if="!hasValidGameId">
+      <GamesListCompact />
+    </template>
+    <template v-else>
+      <GamesHoleView v-if="holeParam" />
+      <template v-else>
+        <!-- Scorecard Ansicht -->
+        <div class="shrink-0 flex justify-between items-center">
+          <h1 class="maintitle">Scorecard – {{ gameName }}</h1>
+          <button @click="toggleView" class="flex items-center justify-center w-8 h-8 -mt-2 rounded-md bg-gray-200 text-sm text-gray-800 shadow hover:bg-gray-300
+       dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 transition" title="Ansicht wechseln">
+            <ArrowPathIcon class="w-5 h-5" />
+          </button>
+        </div>
 
-    <!-- LOADING -->
-    <div v-if="players.length === 0" class="shrink-0 text-gray-500 text-center dark:text-gray-300">
-      {{ $t('ScorecardLoading') }}
-    </div>
+        <div v-if="players.length === 0" class="shrink-0 text-gray-500 text-center dark:text-gray-300">
+          {{ $t('ScorecardLoading') }}
+        </div>
 
-    <!-- MAIN -->
-    <div v-else>
-      <component :is="viewMode === 'horizontal' ? ScorecardHorizontal : ScorecardVertical" :players="sortedPlayers"
-        :holes="holes" :scores="scores" :game-id="gameId" :sort-column="sortColumn" :sort-direction="sortDirection"
-        :sorted-players="sortedPlayers" :average-score="averageScore" :total-score="totalScore" @sort="sortBy" />
-    </div>
-    <div class="mt-4">
-      <button @click="goBack" class="button-primary w-full text-center">{{ $t('Back') }}</button>
-    </div>
+        <div v-else>
+          <GamesDetailHorizontal v-if="viewMode === 'horizontal'" :players="sortedPlayers" :holes="holes" :scores="scores"
+            :game-id="gameId" :sort-column="sortColumn" :sort-direction="sortDirection"
+            :sorted-players="sortedPlayers" :average-score="averageScore" :total-score="totalScore" @sort="sortBy" />
+
+          <GamesDetailVertical v-else :players="sortedPlayers" :holes="holes" :scores="scores" :game-id="gameId"
+            :sort-column="sortColumn" :sort-direction="sortDirection" :sorted-players="sortedPlayers"
+            :average-score="averageScore" :total-score="totalScore" @sort="sortBy" />
+
+        </div>
+      </template>
+    </template>
   </DefaultTemplate>
 </template>
 
 <script setup>
-import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
-import ScorecardHorizontal from '../components/Scorecard_Horizontal.vue';
-import ScorecardVertical from '../components/Scorecard_Vertical.vue';
-import { onMounted, ref, computed, watch, nextTick } from 'vue';
+import DefaultTemplate from '@/layouts/DefaultTemplate.vue';
+import GamesListCompact from '../components/GamesListCompact.vue';
+import GamesDetailHorizontal from '../components/GamesDetail_Horizontal.vue';
+import GamesDetailVertical from '../components/GamesDetail_Vertical.vue';
+import GamesHoleView from '../components/GamesHoleView.vue'
+import { onMounted, ref, computed, watch, watchEffect, nextTick } from 'vue';
 import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 
 const route = useRoute();
 const router = useRouter()
-const gameId = route.params.id;
+const gameId = computed(() => parseInt(route.params.gameId))
+const hasValidGameId = computed(() => Number.isInteger(gameId.value))
 
 const players = ref([]);
 const scores = ref({});
 const holes = ref([]);
+const holeParam = computed(() => {
+  const n = parseInt(route.params.holeId)
+  return isNaN(n) ? null : n
+})
 const gameName = ref('');
 
 const sortColumn = ref('name');
 const sortDirection = ref('asc');
 const viewMode = ref('horizontal'); // default, wird überschrieben
-
-function goBack() {
-  router.back()
-}
 
 function sortBy(column) {
   if (sortColumn.value === column) {
@@ -107,13 +118,15 @@ watch(viewMode, (val) => {
   localStorage.setItem('scorecardView', val);
 });
 
-onMounted(async () => {
+watchEffect(async () => {
+  if (!gameId.value || isNaN(gameId.value)) return;
+
   try {
     const { data: gameList } = await axios.get('/games');
-    const match = gameList.find(g => g.id === parseInt(gameId));
-    gameName.value = match?.name || `Spiel #${gameId}`;
+    const match = gameList.find(g => g.id === gameId.value);
+    gameName.value = match?.name || `Spiel #${gameId.value}`;
 
-    const { data: playerList } = await axios.get(`/games/${gameId}/players`);
+    const { data: playerList } = await axios.get(`/games/${gameId.value}/players`);
     players.value = playerList;
 
     for (const player of players.value) {
@@ -121,7 +134,7 @@ onMounted(async () => {
     }
 
     const { data: scoreData } = await axios.get('/scores', {
-      params: { game_id: gameId }
+      params: { game_id: gameId.value }
     });
 
     for (const entry of scoreData) {
@@ -138,13 +151,14 @@ onMounted(async () => {
       holes.value.push(1);
     }
 
-    // Entscheidung über Ansicht treffen, nachdem alle Daten geladen sind
     await nextTick();
     const saved = localStorage.getItem('scorecardView');
     if (saved === 'horizontal' || saved === 'vertical') {
       viewMode.value = saved;
     } else {
-      viewMode.value = (players.value.length > 4 && holes.value.length > 4) ? 'vertical' : 'horizontal';
+      viewMode.value = (players.value.length > 4 && holes.value.length > 4)
+        ? 'vertical'
+        : 'horizontal';
     }
   } catch (err) {
     console.error('Fehler beim Laden der Scorecard:', err);

@@ -19,7 +19,7 @@
                 <!-- Loch-Zeilen -->
                 <tr v-for="hole in holes" :key="hole" class="scorecard-hover-row">
                     <td class="scorecard-cell text-left font-semibold left-0 bg-white/80 dark:bg-gray-900/80">
-                        <router-link :to="`/hole/${gameId}/${hole}`"
+                        <router-link :to="`/games/${gameId}/${hole}`"
                             class="text-blue-600 dark:text-blue-400 hover:underline">
                             {{ hole }}
                         </router-link>
@@ -29,6 +29,7 @@
                         {{ scores[player.id]?.[hole] ?? '–' }}
                     </td>
                 </tr>
+
                 <!-- Durchschnitt -->
                 <tr class="bg-gray-100 dark:bg-gray-800 font-semibold text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors"
                     @click="$emit('sort', 'average')">
@@ -42,6 +43,7 @@
                         {{ averageScore(player.id) }}
                     </td>
                 </tr>
+
                 <!-- Total -->
                 <tr class="bg-gray-200 dark:bg-gray-900 font-semibold text-gray-800 dark:text-gray-100 cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-800 transition-colors"
                     @click="$emit('sort', 'total')">
@@ -61,7 +63,17 @@
 </template>
 
 <script setup>
-defineProps({
+const {
+    players,
+    holes,
+    scores,
+    gameId,
+    sortColumn,
+    sortDirection,
+    sortedPlayers,
+    averageScore,
+    totalScore
+} = defineProps({
     players: Array,
     holes: Array,
     scores: Object,
@@ -71,6 +83,7 @@ defineProps({
     sortedPlayers: Array,
     averageScore: Function,
     totalScore: Function
-});
-defineEmits(['sort']);
+})
+
+defineEmits(['sort'])
 </script>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://sc-test.urban-golf.ch/newgame/</loc>
+    <loc>https://sc-test.urban-golf.ch/new/games</loc>
   </url>
   <url>
-    <loc>https://sc-test.urban-golf.ch/new/listgames</loc>
+    <loc>https://sc-test.urban-golf.ch/new/games/new</loc>
   </url>
   <url>
     <loc>https://sc-test.urban-golf.ch/new/feedback</loc>
