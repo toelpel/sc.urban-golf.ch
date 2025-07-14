@@ -6,7 +6,7 @@ import { getClient } from '../db/pg.js';
 const isValidId = (id) => /^[a-zA-Z0-9_-]{10,30}$/.test(id);
 
 export default async function (fastify, opts) {
-  // Spiel erstellen oder aktualisieren (UPSERT)
+  // Spiel erstellen oder aktualisieren
   fastify.post('/', async (req, reply) => {
     const { id, name, players } = req.body;
 
@@ -41,6 +41,17 @@ export default async function (fastify, opts) {
     } catch (err) {
       fastify.log.error(err);
       reply.code(500).send({ error: 'Database error' });
+    } finally {
+      client.release();
+    }
+  });
+
+  // Alle Spiele abrufen
+  fastify.get('/', async (req, reply) => {
+    const client = await getClient();
+    try {
+      const result = await client.query('SELECT * FROM games ORDER BY created_at DESC');
+      reply.send(result.rows);
     } finally {
       client.release();
     }
