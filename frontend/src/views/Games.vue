@@ -47,7 +47,7 @@ import axios from 'axios';
 
 const route = useRoute();
 const router = useRouter()
-const gameId = computed(() => parseInt(route.params.gameId))
+const gameId = computed(() => route.params.gameId)
 const hasValidGameId = computed(() => Number.isInteger(gameId.value))
 
 const players = ref([]);

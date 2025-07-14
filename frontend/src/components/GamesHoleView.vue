@@ -82,7 +82,7 @@ async function loadHoleData() {
 
   // Spieldaten laden
   const { data: games } = await axios.get('/games');
-  const match = games.find(g => g.id === parseInt(gameId));
+  const match = games.find(g => g.id === gameId);
   gameName.value = match?.name || `Spiel #${gameId}`;
 
   // Spieler laden
@@ -108,7 +108,7 @@ async function loadHoleData() {
 }
 
 function changeStrokes(playerId, delta) {
-  const current = parseInt(scores.value[playerId]) || 0;
+  const current = scores.value[playerId] || 0;
   let updated = current + delta;
   if (updated < -3) updated = -3;
   if (updated > 15) updated = 15;

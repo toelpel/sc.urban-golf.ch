@@ -8,7 +8,7 @@
       <input type="text" v-model="gameName" :placeholder="$t('NewGame-GameName')" maxlength="30"
         class="input-field w-full" />
 
-      <div v-for="(player, index) in players" :key="index">
+      <div v-for="(player, index) in players" :key="player.id">
         <input type="text" v-model="player.name" :placeholder="`${$t('NewGame-PlayerName')} ${index + 1}`"
           maxlength="30" class="input-field w-full" />
       </div>
@@ -18,7 +18,7 @@
       </button>
 
       <button @click="saveGame" :disabled="isSaving" class="button-primary w-full">
-        {{ isEditing ? `${$t('NewGame-SaveChanges')}` : `${$t('NewGame-StartGame')}` }}
+        {{ isEditing ? $t('NewGame-SaveChanges') : $t('NewGame-StartGame') }}
       </button>
     </div>
   </DefaultTemplate>
@@ -26,89 +26,97 @@
 
 <script setup>
 import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
-import { ref, onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import axios from 'axios';
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { nanoid } from 'nanoid'
+import axios from 'axios'
 
-const router = useRouter();
-const route = useRoute();
-const gameId = route.query.gameId;
+const router = useRouter()
+const route = useRoute()
+const gameId = route.query.gameId
 
-const gameName = ref('');
-const players = ref([{ id: null, name: '' }]);
-const isEditing = ref(false);
-const isSaving = ref(false);
+const gameName = ref('')
+const players = ref([{ id: nanoid(), name: '' }])
+const isEditing = ref(false)
+const isSaving = ref(false)
 
 onMounted(async () => {
   if (gameId) {
-    isEditing.value = true;
-    const { data: games } = await axios.get('/games');
-    const match = games.find(g => g.id === parseInt(gameId));
+    isEditing.value = true
+
+    const { data: games } = await axios.get('/games')
+    const match = games.find(g => g.id === gameId)
     if (match) {
-      gameName.value = match.name || '';
+      gameName.value = match.name || ''
     }
 
-    const { data: existing } = await axios.get(`/games/${gameId}/players`);
-    players.value = existing.map(p => ({ id: p.id, name: p.name }));
+    const { data: existing } = await axios.get(`/games/${gameId}/players`)
+    players.value = existing.map(p => ({ id: p.id, name: p.name }))
   }
-});
+})
 
 function addPlayer() {
   if (players.value.length < 10) {
-    players.value.push({ id: null, name: '' });
+    players.value.push({ id: nanoid(), name: '' })
   }
 }
 
 async function saveGame() {
-  if (isSaving.value) return;
-
-  isSaving.value = true;
+  if (isSaving.value) return
+  isSaving.value = true
 
   const validPlayers = players.value
     .map(p => ({ ...p, name: p.name.trim() }))
-    .filter(p => p.name);
+    .filter(p => p.name)
 
   if (!gameName.value || validPlayers.length === 0) {
-    alert('Bitte Spielname und mindestens einen Spieler angeben.');
-    isSaving.value = false;
-    return;
+    alert('Bitte Spielname und mindestens einen Spieler angeben.')
+    isSaving.value = false
+    return
   }
 
   try {
-    const playerIds = [];
+    const playerIds = []
 
     for (const player of validPlayers) {
-      if (player.id) {
-        await axios.put(`/players/${player.id}`, { name: player.name });
-        playerIds.push(player.id);
+      // Spieler bereits vorhanden → aktualisieren
+      if (player.id && player.id.length > 0) {
+        await axios.put(`/players/${player.id}`, { name: player.name })
+        playerIds.push(player.id)
       } else {
-        const { data: newPlayer } = await axios.post('/players', { name: player.name });
-        playerIds.push(newPlayer.id);
+        // (theoretisch nicht mehr notwendig mit nanoid)
+        const { data: newPlayer } = await axios.post('/players', {
+          id: nanoid(),
+          name: player.name,
+        })
+        playerIds.push(newPlayer.id)
       }
     }
 
     if (isEditing.value) {
-      await axios.put(`/games/${gameId}`, { name: gameName.value });
-      await axios.post(`/games/${gameId}/players`, { players: playerIds });
-      router.go(-1);
+      await axios.put(`/games/${gameId}`, { name: gameName.value })
+      await axios.post(`/games/${gameId}/players`, { players: playerIds })
+      router.go(-1)
     } else {
+      const newGameId = nanoid()
       const { data: game } = await axios.post('/games', {
+        id: newGameId,
         name: gameName.value,
-        players: playerIds
-      });
+        players: playerIds,
+      })
 
       if (!game?.id) {
-        alert('Fehler beim Erstellen des Spiels.');
-        return;
+        alert('Fehler beim Erstellen des Spiels.')
+        return
       }
 
-      router.push(`/games/${game.id}/1`);
+      router.push(`/games/${game.id}/1`)
     }
   } catch (err) {
-    console.error(err);
-    alert('Fehler beim Speichern: ' + err.message);
+    console.error(err)
+    alert('Fehler beim Speichern: ' + err.message)
   } finally {
-    isSaving.value = false;
+    isSaving.value = false
   }
 }
 </script>

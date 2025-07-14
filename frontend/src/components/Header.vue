@@ -97,7 +97,7 @@ watchEffect(async () => {
 
     if (relevant && route.params.gameId) {
         try {
-            const gameId = parseInt(route.params.gameId)
+            const gameId = route.params.gameId
             const { data } = await axios.get('/games')
             const game = data.find(g => g.id === gameId)
             gameName.value = game ? game.name : `${t('Navigation.Game')} ${gameId}`
