@@ -46,6 +46,30 @@ export default async function (fastify, opts) {
     }
   });
 
+  // Spieler einem Spiel hinzufügen (z. B. bei Spiel-Update)
+  fastify.post('/:id/players', async (req, reply) => {
+    const gameId = req.params.id;
+    const { players } = req.body;
+
+    if (!isValidId(gameId) || !Array.isArray(players) || players.length === 0) {
+      return reply.code(400).send({ error: 'Valid game ID and player list required' });
+    }
+
+    const client = await getClient();
+    try {
+      for (const playerId of players) {
+        if (!isValidId(playerId)) continue;
+        await client.query(
+          'INSERT INTO game_players (game_id, player_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+          [gameId, playerId]
+        );
+      }
+      reply.send({ success: true });
+    } finally {
+      client.release();
+    }
+  });
+
   // Alle Spiele abrufen
   fastify.get('/', async (req, reply) => {
     const client = await getClient();
