@@ -4,7 +4,7 @@
       <GamesListCompact />
     </template>
     <template v-else>
-      <GamesHoleView v-if="holeParam" />
+      <GamesHoleView v-if="isHoleView" />
       <template v-else>
         <!-- Scorecard Ansicht -->
         <div class="shrink-0 flex justify-between items-center">
@@ -48,15 +48,14 @@ import axios from 'axios';
 const route = useRoute();
 const router = useRouter()
 const gameId = computed(() => route.params.gameId)
-const hasValidGameId = computed(() => Number.isInteger(gameId.value))
+const hasValidGameId = computed(() =>
+  typeof gameId.value === 'string' && /^[a-zA-Z0-9_-]{10,30}$/.test(gameId.value)
+)
 
 const players = ref([]);
 const scores = ref({});
 const holes = ref([]);
-const holeParam = computed(() => {
-  const n = parseInt(route.params.holeId)
-  return isNaN(n) ? null : n
-})
+const isHoleView = computed(() => 'holeId' in route.params)
 const gameName = ref('');
 
 const sortColumn = ref('name');
@@ -119,7 +118,7 @@ watch(viewMode, (val) => {
 });
 
 watchEffect(async () => {
-  if (!gameId.value || isNaN(gameId.value)) return;
+  if (!hasValidGameId.value) return;
 
   try {
     const { data: gameList } = await axios.get('/games');
