@@ -20,8 +20,8 @@
         </div>
 
         <div v-else>
-          <GamesDetailHorizontal v-if="viewMode === 'horizontal'" :players="sortedPlayers" :holes="holes" :scores="scores"
-            :game-id="gameId" :sort-column="sortColumn" :sort-direction="sortDirection"
+          <GamesDetailHorizontal v-if="viewMode === 'horizontal'" :players="sortedPlayers" :holes="holes"
+            :scores="scores" :game-id="gameId" :sort-column="sortColumn" :sort-direction="sortDirection"
             :sorted-players="sortedPlayers" :average-score="averageScore" :total-score="totalScore" @sort="sortBy" />
 
           <GamesDetailVertical v-else :players="sortedPlayers" :holes="holes" :scores="scores" :game-id="gameId"
@@ -115,7 +115,7 @@ function toggleView() {
 }
 
 watch(viewMode, (val) => {
-  localStorage.setItem('scorecardView', val);
+  localStorage.setItem('GamesDetailView', val);
 });
 
 watchEffect(async () => {
@@ -152,13 +152,13 @@ watchEffect(async () => {
     }
 
     await nextTick();
-    const saved = localStorage.getItem('scorecardView');
+    const saved = localStorage.getItem('GamesDetailView');
     if (saved === 'horizontal' || saved === 'vertical') {
       viewMode.value = saved;
     } else {
-      viewMode.value = (players.value.length > 4 && holes.value.length > 4)
-        ? 'vertical'
-        : 'horizontal';
+      viewMode.value = (players.value.length > 4 && holes.value.length <= 4)
+        ? 'horizontal'
+        : 'vertical';
     }
   } catch (err) {
     console.error('Fehler beim Laden der Scorecard:', err);
