@@ -5,7 +5,7 @@
                 <tr>
                     <th class="scorecard-header-cell sticky left-0 top-0 bg-gray-100 z-10 cursor-pointer"
                         @click="$emit('sort', 'name')">
-                        {{ $t('Player') }}
+                        {{ $t('General.Player') }}
                         <span v-if="sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
                     </th>
                     <th v-for="hole in holes" :key="hole" class="scorecard-header-cell">
@@ -20,7 +20,7 @@
                     </th>
                     <th class="scorecard-header-cell sticky right-0 top-0 bg-gray-100 z-10 cursor-pointer"
                         @click="$emit('sort', 'total')">
-                        {{ $t('Total') }} <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
+                        {{ $t('General.Total') }} <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
                     </th>
                 </tr>
             </thead>

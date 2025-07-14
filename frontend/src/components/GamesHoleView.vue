@@ -1,6 +1,6 @@
 <template>
   <h1 class="maintitle">
-    {{ gameName }} – {{ $t('Hole') }} {{ hole }} –
+    {{ gameName }} – {{ $t('General.Hole') }} {{ hole }} –
     <router-link :to="{ name: 'GamesNew', query: { gameId: gameId } }" class="text-blue-500">✏️</router-link>
   </h1>
   <div class="flex flex-wrap justify-center gap-2 my-4 items-center text-sm text-gray-700 dark:text-gray-300">
@@ -42,16 +42,16 @@
   <div class="flex flex-col items-stretch gap-3 mt-6">
     <div class="flex flex-row gap-3">
       <router-link :to="`/games/${gameId}/${hole - 1}`" v-if="hole > 1" class="button-primary flex-1 text-center">
-        {{ $t('Back') }}
+        {{ $t('General.Back') }}
       </router-link>
 
       <router-link :to="`/games/${gameId}/${hole + 1}`" class="button-primary flex-1 text-center">
-        {{ $t('Forward') }}
+        {{ $t('General.Forward') }}
       </router-link>
     </div>
 
     <router-link :to="`/games/${gameId}`" class="button-primary w-full text-center">
-      {{ $t('Scorecard') }}
+      {{ $t('General.Scorecard') }}
     </router-link>
   </div>
 </template>

@@ -1,13 +1,18 @@
 {
-  "NewGame": "Nieuw spel",
-  "Games": "Spellen",
-  "Feedback": "Feedback",
-  "Player": "Speler",
-  "Total": "Totaal",
-  "Back": "Terug",
-  "Forward": "Volgende",
-  "Send": "Verzenden",
-  "Hole": "Hole",
+  "General": {
+    "Home": "Home",
+    "NewGame": "Nieuw spel",
+    "Games": "Spellen",
+    "Game": "Spel",
+    "Feedback": "Feedback",
+    "Scorecard": "Scorekaart",
+    "Hole": "Hole",
+    "Player": "Speler",
+    "Total": "Totaal",
+    "Back": "Terug",
+    "Forward": "Volgende",
+    "Send": "Verzenden"
+  },
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Maak een nieuw spel aan of bekijk bestaande spellen.",

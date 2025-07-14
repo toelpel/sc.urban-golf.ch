@@ -32,12 +32,15 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import NavControls from './NavControls.vue'
 import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
+
 const gameName = ref('')
 
 function goBack() {
@@ -47,24 +50,15 @@ function goBack() {
 function buildDynamicPath(routeRecord) {
     let path = routeRecord.path
     const params = route.params
-
     for (const key in params) {
         path = path.replace(`:${key}`, params[key])
     }
     return path
 }
 
-const breadcrumbMap = {
-    '/': 'Home',
-    '/games/new': 'Neues Spiel',
-    '/games': 'Spiele',
-    '/feedback': 'Feedback'
-}
-
 const breadcrumb = computed(() => {
     const chain = []
     const routeByName = Object.fromEntries(router.getRoutes().map(r => [r.name, r]))
-
     let current = routeByName[route.name]
 
     while (current) {
@@ -75,12 +69,10 @@ const breadcrumb = computed(() => {
                 if (current.name === 'GamesHole') {
                     return route.params.holeId
                 }
-
                 if (current.name === 'GamesDetail') {
                     return gameName.value
                 }
-
-                return current.meta.title
+                return t(current.meta.title)
             })()
 
             chain.unshift({ path, label })
@@ -108,11 +100,10 @@ watchEffect(async () => {
             const gameId = parseInt(route.params.gameId)
             const { data } = await axios.get('/games')
             const game = data.find(g => g.id === gameId)
-            gameName.value = game ? game.name : `Spiel ${gameId}`
+            gameName.value = game ? game.name : `${t('Navigation.Game')} ${gameId}`
         } catch {
-            gameName.value = `Spiel ${route.params.gameId}`
+            gameName.value = `${t('Navigation.Game')} ${route.params.gameId}`
         }
     }
 })
-
 </script>

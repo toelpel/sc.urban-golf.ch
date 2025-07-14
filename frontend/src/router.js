@@ -8,7 +8,7 @@ const router = createRouter({
       name: 'Home',
       component: () => import('./views/Home.vue'),
       meta: {
-        title: 'Home'
+        title: 'General.Home'
       }
     },
     {
@@ -16,7 +16,7 @@ const router = createRouter({
       name: 'Feedback',
       component: () => import('./views/Feedback.vue'),
       meta: {
-        title: 'Feedback',
+        title: 'General.Feedback',
         parent: 'Home'
       }
     },
@@ -25,7 +25,7 @@ const router = createRouter({
       name: 'GamesList',
       component: () => import('./views/Games.vue'),
       meta: {
-        title: 'Spiele',
+        title: 'General.Games',
         parent: 'Home'
       }
     },
@@ -34,7 +34,7 @@ const router = createRouter({
       name: 'GamesNew',
       component: () => import('./views/GamesNew.vue'),
       meta: {
-        title: 'Neues Spiel',
+        title: 'General.NewGame',
         parent: 'Home'
       }
     },
@@ -43,7 +43,7 @@ const router = createRouter({
       name: 'GamesDetail',
       component: () => import('./views/Games.vue'),
       meta: {
-        title: 'Scorecard',
+        title: 'General.Scorecard',
         parent: 'GamesList'
       }
     },
@@ -52,7 +52,7 @@ const router = createRouter({
       name: 'GamesHole',
       component: () => import('./views/Games.vue'),
       meta: {
-        title: 'Loch',
+        title: 'General.Hole',
         parent: 'GamesDetail'
       }
     }

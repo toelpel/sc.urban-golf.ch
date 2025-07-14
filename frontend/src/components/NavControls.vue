@@ -3,15 +3,15 @@
     <div class="hidden md:flex items-center gap-3">
         <router-link to="/games/new" class="material-nav-link"
             :class="{ 'material-nav-link--active': $route.path === '/games/new' }">
-            🆕 {{ $t('NewGame') }}
+            🆕 {{ $t('General.NewGame') }}
         </router-link>
         <router-link to="/games" class="material-nav-link"
             :class="{ 'material-nav-link--active': $route.path === '/games' }">
-            📋 {{ $t('Games') }}
+            📋 {{ $t('General.Games') }}
         </router-link>
         <router-link to="/feedback" class="material-nav-link"
             :class="{ 'material-nav-link--active': $route.path === '/feedback' }">
-            💬 {{ $t('Feedback') }}
+            💬 {{ $t('General.Feedback') }}
         </router-link>
 
         <div class="flex items-center gap-2 ml-2">
@@ -55,15 +55,15 @@
                     class="absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-lg ring-1 ring-black/10 text-sm dark:bg-gray-800 dark:text-white">
                     <router-link to="/games/new" class="dropdown-item"
                         :class="{ 'dropdown-item--active': $route.path === '/games/new' }" @click="isOpen = false">
-                        🆕 {{ $t('NewGame') }}
+                        🆕 {{ $t('General.NewGame') }}
                     </router-link>
                     <router-link to="/games" class="dropdown-item"
                         :class="{ 'dropdown-item--active': $route.path === '/games' }" @click="isOpen = false">
-                        📋 {{ $t('Games') }}
+                        📋 {{ $t('General.Games') }}
                     </router-link>
                     <router-link to="/feedback" class="dropdown-item"
                         :class="{ 'dropdown-item--active': $route.path === '/feedback' }" @click="isOpen = false">
-                        💬 {{ $t('Feedback') }}
+                        💬 {{ $t('General.Feedback') }}
                     </router-link>
                     <button class="dropdown-item" @click="toggleDark">
                         {{ isDark ? '☀️ Lightmode' : '🌙 Darkmode' }}

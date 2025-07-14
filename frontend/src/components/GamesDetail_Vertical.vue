@@ -6,7 +6,7 @@
                 <tr>
                     <th
                         class="scorecard-header-cell text-left left-0 sticky top-0 z-10 w-20 bg-white/90 dark:bg-gray-900/90">
-                        {{ $t('Hole') }}
+                        {{ $t('General.Hole') }}
                     </th>
                     <th v-for="player in sortedPlayers" :key="player.id"
                         class="scorecard-header-cell text-center sticky top-0 z-10 max-w-[10rem] truncate"
@@ -48,7 +48,7 @@
                 <tr class="bg-gray-200 dark:bg-gray-900 font-semibold text-gray-800 dark:text-gray-100 cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-800 transition-colors"
                     @click="$emit('sort', 'total')">
                     <td class="scorecard-cell text-left sticky left-0 z-10 bg-gray-200 dark:bg-gray-900">
-                        {{ $t('Total') }}
+                        {{ $t('General.Total') }}
                         <span v-if="sortColumn === 'total'">
                             {{ sortDirection === 'asc' ? '↑' : '↓' }}
                         </span>

@@ -6,7 +6,7 @@
       {{ $t('Feedback-ThankYou') }}
 
       <div class="flex w-full mt-6">
-        <button @click="goBack" class="button-primary flex-1">{{ $t('Back') }}</button>
+        <button @click="goBack" class="button-primary flex-1">{{ $t('General.Back') }}</button>
       </div>
     </div>
 
@@ -31,8 +31,8 @@
         <input id="email" type="email" v-model="email" class="input-field" />
       </div>
       <div class="flex w-full gap-4 mt-6">
-        <button @click="goBack" type="button" class="button-primary flex-1">{{ $t('Back') }}</button>
-        <button type="submit" class="button-primary flex-1">{{ $t('Send') }}</button>
+        <button @click="goBack" type="button" class="button-primary flex-1">{{ $t('General.Back') }}</button>
+        <button type="submit" class="button-primary flex-1">{{ $t('General.Send') }}</button>
       </div>
     </form>
   </DefaultTemplate>

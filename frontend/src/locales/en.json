@@ -1,13 +1,18 @@
 {
-  "NewGame": "New Game",
-  "Games": "Games",
-  "Feedback": "Feedback",
-  "Player": "Player",
-  "Total": "Total",
-  "Back": "Back",
-  "Forward": "Next",
-  "Send": "Submit",
-  "Hole": "Hole",
+  "General": {
+    "Home": "Home",
+    "NewGame": "New Game",
+    "Games": "Games",
+    "Game": "Game",
+    "Feedback": "Feedback",
+    "Scorecard": "Scorecard",
+    "Hole": "Hole",
+    "Player": "Player",
+    "Total": "Total",
+    "Back": "Back",
+    "Forward": "Next",
+    "Send": "Submit"
+  },
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Create a new game or view existing games.",

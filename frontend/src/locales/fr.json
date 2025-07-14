@@ -1,13 +1,18 @@
 {
-  "NewGame": "Nouvelle partie",
-  "Games": "Parties",
-  "Feedback": "Retour",
-  "Player": "Joueur",
-  "Total": "Total",
-  "Back": "Retour",
-  "Forward": "Suivant",
-  "Send": "Envoyer",
-  "Hole": "Trou",
+  "General": {
+    "Home": "Home",
+    "NewGame": "Nouvelle parti",
+    "Games": "Parties",
+    "Game": "Partie",
+    "Feedback": "Retour",
+    "Scorecard": "Carte de score",
+    "Hole": "Trou",
+    "Player": "Joueur",
+    "Total": "Total",
+    "Back": "Retour",
+    "Forward": "Suivant",
+    "Send": "Envoyer"
+  },
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Crée une nouvelle partie ou consulte les parties existantes.",
