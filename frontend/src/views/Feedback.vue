@@ -54,12 +54,12 @@ const submitted = ref(false)
 
 const submitFeedback = async () => {
   if (rating.value < 1 || rating.value > 5) {
-    alert('Bitte eine Bewertung von 1 bis 5 Sternen vergeben.');
+    alert('Please give a rating from 1 to 5 stars.');
     return;
   }
 
   if (!message.value.trim()) {
-    alert('Bitte ein Feedback eingeben.');
+    alert('Please enter feedback.');
     return;
   }
 
@@ -73,8 +73,8 @@ const submitFeedback = async () => {
 
     submitted.value = true;
   } catch (err) {
-    console.error('Fehler beim Absenden:', err);
-    alert('Dein Feedback konnte leider nicht gesendet werden.');
+    console.error('Error when sending:', err);
+    alert('Sorry, your feedback could not be sent.');
   }
 };
 

@@ -70,7 +70,7 @@ async function saveGame() {
     .filter(p => p.name)
 
   if (!gameName.value || validPlayers.length === 0) {
-    alert('Bitte Spielname und mindestens einen Spieler angeben.')
+    alert('Please enter game name and at least one player.')
     isSaving.value = false
     return
   }
@@ -80,36 +80,32 @@ async function saveGame() {
 
     for (const player of validPlayers) {
       player.name = player.name.trim()
-      try {
-        await axios.put(`/players/${player.id}`, { name: player.name })
-      } catch (err) {
-        await axios.post('/players', { id: player.id, name: player.name })
-      }
+      await axios.post('/players', { id: player.id, name: player.name })
       playerIds.push(player.id)
     }
 
+    // Upsert-Logik: Immer POST /games, egal ob neu oder bestehend
+    const idToUse = isEditing.value ? gameId : nanoid()
+    const { data: game } = await axios.post('/games', {
+      id: idToUse,
+      name: gameName.value,
+      players: playerIds,
+    })
+
+    if (!game?.id) {
+      alert('Error when saving the game.')
+      return
+    }
+
     if (isEditing.value) {
-      await axios.put(`/games/${gameId}`, { name: gameName.value })
-      await axios.post(`/games/${gameId}/players`, { players: playerIds })
+      await axios.post(`/games/${idToUse}/players`, { players: playerIds })
       router.go(-1)
     } else {
-      const newGameId = nanoid()
-      const { data: game } = await axios.post('/games', {
-        id: newGameId,
-        name: gameName.value,
-        players: playerIds,
-      })
-
-      if (!game?.id) {
-        alert('Fehler beim Erstellen des Spiels.')
-        return
-      }
-
       router.push(`/games/${game.id}/1`)
     }
   } catch (err) {
     console.error(err)
-    alert('Fehler beim Speichern: ' + err.message)
+    alert('Error when saving: ' + err.message)
   } finally {
     isSaving.value = false
   }

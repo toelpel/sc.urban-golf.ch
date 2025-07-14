@@ -83,7 +83,7 @@ async function loadHoleData() {
   // Spieldaten laden
   const { data: games } = await axios.get('/games');
   const match = games.find(g => g.id === gameId);
-  gameName.value = match?.name || `Spiel #${gameId}`;
+  gameName.value = match?.name || `Game #${gameId}`;
 
   // Spieler laden
   const { data: playerList } = await axios.get(`/games/${gameId}/players`);

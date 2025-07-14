@@ -10,7 +10,7 @@ export function useGamesDetailData(gameId) {
     async function load() {
         const { data: gameList } = await axios.get('/games');
         const match = gameList.find(g => g.id === gameId.value);
-        gameName.value = match?.name || `Spiel #${gameId.value}`;
+        gameName.value = match?.name || `Game #${gameId.value}`;
 
         const { data: playerList } = await axios.get(`/games/${gameId.value}/players`);
         players.value = playerList;

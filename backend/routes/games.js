@@ -22,10 +22,11 @@ export default async function (fastify, opts) {
     const client = await getClient();
     try {
       await client.query(
-        'INSERT INTO games (id, name) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+        `INSERT INTO games (id, name)
+        VALUES ($1, $2)
+        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name`,
         [gameId, name]
       );
-
       for (const playerId of players) {
         if (!isValidId(playerId)) continue;
         await client.query(
@@ -44,16 +45,27 @@ export default async function (fastify, opts) {
   });
 
   // Spieler einem Spiel hinzufügen
-  fastify.post('/:id/players', async (req, reply) => {
-    const gameId = req.params.id;
-    const { players } = req.body;
+  fastify.post('/', async (req, reply) => {
+    const { id, name, players } = req.body;
 
-    if (!isValidId(gameId) || !Array.isArray(players) || players.length === 0) {
-      return reply.code(400).send({ error: 'Valid game ID and player list required' });
+    if (!name || !Array.isArray(players) || players.length === 0) {
+      return reply.code(400).send({ error: 'Name and players required' });
+    }
+
+    const gameId = id;
+    if (!isValidId(gameId)) {
+      return reply.code(400).send({ error: 'Invalid or missing game ID' });
     }
 
     const client = await getClient();
     try {
+      await client.query(
+        `INSERT INTO games (id, name)
+       VALUES ($1, $2)
+       ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name`,
+        [gameId, name]
+      );
+
       for (const playerId of players) {
         if (!isValidId(playerId)) continue;
         await client.query(
@@ -61,18 +73,11 @@ export default async function (fastify, opts) {
           [gameId, playerId]
         );
       }
-      reply.send({ success: true });
-    } finally {
-      client.release();
-    }
-  });
 
-  // Alle Spiele abrufen
-  fastify.get('/', async (req, reply) => {
-    const client = await getClient();
-    try {
-      const result = await client.query('SELECT * FROM games ORDER BY created_at DESC');
-      reply.send(result.rows);
+      reply.code(200).send({ id: gameId, name, status: 'upserted' });
+    } catch (err) {
+      fastify.log.error(err);
+      reply.code(500).send({ error: 'Database error' });
     } finally {
       client.release();
     }
@@ -95,27 +100,6 @@ export default async function (fastify, opts) {
         [gameId]
       );
       reply.send(result.rows);
-    } finally {
-      client.release();
-    }
-  });
-
-  // Spiel aktualisieren
-  fastify.put('/:id', async (req, reply) => {
-    const gameId = req.params.id;
-    const { name } = req.body;
-
-    if (!isValidId(gameId) || !name) {
-      return reply.code(400).send({ error: 'Valid game ID and name required' });
-    }
-
-    const client = await getClient();
-    try {
-      await client.query(
-        'UPDATE games SET name = $1 WHERE id = $2',
-        [name, gameId]
-      );
-      reply.send({ success: true });
     } finally {
       client.release();
     }
