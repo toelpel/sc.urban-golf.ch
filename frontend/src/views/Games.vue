@@ -80,6 +80,15 @@ const {
   loadPreference: loadViewPreference
 } = useViewMode(players, holes);
 
+function sortBy(column) {
+  if (sortColumn.value === column) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortColumn.value = column;
+    sortDirection.value = 'asc';
+  }
+}
+
 // Trigger: Daten laden bei gültiger gameId
 watchEffect(async () => {
   if (!hasValidGameId.value) return;
