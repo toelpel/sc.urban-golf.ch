@@ -20,9 +20,15 @@
             <!-- Breadcrumb -->
             <span v-if="breadcrumb.length" class="mx-1">/</span>
             <template v-for="(item, index) in breadcrumb" :key="item.path">
-                <router-link :to="item.path" class="hover:underline" v-if="index !== breadcrumb.length - 1">{{
-                    item.label }}</router-link>
-                <span v-else class="font-semibold">{{ item.label }}</span>
+                <router-link :to="item.path" class="hover:underline flex items-center space-x-1"
+                    v-if="index !== breadcrumb.length - 1">
+                    <HomeIcon v-if="index === 0" class="w-4 h-4" />
+                    <span v-else>{{ item.label }}</span>
+                </router-link>
+                <span v-else class="font-semibold flex items-center space-x-1">
+                    <HomeIcon v-if="index === 0" class="w-4 h-4" />
+                    <span v-else>{{ item.label }}</span>
+                </span>
                 <span v-if="index < breadcrumb.length - 1" class="mx-1">/</span>
             </template>
         </div>
@@ -35,7 +41,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import NavControls from './NavControls.vue'
-import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
+import { ArrowLeftIcon, HomeIcon } from '@heroicons/vue/24/solid'
 
 const router = useRouter()
 const route = useRoute()

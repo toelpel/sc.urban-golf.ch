@@ -4,10 +4,6 @@
 
     <div v-if="submitted" class="text-green-600 dark:text-green-400">
       {{ $t('Feedback-ThankYou') }}
-
-      <div class="flex w-full mt-6">
-        <button @click="goBack" class="button-primary flex-1">{{ $t('General.Back') }}</button>
-      </div>
     </div>
 
     <form v-else @submit.prevent="submitFeedback" class="space-y-4">
@@ -30,9 +26,8 @@
         <label class="label" for="email">{{ $t('Feedback-Email') }}</label>
         <input id="email" type="email" v-model="email" class="input-field" />
       </div>
-      <div class="flex w-full gap-4 mt-6">
-        <button @click="goBack" type="button" class="button-primary flex-1">{{ $t('General.Back') }}</button>
-        <button type="submit" class="button-primary flex-1">{{ $t('General.Send') }}</button>
+      <div class="mt-6">
+        <button type="submit" class="button-primary w-full">{{ $t('General.Send') }}</button>
       </div>
     </form>
   </DefaultTemplate>
@@ -41,15 +36,12 @@
 <script setup>
 import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import axios from 'axios'
 
-const router = useRouter()
 const rating = ref(0)
 const message = ref('')
 const name = ref('')
 const email = ref('')
-const captcha = ref('')
 const submitted = ref(false)
 
 const submitFeedback = async () => {
@@ -77,9 +69,4 @@ const submitFeedback = async () => {
     alert('Sorry, your feedback could not be sent.');
   }
 };
-
-const goBack = () => {
-  router.back()
-}
-
 </script>
