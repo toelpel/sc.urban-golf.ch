@@ -41,7 +41,7 @@
                                 {{ sortDirection === 'asc' ? '↑' : '↓' }}
                             </span>
                         </td>
-                        <td v-for="player in sortedPlayers" :key="player.id" class="scorecard-metric-cell">
+                        <td v-for="player in sortedPlayers" :key="player.id" class="scorecard-cell">
                             {{ averageScore(player.id) }}
                         </td>
                     </tr>
@@ -55,7 +55,7 @@
                                 {{ sortDirection === 'asc' ? '↑' : '↓' }}
                             </span>
                         </td>
-                        <td v-for="player in sortedPlayers" :key="player.id" class="scorecard-metric-cell">
+                        <td v-for="player in sortedPlayers" :key="player.id" class="scorecard-cell">
                             {{ totalScore(player.id) }}
                         </td>
                     </tr>
