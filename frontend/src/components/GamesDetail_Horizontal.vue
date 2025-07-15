@@ -1,9 +1,9 @@
 <template>
     <div class="relative w-full overflow-x-auto">
         <table class="scorecard-table min-w-[42rem] relative">
-            <thead class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100">
+            <thead class="text-gray-800 dark:text-gray-100">
                 <tr>
-                    <th class="scorecard-header-cell sticky left-0 top-0 bg-gray-100 z-10 cursor-pointer"
+                    <th class="scorecard-header-cell sticky left-0 top-0 z-10 cursor-pointer"
                         @click="$emit('sort', 'name')">
                         {{ $t('General.Player') }}
                         <span v-if="sortColumn === 'name'">{{ sortDirectionSymbol }}</span>
@@ -14,11 +14,11 @@
                             {{ hole }}
                         </router-link>
                     </th>
-                    <th class="scorecard-header-cell sticky right-12 top-0 bg-gray-100 z-10 cursor-pointer"
+                    <th class="scorecard-header-cell sticky right-12 top-0 z-10 cursor-pointer"
                         @click="$emit('sort', 'average')">
                         Ø <span v-if="sortColumn === 'average'">{{ sortDirectionSymbol }}</span>
                     </th>
-                    <th class="scorecard-header-cell sticky right-0 top-0 bg-gray-100 z-10 cursor-pointer"
+                    <th class="scorecard-header-cell sticky right-0 top-0 z-10 cursor-pointer"
                         @click="$emit('sort', 'total')">
                         {{ $t('General.Total') }} <span v-if="sortColumn === 'total'">{{ sortDirectionSymbol }}</span>
                     </th>
@@ -26,16 +26,16 @@
             </thead>
             <tbody>
                 <tr v-for="player in sortedPlayers" :key="player.id" class="scorecard-hover-row">
-                    <td class="scorecard-player-cell sticky left-0 z-10 bg-white dark:bg-gray-900">
+                    <td class="scorecard-player-cell sticky left-0 z-10">
                         {{ player.name }}
                     </td>
                     <td v-for="hole in holes" :key="hole" class="scorecard-cell">
                         {{ scores[player.id]?.[hole] ?? '–' }}
                     </td>
-                    <td class="scorecard-metric-cell sticky right-12 z-10 bg-white dark:bg-gray-900">
+                    <td class="scorecard-metric-cell sticky right-12 z-10">
                         {{ averageScore(player.id) }}
                     </td>
-                    <td class="scorecard-metric-cell sticky right-0 z-10 bg-white dark:bg-gray-900">
+                    <td class="scorecard-metric-cell sticky right-0 z-10">
                         {{ totalScore(player.id) }}
                     </td>
                 </tr>
