@@ -73,37 +73,50 @@ export default async function (fastify, opts) {
 
     try {
       let where = '';
+      let gamesQuery = '';
+      let countQuery = '';
       let valuesGames = [perPage, offset];
       let valuesCount = [];
 
       if (search) {
         where = `WHERE g.name ILIKE $3 OR EXISTS (
+        SELECT 1 FROM game_players gp
+        JOIN players p ON gp.player_id = p.id
+        WHERE gp.game_id = g.id AND p.name ILIKE $3
+      )`;
+        valuesGames = [perPage, offset, `%${search}%`];
+
+        // Neue WHERE-Bedingung für countQuery mit $1
+        countQuery = `
+        SELECT COUNT(*) FROM games g
+        WHERE g.name ILIKE $1 OR EXISTS (
           SELECT 1 FROM game_players gp
           JOIN players p ON gp.player_id = p.id
-          WHERE gp.game_id = g.id AND p.name ILIKE $3
+          WHERE gp.game_id = g.id AND p.name ILIKE $1
         )`;
-        valuesGames = [perPage, offset, `%${search}%`];
         valuesCount = [`%${search}%`];
+      } else {
+        countQuery = `SELECT COUNT(*) FROM games g`;
       }
 
-      const gamesResult = await client.query(
-        `SELECT g.* FROM games g
-         ${where}
-         ORDER BY g.created_at DESC
-         LIMIT $1 OFFSET $2`,
-        valuesGames
-      );
+      gamesQuery = `
+      SELECT g.* FROM games g
+      ${where}
+      ORDER BY g.created_at DESC
+      LIMIT $1 OFFSET $2`;
 
-      const countResult = await client.query(
-        `SELECT COUNT(*) FROM games g
-         ${where}`,
-        valuesCount
-      );
+      const [gamesResult, countResult] = await Promise.all([
+        client.query(gamesQuery, valuesGames),
+        client.query(countQuery, valuesCount)
+      ]);
 
-      reply.send({ games: gamesResult.rows, total: parseInt(countResult.rows[0].count) });
+      reply.send({
+        games: gamesResult.rows,
+        total: parseInt(countResult.rows[0].count)
+      });
     } catch (err) {
       fastify.log.error(err);
-      reply.code(500).send({ error: 'Database error' });
+      reply.code(500).send({ error: 'Database error', details: err.message });
     } finally {
       client.release();
     }
