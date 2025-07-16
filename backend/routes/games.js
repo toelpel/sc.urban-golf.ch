@@ -1,12 +1,8 @@
 import { getClient } from '../db/pg.js';
 
-/**
- * Regex zur ID-Validierung: nanoid (21 Zeichen, alphanumerisch, - und _)
- */
 const isValidId = (id) => /^[a-zA-Z0-9_-]{10,30}$/.test(id);
 
 export default async function (fastify, opts) {
-  // Spiel erstellen oder aktualisieren
   fastify.post('/', async (req, reply) => {
     const { id, name, players } = req.body;
 
@@ -46,7 +42,6 @@ export default async function (fastify, opts) {
     }
   });
 
-  // Spieler einem Spiel hinzufügen (z. B. bei Spiel-Update)
   fastify.post('/:id/players', async (req, reply) => {
     const gameId = req.params.id;
     const { players } = req.body;
@@ -70,18 +65,45 @@ export default async function (fastify, opts) {
     }
   });
 
-  // Alle Spiele abrufen
+  // Neue Route: GET /games?page=1&per_page=4&search=abc
   fastify.get('/', async (req, reply) => {
     const client = await getClient();
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const perPage = Math.min(10, parseInt(req.query.per_page) || 4);
+    const offset = (page - 1) * perPage;
+    const search = req.query.search;
+
     try {
-      const result = await client.query('SELECT * FROM games ORDER BY created_at DESC');
-      reply.send(result.rows);
+      let where = '';
+      let values = [perPage, offset];
+
+      if (search) {
+        where = `WHERE g.name ILIKE $3 OR EXISTS (
+          SELECT 1 FROM game_players gp
+          JOIN players p ON gp.player_id = p.id
+          WHERE gp.game_id = g.id AND p.name ILIKE $3
+        )`;
+        values = [perPage, offset, `%${search}%`];
+      }
+
+      const gamesResult = await client.query(
+        `SELECT g.* FROM games g
+         ${where}
+         ORDER BY g.created_at DESC
+         LIMIT $1 OFFSET $2`, values
+      );
+
+      const countResult = await client.query(
+        `SELECT COUNT(*) FROM games g
+         ${where}`, search ? [`%${search}%`] : []
+      );
+
+      reply.send({ games: gamesResult.rows, total: parseInt(countResult.rows[0].count) });
     } finally {
       client.release();
     }
   });
 
-  // Spieler eines Spiels abrufen
   fastify.get('/:id/players', async (req, reply) => {
     const gameId = req.params.id;
     if (!isValidId(gameId)) {
