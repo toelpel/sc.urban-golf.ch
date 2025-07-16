@@ -99,17 +99,16 @@ const showBack = computed(() =>
 watchEffect(async () => {
     const relevant =
         route.name === 'GamesDetail' ||
-        route.name === 'GamesHole'
+        route.name === 'GamesHole';
 
     if (relevant && route.params.gameId) {
         try {
-            const gameId = route.params.gameId
-            const { data } = await axios.get('/games')
-            const game = data.find(g => g.id === gameId)
-            gameName.value = game ? game.name : `${t('Navigation.Game')} ${gameId}`
+            const gameId = route.params.gameId;
+            const { data } = await axios.get(`/games/${gameId}`);
+            gameName.value = data?.name || `${t('Navigation.Game')} ${gameId}`;
         } catch {
-            gameName.value = `${t('Navigation.Game')} ${route.params.gameId}`
+            gameName.value = `${t('Navigation.Game')} ${route.params.gameId}`;
         }
     }
-})
+});
 </script>
