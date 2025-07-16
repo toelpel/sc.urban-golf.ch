@@ -3,10 +3,13 @@ import { getClient } from '../db/pg.js';
 const isValidId = (id) => /^[a-zA-Z0-9_-]{10,30}$/.test(id);
 
 export default async function (fastify, opts) {
+  // Spiel erstellen oder aktualisieren
   fastify.post('/', async (req, reply) => {
     const { id, name, players } = req.body;
+
     if (!name || !Array.isArray(players) || players.length === 0)
       return reply.code(400).send({ error: 'Name and players required' });
+
     if (!isValidId(id))
       return reply.code(400).send({ error: 'Invalid or missing game ID' });
 
@@ -37,6 +40,7 @@ export default async function (fastify, opts) {
     }
   });
 
+  // Spieler einem Spiel hinzufügen
   fastify.post('/:id/players', async (req, reply) => {
     const gameId = req.params.id;
     const { players } = req.body;
@@ -59,6 +63,7 @@ export default async function (fastify, opts) {
     }
   });
 
+  // Spiele abrufen mit optionaler Suche und Pagination
   fastify.get('/', async (req, reply) => {
     const client = await getClient();
     const page = Math.max(1, parseInt(req.query.page) || 1);
@@ -68,7 +73,8 @@ export default async function (fastify, opts) {
 
     try {
       let where = '';
-      let values = [perPage, offset];
+      let valuesGames = [perPage, offset];
+      let valuesCount = [];
 
       if (search) {
         where = `WHERE g.name ILIKE $3 OR EXISTS (
@@ -76,27 +82,34 @@ export default async function (fastify, opts) {
           JOIN players p ON gp.player_id = p.id
           WHERE gp.game_id = g.id AND p.name ILIKE $3
         )`;
-        values = [perPage, offset, `%${search}%`];
+        valuesGames = [perPage, offset, `%${search}%`];
+        valuesCount = [`%${search}%`];
       }
 
       const gamesResult = await client.query(
         `SELECT g.* FROM games g
          ${where}
          ORDER BY g.created_at DESC
-         LIMIT $1 OFFSET $2`, values
+         LIMIT $1 OFFSET $2`,
+        valuesGames
       );
 
       const countResult = await client.query(
         `SELECT COUNT(*) FROM games g
-         ${where}`, search ? [`%${search}%`] : []
+         ${where}`,
+        valuesCount
       );
 
       reply.send({ games: gamesResult.rows, total: parseInt(countResult.rows[0].count) });
+    } catch (err) {
+      fastify.log.error(err);
+      reply.code(500).send({ error: 'Database error' });
     } finally {
       client.release();
     }
   });
 
+  // Spielname via ID abrufen
   fastify.get('/:id', async (req, reply) => {
     const gameId = req.params.id;
     if (!isValidId(gameId)) return reply.code(400).send({ error: 'Invalid game ID' });
@@ -111,6 +124,7 @@ export default async function (fastify, opts) {
     }
   });
 
+  // Spieler eines Spiels abrufen
   fastify.get('/:id/players', async (req, reply) => {
     const gameId = req.params.id;
     if (!isValidId(gameId)) return reply.code(400).send({ error: 'Invalid game ID' });
