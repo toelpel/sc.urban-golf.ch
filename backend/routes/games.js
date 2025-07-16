@@ -5,15 +5,10 @@ const isValidId = (id) => /^[a-zA-Z0-9_-]{10,30}$/.test(id);
 export default async function (fastify, opts) {
   fastify.post('/', async (req, reply) => {
     const { id, name, players } = req.body;
-
-    if (!name || !Array.isArray(players) || players.length === 0) {
+    if (!name || !Array.isArray(players) || players.length === 0)
       return reply.code(400).send({ error: 'Name and players required' });
-    }
-
-    const gameId = id;
-    if (!isValidId(gameId)) {
+    if (!isValidId(id))
       return reply.code(400).send({ error: 'Invalid or missing game ID' });
-    }
 
     const client = await getClient();
     try {
@@ -22,14 +17,14 @@ export default async function (fastify, opts) {
          VALUES ($1, $2)
          ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name
          RETURNING id, name`,
-        [gameId, name]
+        [id, name]
       );
 
       for (const playerId of players) {
         if (!isValidId(playerId)) continue;
         await client.query(
           'INSERT INTO game_players (game_id, player_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-          [gameId, playerId]
+          [id, playerId]
         );
       }
 
@@ -46,9 +41,8 @@ export default async function (fastify, opts) {
     const gameId = req.params.id;
     const { players } = req.body;
 
-    if (!isValidId(gameId) || !Array.isArray(players) || players.length === 0) {
+    if (!isValidId(gameId) || !Array.isArray(players) || players.length === 0)
       return reply.code(400).send({ error: 'Valid game ID and player list required' });
-    }
 
     const client = await getClient();
     try {
@@ -65,7 +59,6 @@ export default async function (fastify, opts) {
     }
   });
 
-  // Neue Route: GET /games?page=1&per_page=4&search=abc
   fastify.get('/', async (req, reply) => {
     const client = await getClient();
     const page = Math.max(1, parseInt(req.query.page) || 1);
@@ -104,11 +97,23 @@ export default async function (fastify, opts) {
     }
   });
 
+  fastify.get('/:id', async (req, reply) => {
+    const gameId = req.params.id;
+    if (!isValidId(gameId)) return reply.code(400).send({ error: 'Invalid game ID' });
+
+    const client = await getClient();
+    try {
+      const result = await client.query(`SELECT id, name FROM games WHERE id = $1`, [gameId]);
+      if (result.rowCount === 0) return reply.code(404).send({ error: 'Not found' });
+      reply.send(result.rows[0]);
+    } finally {
+      client.release();
+    }
+  });
+
   fastify.get('/:id/players', async (req, reply) => {
     const gameId = req.params.id;
-    if (!isValidId(gameId)) {
-      return reply.code(400).send({ error: 'Invalid game ID' });
-    }
+    if (!isValidId(gameId)) return reply.code(400).send({ error: 'Invalid game ID' });
 
     const client = await getClient();
     try {
