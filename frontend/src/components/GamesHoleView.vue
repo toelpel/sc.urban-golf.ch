@@ -23,7 +23,7 @@
       <button @click="changeStrokes(player.id, -1)" class="button-primary w-10 h-10 flex items-center justify-center"
         aria-label="Weniger Schläge">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 -translate-y-[1px] -translate-x-[10px]" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+          viewBox="0 0 24 24" stroke="currentColor" stroke-width="4" stroke-linecap="butt">
           <path d="M5 12h14" />
         </svg>
       </button>
@@ -35,7 +35,7 @@
       <button @click="changeStrokes(player.id, 1)" class="button-primary w-10 h-10 flex items-center justify-center"
         aria-label="Mehr Schläge">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 -translate-y-[1px] -translate-x-[10px]" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+          viewBox="0 0 24 24" stroke="currentColor" stroke-width="4" stroke-linecap="butt">
           <path d="M12 5v14M5 12h14" />
         </svg>
       </button>
@@ -44,7 +44,7 @@
 
   <div class="flex flex-col items-stretch gap-3 mt-6">
     <div class="flex flex-row gap-3">
-      <router-link v-if="hole > 1" :to="`/games/${gameId}/${hole - 1}`" class="button-primary flex-1 text-center">
+      <router-link :to="`/games/${gameId}/${hole - 1}`" v-if="hole > 1" class="button-primary flex-1 text-center">
         {{ $t('General.Back') }}
       </router-link>
 
@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watchEffect } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useGamesDetailData } from '@/composables/useGamesDetailData.js';
 import axios from 'axios';
@@ -71,13 +71,22 @@ const hole = computed(() => parseInt(route.params.holeId));
 
 const { players, scores, holes, gameName, load } = useGamesDetailData(gameId);
 
-watchEffect(() => {
+async function ensureScoreFieldsExist() {
   for (const player of players.value) {
     if (!scores.value[player.id]) scores.value[player.id] = {};
     if (scores.value[player.id][hole.value] === undefined) {
       scores.value[player.id][hole.value] = '';
     }
   }
+}
+
+onMounted(async () => {
+  await load();
+  ensureScoreFieldsExist();
+});
+
+watch(() => hole.value, () => {
+  ensureScoreFieldsExist();
 });
 
 function changeStrokes(playerId, delta) {
