@@ -32,6 +32,7 @@
   "ListGames-NoGamesFound": "Geen spellen gevonden",
   "ListGames-HolesPlayed": "Gespeelde holes",
   "ListGames-SearchText": "Spel- of spelersnaam",
+  "ListGames-LoadMore": "Meer spellen laden",
   "NewGame-TitleNew": "Nieuw spel aanmaken",
   "NewGame-TitleEdit": "Spel bewerken",
   "NewGame-GameName": "Spelnaam",

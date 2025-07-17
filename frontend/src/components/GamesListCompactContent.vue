@@ -1,5 +1,6 @@
 <template>
-    <div v-if="games.length === 0 && !isLoading" class="text-center text-gray-500 dark:text-gray-400">
+    <div v-if="games.length === 0 && !isLoading && showNoGamesTimeout"
+        class="text-center text-gray-500 dark:text-gray-400">
         {{ $t('ListGames-NoGamesFound') }}
     </div>
 
@@ -42,8 +43,8 @@
             </transition>
         </li>
 
-        <!-- Skeleton loaders -->
-        <li v-for="n in 3" :key="'skeleton-' + n" v-if="isLoading"
+        <!-- Skeleton loaders angepasst an perPage -->
+        <li v-for="n in props.perPage" :key="'skeleton-' + n" v-if="isLoading"
             class="animate-pulse bg-white/60 dark:bg-gray-800/60 rounded-2xl px-5 py-4 border border-gray-300 dark:border-gray-600">
             <div class="flex justify-between items-center">
                 <div class="space-y-2 w-full">
@@ -55,7 +56,7 @@
         </li>
     </ul>
 
-    <div v-if="hasMore && !isLoading" class="mt-6 text-center">
+    <div v-if="hasMore && !isLoading && games.length > 0" class="mt-6 text-center">
         <button @click="loadMoreGames" class="button-primary">
             {{ $t('ListGames-LoadMore') || 'Mehr laden' }}
         </button>
@@ -82,23 +83,33 @@ const playerMap = ref({});
 const gameMeta = ref({});
 const expandedGameId = ref(null);
 const hasMore = ref(true);
-const isLoading = ref(false);
+const isLoading = ref(true);
+const showNoGamesTimeout = ref(false);
 
 let debounceTimer = null;
+let noGamesTimer = null;
 
 watch(
     () => props.searchTerm,
     (newTerm) => {
         clearTimeout(debounceTimer);
+        clearTimeout(noGamesTimer);
+
         debounceTimer = setTimeout(async () => {
             games.value = [];
             playerMap.value = {};
             gameMeta.value = {};
             page.value = 1;
             hasMore.value = true;
+            isLoading.value = true;
+            showNoGamesTimeout.value = false;
+
+            noGamesTimer = setTimeout(() => {
+                showNoGamesTimeout.value = true;
+            }, 10000); // 10 Sekunden Timeout
 
             await loadMoreGames();
-        }, 300); // 300ms debounce delay
+        }, 300);
     },
     { immediate: true }
 );

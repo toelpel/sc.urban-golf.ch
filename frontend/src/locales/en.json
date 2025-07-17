@@ -32,6 +32,7 @@
   "ListGames-NoGamesFound": "No games found",
   "ListGames-HolesPlayed": "Holes Played",
   "ListGames-SearchText": "Game- or Playername",
+  "ListGames-LoadMore": "Load more games",
   "NewGame-TitleNew": "Create New Game",
   "NewGame-TitleEdit": "Edit Game",
   "NewGame-GameName": "Game Name",

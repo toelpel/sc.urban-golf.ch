@@ -32,6 +32,7 @@
   "ListGames-NoGamesFound": "Aucune partie trouvée",
   "ListGames-HolesPlayed": "Trous joués",
   "ListGames-SearchText": "Nom du jeu ou du joueur",
+  "ListGames-LoadMore": "Charger d'autres jeux",
   "NewGame-TitleNew": "Créer une nouvelle partie",
   "NewGame-TitleEdit": "Modifier la partie",
   "NewGame-GameName": "Nom de la partie",
