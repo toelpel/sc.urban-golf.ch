@@ -26,4 +26,5 @@ import GameListContent from './GamesListCompactContent.vue';
 const currentPage = ref(1);
 const perPage = 4;
 const searchTerm = ref('');
+
 </script>

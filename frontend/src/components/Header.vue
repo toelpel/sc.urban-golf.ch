@@ -36,18 +36,15 @@
 </template>
 
 <script setup>
-import { computed, ref, watchEffect } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import axios from 'axios'
 import NavControls from './NavControls.vue'
 import { ArrowLeftIcon, HomeIcon } from '@heroicons/vue/24/solid'
 
 const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
-
-const gameName = ref('')
 
 function goBack() {
     router.back()
@@ -72,11 +69,11 @@ const breadcrumb = computed(() => {
             const path = current.path.includes(':') ? buildDynamicPath(current) : current.path
 
             const label = (() => {
+                if (current.name === 'GamesDetail') {
+                    return t('General.Scorecard')
+                }
                 if (current.name === 'GamesHole') {
                     return route.params.holeId
-                }
-                if (current.name === 'GamesDetail') {
-                    return gameName.value
                 }
                 return t(current.meta.title)
             })()
@@ -95,21 +92,4 @@ const showBack = computed(() =>
         route.path === prefix || route.path.startsWith(prefix + '/')
     )
 )
-
-watchEffect(async () => {
-    const relevant =
-        route.name === 'GamesDetail' ||
-        route.name === 'GamesHole'
-
-    if (relevant && route.params.gameId) {
-        try {
-            const gameId = route.params.gameId
-            const { data } = await axios.get('/games')
-            const game = data.find(g => g.id === gameId)
-            gameName.value = game ? game.name : `${t('Navigation.Game')} ${gameId}`
-        } catch {
-            gameName.value = `${t('Navigation.Game')} ${route.params.gameId}`
-        }
-    }
-})
 </script>

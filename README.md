@@ -52,13 +52,13 @@ Multi-language support is fully integrated using **vue-i18n**. Language files re
 - Hole-by-hole live scoring with +/– buttons
 - Mobile-optimized single-hole view
 - Smart Scorecard view with:
-  - Horizontal scrolling
+  - Horizontal/vertical view
   - Fixed player/average/total columns
   - Clickable hole headers
   - Sorted columns (name, average, total)
 - List of past games with:
   - Search (after 3 characters) by game or player name
-  - Pagination (5 per page)
+  - LoadMore function
   - Expandable game meta info (holes played, player scores)
 - Persistent dark mode (based on system settings or manual toggle)
 
