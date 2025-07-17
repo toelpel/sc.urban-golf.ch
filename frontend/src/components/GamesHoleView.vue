@@ -60,18 +60,12 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
-import { ref, computed, onMounted, watch } from 'vue';
-=======
-import { ref, onMounted, computed, watch } from 'vue';
->>>>>>> ec7b2fe20186f8fd9821f6031dcc38617681e4d5
+import { ref, computed, onMounted, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import { useGamesDetailData } from '@/composables/useGamesDetailData.js';
 import axios from 'axios';
-import { useGamesDetailData } from '@/composables/useGamesDetailData';
 
 const route = useRoute();
-<<<<<<< HEAD
 const gameId = ref(route.params.gameId);
 const hole = computed(() => parseInt(route.params.holeId));
 
@@ -82,46 +76,17 @@ async function ensureScoreFieldsExist() {
     if (!scores.value[player.id]) scores.value[player.id] = {};
     if (scores.value[player.id][hole.value] === undefined) {
       scores.value[player.id][hole.value] = '';
-=======
-const gameId = route.params.gameId;
-const hole = computed(() => parseInt(route.params.holeId));
-
-const { players, scores, holes, gameName, load } = useGamesDetailData(ref(gameId));
-
-watch(() => hole.value, async () => {
-  await load(); // optional: holewechsel → reload scores
-});
-
-onMounted(async () => {
-  await load();
-  loadHoleScores(); // Initialscores für aktuelles Loch setzen
-});
-
-function loadHoleScores() {
-  // Scores initialisieren mit "" oder 0
-  for (const player of players.value) {
-    scores.value[player.id] ??= '';
-  }
-
-  axios.get('/scores', { params: { game_id: gameId } }).then(({ data }) => {
-    holes.value.splice(0, holes.value.length, ...Array.from(new Set(data.map(e => e.hole))).sort((a, b) => a - b));
-
-    for (const entry of data) {
-      if (parseInt(entry.hole) === hole.value) {
-        scores.value[entry.player_id] = entry.strokes;
-      }
->>>>>>> ec7b2fe20186f8fd9821f6031dcc38617681e4d5
     }
-  });
+  }
 }
 
-onMounted(async () => {
-  await load();
-  ensureScoreFieldsExist();
-});
-
-watch(() => hole.value, () => {
-  ensureScoreFieldsExist();
+watchEffect(() => {
+  for (const player of players.value) {
+    if (!scores.value[player.id]) scores.value[player.id] = {};
+    if (scores.value[player.id][hole.value] === undefined) {
+      scores.value[player.id][hole.value] = '';
+    }
+  }
 });
 
 function changeStrokes(playerId, delta) {
