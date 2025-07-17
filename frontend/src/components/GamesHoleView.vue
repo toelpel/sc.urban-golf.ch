@@ -71,15 +71,6 @@ const hole = computed(() => parseInt(route.params.holeId));
 
 const { players, scores, holes, gameName, load } = useGamesDetailData(gameId);
 
-async function ensureScoreFieldsExist() {
-  for (const player of players.value) {
-    if (!scores.value[player.id]) scores.value[player.id] = {};
-    if (scores.value[player.id][hole.value] === undefined) {
-      scores.value[player.id][hole.value] = '';
-    }
-  }
-}
-
 watchEffect(() => {
   for (const player of players.value) {
     if (!scores.value[player.id]) scores.value[player.id] = {};
