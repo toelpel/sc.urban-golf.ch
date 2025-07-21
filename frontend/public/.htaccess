@@ -1,9 +1,13 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
+
+  # Anfragen an vorhandene Dateien oder Verzeichnisse werden normal ausgeliefert
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Alle anderen Anfragen gehen an index.html (SPA)
   RewriteRule . /index.html [L]
 </IfModule>
 
