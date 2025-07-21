@@ -21,24 +21,39 @@
       "Text": "Wir freuen uns über dein"
     }
   },
-  "Feedback-Title": "Feedback zur Scorecard",
-  "Feedback-ThankYou": "Vielen Dank für dein Feedback! 🍀",
-  "Feedback-RatingTitle": "Bewertung",
-  "Feedback-Text": "Feedback",
-  "Feedback-Name": "Name (optional)",
-  "Feedback-Email": "Email (optional)",
-  "Scorecard": "Scorecard",
-  "ListGames-AllGames": "Alle Spiele",
-  "ListGames-NoGamesFound": "Keine Spiele gefunden",
-  "ListGames-HolesPlayed": "Gespielte Löcher",
-  "ListGames-SearchText": "Spiel- oder Spielername",
-  "ListGames-LoadMore": "Weitere Spiele laden",
-  "NewGame-TitleNew": "Neues Spiel erstellen",
-  "NewGame-TitleEdit": "Spiel bearbeiten",
-  "NewGame-GameName": "Spielname",
-  "NewGame-PlayerName": "Spieler",
-  "NewGame-SaveChanges": "Änderungen speichern",
-  "NewGame-StartGame": "Spiel starten",
-  "NewGame-AddPlayer": "Spieler hinzufügen",
-  "ScorecardLoading": "Lade Spieler und Scores ..."
+  "Feedback": {
+    "Title": "Feedback zur Scorecard",
+    "ThankYou": "Vielen Dank für dein Feedback! 🍀",
+    "RatingTitle": "Bewertung",
+    "Text": "Feedback",
+    "Name": "Name (optional)",
+    "Email": "Email (optional)"
+  },
+  "Scorecard": {
+    "Title": "Scorecard",
+    "Loading": "Lade Spieler und Scores ..."
+  },
+  "Games": {
+    "ListGames": {
+      "AllGames": "Alle Spiele",
+      "NoGamesFound": "Keine Spiele gefunden",
+      "HolesPlayed": "Gespielte Löcher",
+      "SearchText": "Spiel- oder Spielername",
+      "LoadMore": "Weitere Spiele laden"
+    },
+    "NewGame": {
+      "TitleNew": "Neues Spiel erstellen",
+      "TitleEdit": "Spiel bearbeiten",
+      "GameName": "Spielname",
+      "PlayerName": "Spieler",
+      "SaveChanges": "Änderungen speichern",
+      "StartGame": "Spiel starten",
+      "AddPlayer": "Spieler hinzufügen"
+    },
+    "HoleView": {
+      "EditGame": "Spiel bearbeiten",
+      "HideHoleOverview": "Verstecke die Lochübersicht",
+      "ShowHoleOverview": "Zeige die Lochübersicht an"
+    }
+  }
 }

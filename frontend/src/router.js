@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
-  history: createWebHistory('/new/'),
+  history: createWebHistory('/'),
   routes: [
     {
       path: '/',
@@ -30,7 +30,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/games/new',
+      path: '/games/new/:gameId?',
       name: 'GamesNew',
       component: () => import('./views/GamesNew.vue'),
       meta: {

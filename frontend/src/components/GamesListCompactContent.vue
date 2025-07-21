@@ -1,7 +1,7 @@
 <template>
     <div v-if="games.length === 0 && !isLoading && showNoGamesTimeout"
         class="text-center text-gray-500 dark:text-gray-400">
-        {{ $t('ListGames-NoGamesFound') }}
+        {{ $t('Games.ListGames.NoGamesFound') }}
     </div>
 
     <ul class="space-y-2">
@@ -31,7 +31,7 @@
                 <div v-if="expandedGameId === game.id"
                     class="mt-4 pt-3 border-t border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300">
                     <div class="mb-2">
-                        🕳️ {{ $t('ListGames-HolesPlayed') }}: {{ gameMeta[game.id]?.holes?.length || 0 }}
+                        🕳️ {{ $t('Games.ListGames.HolesPlayed') }}: {{ gameMeta[game.id]?.holes?.length || 0 }}
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
                         <div v-for="player in gameMeta[game.id]?.players || []" :key="player.id" class="truncate"
@@ -58,7 +58,7 @@
 
     <div v-if="hasMore && !isLoading && games.length > 0" class="mt-6 text-center">
         <button @click="loadMoreGames" class="button-primary">
-            {{ $t('ListGames-LoadMore') || 'Mehr laden' }}
+            {{ $t('Games.ListGames.LoadMore') }}
         </button>
     </div>
 </template>

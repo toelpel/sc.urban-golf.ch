@@ -25,10 +25,16 @@ export default async function (fastify, opts) {
 
       for (const playerId of players) {
         if (!isValidId(playerId)) continue;
-        await client.query(
-          'INSERT INTO game_players (game_id, player_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-          [id, playerId]
-        );
+
+        try {
+          await client.query(
+            'INSERT INTO game_players (game_id, player_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+            [id, playerId]
+          );
+        } catch (err) {
+          fastify.log.warn({ playerId, error: err.message }, 'Failed to insert into game_players – continuing anyway')
+          // nicht erneut reply.send() → einfach weitermachen
+        }
       }
 
       reply.code(200).send({ ...result.rows[0], status: 'upserted' });

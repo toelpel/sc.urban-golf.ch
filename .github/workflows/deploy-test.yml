@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.FTP_USER_TEST }}
           password: ${{ secrets.FTP_PASS_TEST }}
           local-dir: frontend/dist/
-          server-dir: /new/
+          server-dir: /
           exclude: |
             .git
             .git/**

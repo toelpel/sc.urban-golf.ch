@@ -8,15 +8,15 @@
       <template v-else>
         <!-- Scorecard Ansicht -->
         <div class="shrink-0 flex justify-between items-center">
-          <h1 class="maintitle">Scorecard – {{ gameName }}</h1>
+          <h1 class="maintitle">{{ $t('Scorecard.Title') }} – {{ gameName }}</h1>
           <button @click="toggleView" class="flex items-center justify-center w-8 h-8 -mt-2 rounded-md bg-gray-200 text-sm text-gray-800 shadow hover:bg-gray-300
-         dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 transition" title="Ansicht wechseln">
+         dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 transition">
             <ArrowPathIcon class="w-5 h-5" />
           </button>
         </div>
 
         <div v-if="players.length === 0" class="shrink-0 text-gray-500 text-center dark:text-gray-300">
-          {{ $t('ScorecardLoading') }}
+          {{ $t('Scorecard.Loading') }}
         </div>
 
         <div v-else>

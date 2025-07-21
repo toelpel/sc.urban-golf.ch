@@ -21,24 +21,39 @@
       "Text": "We horen graag jouw"
     }
   },
-  "Feedback-Title": "Feedback over de scorecard",
-  "Feedback-ThankYou": "Bedankt voor je feedback! 🍀",
-  "Feedback-RatingTitle": "Beoordeling",
-  "Feedback-Text": "Feedback",
-  "Feedback-Name": "Naam (optioneel)",
-  "Feedback-Email": "E-mail (optioneel)",
-  "Scorecard": "Scorekaart",
-  "ListGames-AllGames": "Alle spellen",
-  "ListGames-NoGamesFound": "Geen spellen gevonden",
-  "ListGames-HolesPlayed": "Gespeelde holes",
-  "ListGames-SearchText": "Spel- of spelersnaam",
-  "ListGames-LoadMore": "Meer spellen laden",
-  "NewGame-TitleNew": "Nieuw spel aanmaken",
-  "NewGame-TitleEdit": "Spel bewerken",
-  "NewGame-GameName": "Spelnaam",
-  "NewGame-PlayerName": "Speler",
-  "NewGame-SaveChanges": "Wijzigingen opslaan",
-  "NewGame-StartGame": "Spel starten",
-  "NewGame-AddPlayer": "Speler toevoegen",
-  "ScorecardLoading": "Spelers en scores laden ..."
+  "Feedback": {
+    "Title": "Feedback over de scorecard",
+    "ThankYou": "Bedankt voor je feedback! 🍀",
+    "RatingTitle": "Beoordeling",
+    "Text": "Feedback",
+    "Name": "Naam (optioneel)",
+    "Email": "E-mail (optioneel)"
+  },
+  "Scorecard": {
+    "Title": "Scorekaart",
+    "Loading": "Spelers en scores laden..."
+  },
+  "Games": {
+    "ListGames": {
+      "AllGames": "Alle spellen",
+      "NoGamesFound": "Geen spellen gevonden",
+      "HolesPlayed": "Gespeelde holes",
+      "SearchText": "Spel- of spelersnaam",
+      "LoadMore": "Meer spellen laden"
+    },
+    "NewGame": {
+      "TitleNew": "Nieuw spel aanmaken",
+      "TitleEdit": "Spel bewerken",
+      "GameName": "Spelnaam",
+      "PlayerName": "Speler",
+      "SaveChanges": "Wijzigingen opslaan",
+      "StartGame": "Spel starten",
+      "AddPlayer": "Speler toevoegen"
+    },
+    "HoleView": {
+      "EditGame": "Spel bewerken",
+      "HideHoleOverview": "Verborgen gaten overzicht",
+      "ShowHoleOverview": "Overzicht gaten tonen"
+    }
+  }
 }

@@ -21,24 +21,39 @@
       "Text": "We appreciate your"
     }
   },
-  "Feedback-Title": "Feedback on the Scorecard",
-  "Feedback-ThankYou": "Thank you for your feedback! 🍀",
-  "Feedback-RatingTitle": "Rating",
-  "Feedback-Text": "Feedback",
-  "Feedback-Name": "Name (optional)",
-  "Feedback-Email": "Email (optional)",
-  "Scorecard": "Scorecard",
-  "ListGames-AllGames": "All Games",
-  "ListGames-NoGamesFound": "No games found",
-  "ListGames-HolesPlayed": "Holes Played",
-  "ListGames-SearchText": "Game- or Playername",
-  "ListGames-LoadMore": "Load more games",
-  "NewGame-TitleNew": "Create New Game",
-  "NewGame-TitleEdit": "Edit Game",
-  "NewGame-GameName": "Game Name",
-  "NewGame-PlayerName": "Player",
-  "NewGame-SaveChanges": "Save Changes",
-  "NewGame-StartGame": "Start Game",
-  "NewGame-AddPlayer": "Add Player",
-  "ScorecardLoading": "Loading players and scores ..."
+  "Feedback": {
+    "Title": "Feedback on the Scorecard",
+    "ThankYou": "Thank you for your feedback! 🍀",
+    "RatingTitle": "Rating",
+    "Text": "Feedback",
+    "Name": "Name (optional)",
+    "Email": "Email (optional)"
+  },
+  "Scorecard": {
+    "Title": "Scorecard",
+    "Loading": "Loading players and scores..."
+  },
+  "Games": {
+    "ListGames": {
+      "AllGames": "All Games",
+      "NoGamesFound": "No games found",
+      "HolesPlayed": "Holes Played",
+      "SearchText": "Game- or Playername",
+      "LoadMore": "Load more games"
+    },
+    "NewGame": {
+      "TitleNew": "Create New Game",
+      "TitleEdit": "Edit Game",
+      "GameName": "Game Name",
+      "PlayerName": "Player",
+      "SaveChanges": "Save Changes",
+      "StartGame": "Start Game",
+      "AddPlayer": "Add Player"
+    },
+    "HoleView": {
+      "EditGame": "Edit game",
+      "HideHoleOverview": "Hide Hole Overview",
+      "ShowHoleOverview": "Show Hole Overview"
+    }
+  }
 }

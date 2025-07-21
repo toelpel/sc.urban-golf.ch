@@ -1,24 +1,24 @@
 <template>
   <DefaultTemplate>
     <h1 class="maintitle">
-      {{ isEditing ? $t('NewGame-TitleEdit') : $t('NewGame-TitleNew') }}
+      {{ isEditing ? $t('Games.NewGame.TitleEdit') : $t('Games.NewGame.TitleNew') }}
     </h1>
 
     <div class="flex flex-col items-stretch gap-4 mt-6">
-      <input type="text" v-model="gameName" :placeholder="$t('NewGame-GameName')" maxlength="30"
+      <input type="text" v-model="gameName" :placeholder="$t('Games.NewGame.GameName')" maxlength="30"
         class="input-field w-full" />
 
       <div v-for="(player, index) in players" :key="player.id">
-        <input type="text" v-model="player.name" :placeholder="`${$t('NewGame-PlayerName')} ${index + 1}`"
+        <input type="text" v-model="player.name" :placeholder="`${$t('Games.NewGame.PlayerName')} ${index + 1}`"
           maxlength="30" class="input-field w-full" />
       </div>
 
       <button @click="addPlayer" :disabled="players.length >= 10" class="button-primary w-full">
-        {{ $t('NewGame-AddPlayer') }}
+        {{ $t('Games.NewGame.AddPlayer') }}
       </button>
 
       <button @click="saveGame" :disabled="isSaving" class="button-primary w-full">
-        {{ isEditing ? $t('NewGame-SaveChanges') : $t('NewGame-StartGame') }}
+        {{ isEditing ? $t('Games.NewGame.SaveChanges') : $t('Games.NewGame.StartGame') }}
       </button>
     </div>
   </DefaultTemplate>
@@ -26,32 +26,34 @@
 
 <script setup>
 import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
-import { ref, onMounted } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { nanoid } from 'nanoid'
 import axios from 'axios'
 
 const router = useRouter()
 const route = useRoute()
-const gameId = route.query.gameId
+const gameId = computed(() => route.params.gameId)
 
 const gameName = ref('')
 const players = ref([{ id: nanoid(), name: '' }])
-const isEditing = ref(false)
+const isEditing = computed(() => !!gameId.value)
 const isSaving = ref(false)
 
-onMounted(async () => {
-  if (gameId) {
-    isEditing.value = true
+// Hauptlogik zum Laden eines bestehenden Spiels
+async function loadGame(id) {
+  const { data } = await axios.get('/games')
+  const match = data.games.find(g => g.id === id)
+  gameName.value = match?.name || ''
 
-    const { data: games } = await axios.get('/games')
-    const match = games.find(g => g.id === gameId)
-    if (match) {
-      gameName.value = match.name || ''
-    }
+  const { data: existing } = await axios.get(`/games/${id}/players`)
+  players.value = existing.map(p => ({ id: p.id, name: p.name }))
+}
 
-    const { data: existing } = await axios.get(`/games/${gameId}/players`)
-    players.value = existing.map(p => ({ id: p.id, name: p.name }))
+// Initiales Laden beim Mount
+watchEffect(async () => {
+  if (gameId.value) {
+    await loadGame(gameId.value)
   }
 })
 
@@ -84,8 +86,8 @@ async function saveGame() {
       playerIds.push(player.id)
     }
 
-    // Upsert-Logik: Immer POST /games, egal ob neu oder bestehend
-    const idToUse = isEditing.value ? gameId : nanoid()
+    // Upsert: Immer POST, ID wird je nach Modus gesetzt
+    const idToUse = isEditing.value ? gameId.value : nanoid()
     const { data: game } = await axios.post('/games', {
       id: idToUse,
       name: gameName.value,

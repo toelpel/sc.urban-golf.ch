@@ -2,8 +2,8 @@
   "name": "Urban-Golf.ch ScoreCard",
   "short_name": "ScoreCard",
   "description": "Die Scorecard für deine Urban-Golf Scores",
-  "scope": "/new/",
-  "start_url": "/new/",
+  "scope": "/",
+  "start_url": "/",
   "icons": [
     {
       "src": "icons/web-app-manifest-192x192.png",

@@ -21,24 +21,39 @@
       "Text": "Nous apprécions ton"
     }
   },
-  "Feedback-Title": "Retour sur la scorecard",
-  "Feedback-ThankYou": "Merci pour ton retour ! 🍀",
-  "Feedback-RatingTitle": "Évaluation",
-  "Feedback-Text": "Retour",
-  "Feedback-Name": "Nom (optionnel)",
-  "Feedback-Email": "Email (optionnel)",
-  "Scorecard": "Carte de score",
-  "ListGames-AllGames": "Toutes les parties",
-  "ListGames-NoGamesFound": "Aucune partie trouvée",
-  "ListGames-HolesPlayed": "Trous joués",
-  "ListGames-SearchText": "Nom du jeu ou du joueur",
-  "ListGames-LoadMore": "Charger d'autres jeux",
-  "NewGame-TitleNew": "Créer une nouvelle partie",
-  "NewGame-TitleEdit": "Modifier la partie",
-  "NewGame-GameName": "Nom de la partie",
-  "NewGame-PlayerName": "Joueur",
-  "NewGame-SaveChanges": "Enregistrer les modifications",
-  "NewGame-StartGame": "Démarrer la partie",
-  "NewGame-AddPlayer": "Ajouter un joueur",
-  "ScorecardLoading": "Chargement des joueurs et des scores ..."
+  "Feedback": {
+    "Title": "Retour sur la scorecard",
+    "ThankYou": "Merci pour ton retour ! 🍀",
+    "RatingTitle": "Évaluation",
+    "Text": "Retour",
+    "Name": "Nom (optionnel)",
+    "Email": "Email (optionnel)"
+  },
+  "Scorecard": {
+    "Title": "Carte de score",
+    "Loading": "Chargement des joueurs et des scores..."
+  },
+  "Games": {
+    "ListGames": {
+      "AllGames": "Toutes les parties",
+      "NoGamesFound": "Aucune partie trouvée",
+      "HolesPlayed": "Trous joués",
+      "SearchText": "Nom du jeu ou du joueur",
+      "LoadMore": "Charger d'autres jeux"
+    },
+    "NewGame": {
+      "TitleNew": "Créer une nouvelle partie",
+      "TitleEdit": "Modifier la partie",
+      "GameName": "Nom de la partie",
+      "PlayerName": "Joueur",
+      "SaveChanges": "Enregistrer les modifications",
+      "StartGame": "Démarrer la partie",
+      "AddPlayer": "Ajouter un joueur"
+    },
+    "HoleView": {
+      "EditGame": "Modifier la partie",
+      "HideHoleOverview": "Cache la vue d'ensemble des trous",
+      "ShowHoleOverview": "Affiche l'aperçu des trous"
+    }
+  }
 }
