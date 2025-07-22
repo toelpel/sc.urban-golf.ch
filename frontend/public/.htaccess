@@ -21,7 +21,7 @@
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 
   # Content Security Policy (anpassen je nach externem JS/CSS/CDN)
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' http://localhost:4173 https://*.supabase.co https://api.sc.urban-golf.ch https://www.google-analytics.com"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' http://localhost:4173 https://*.supabase.co https://api.sc.urban-golf.ch https://www.google-analytics.com https://region1.google-analytics.com"
 
   # HTTPS erzwingen via HSTS
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"

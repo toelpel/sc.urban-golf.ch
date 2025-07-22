@@ -36,7 +36,7 @@ const updateSW = registerSW({
     showUpdateToast();
   },
   onOfflineReady() {
-    console.log('App ist bereit für Offline-Nutzung.');
+    console.log('App ready for offline usage.');
   }
 });
 
