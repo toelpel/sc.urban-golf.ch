@@ -1,6 +1,12 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # sitemap.xml redirect
+  RewriteCond %{REQUEST_URI} ^/sitemap\.xml$ [NC]
+  RewriteRule ^ - [L]
+
+  # Default rewrite logic
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
