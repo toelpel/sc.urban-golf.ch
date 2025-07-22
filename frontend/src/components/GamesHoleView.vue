@@ -16,11 +16,10 @@
         <div v-if="isOptionsOpen"
           class="absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-lg ring-1 ring-black/10 text-sm dark:bg-gray-800 dark:text-white z-10">
           <router-link :to="`/games/new/${gameId}`" class="dropdown-item" @click="isOptionsOpen = false">
-            ✏️ {{ $t('Games.HoleView.EditGame') }}
+            {{ $t('Games.HoleView.EditGame') }}
           </router-link>
           <button class="dropdown-item" @click="toggleHoleOverview">
-            {{ showHoleOverview ? '🙈 ' + $t('Games.HoleView.HideHoleOverview') : '👀 ' +
-              $t('Games.HoleView.ShowHoleOverview') }}
+            {{ showHoleOverview ? $t('Games.HoleView.HideHoleOverview') : $t('Games.HoleView.ShowHoleOverview') }}
           </button>
         </div>
       </transition>
