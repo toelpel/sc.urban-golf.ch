@@ -14,56 +14,37 @@ export default async function (fastify, opts) {
       return reply.code(400).send({ error: 'Invalid or missing game ID' });
 
     const client = await getClient();
+
     try {
+      await client.query('BEGIN');
+
+      // Spiel einfügen oder aktualisieren
       const result = await client.query(
         `INSERT INTO games (id, name)
-         VALUES ($1, $2)
-         ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name
-         RETURNING id, name`,
+       VALUES ($1, $2)
+       ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name
+       RETURNING id, name`,
         [id, name]
       );
 
-      for (const playerId of players) {
-        if (!isValidId(playerId)) continue;
-
-        try {
-          await client.query(
-            'INSERT INTO game_players (game_id, player_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-            [id, playerId]
-          );
-        } catch (err) {
-          fastify.log.warn({ playerId, error: err.message }, 'Failed to insert into game_players – continuing anyway')
-          // nicht erneut reply.send() → einfach weitermachen
-        }
-      }
-
-      reply.code(200).send({ ...result.rows[0], status: 'upserted' });
-    } catch (err) {
-      fastify.log.error(err);
-      reply.code(500).send({ error: 'Database error' });
-    } finally {
-      client.release();
-    }
-  });
-
-  // Spieler einem Spiel hinzufügen
-  fastify.post('/:id/players', async (req, reply) => {
-    const gameId = req.params.id;
-    const { players } = req.body;
-
-    if (!isValidId(gameId) || !Array.isArray(players) || players.length === 0)
-      return reply.code(400).send({ error: 'Valid game ID and player list required' });
-
-    const client = await getClient();
-    try {
+      // Spieler-Zuordnung setzen
       for (const playerId of players) {
         if (!isValidId(playerId)) continue;
         await client.query(
-          'INSERT INTO game_players (game_id, player_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-          [gameId, playerId]
+          `INSERT INTO game_players (game_id, player_id)
+         VALUES ($1, $2)
+         ON CONFLICT DO NOTHING`,
+          [id, playerId]
         );
       }
-      reply.send({ success: true });
+
+      await client.query('COMMIT');
+
+      reply.send({ ...result.rows[0], status: 'upserted' });
+    } catch (err) {
+      await client.query('ROLLBACK');
+      fastify.log.error({ id, players, error: err.message }, 'Failed to upsert game with players');
+      reply.code(500).send({ error: 'Database error', details: err.message });
     } finally {
       client.release();
     }

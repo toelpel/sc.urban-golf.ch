@@ -44,6 +44,7 @@ const isSaving = ref(false)
 async function loadGame(id) {
   const { data } = await axios.get('/games')
   const match = data.games.find(g => g.id === id)
+
   gameName.value = match?.name || ''
 
   const { data: existing } = await axios.get(`/games/${id}/players`)
@@ -100,7 +101,6 @@ async function saveGame() {
     }
 
     if (isEditing.value) {
-      await axios.post(`/games/${idToUse}/players`, { players: playerIds })
       router.go(-1)
     } else {
       router.push(`/games/${game.id}/1`)
