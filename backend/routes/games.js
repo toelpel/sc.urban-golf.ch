@@ -59,38 +59,41 @@ export default async function (fastify, opts) {
     const search = req.query.search;
 
     try {
-      let where = '';
       let gamesQuery = '';
+      let valuesGames = [];
       let countQuery = '';
-      let valuesGames = [perPage, offset];
       let valuesCount = [];
 
       if (search) {
-        where = `WHERE g.name ILIKE $3 OR EXISTS (
-        SELECT 1 FROM game_players gp
-        JOIN players p ON gp.player_id = p.id
-        WHERE gp.game_id = g.id AND p.name ILIKE $3
-      )`;
-        valuesGames = [perPage, offset, `%${search}%`];
+        gamesQuery = `
+    SELECT g.* FROM games g
+    WHERE g.name ILIKE $1 OR EXISTS (
+      SELECT 1 FROM game_players gp
+      JOIN players p ON gp.player_id = p.id
+      WHERE gp.game_id = g.id AND p.name ILIKE $1
+    )
+    ORDER BY g.created_at DESC
+    LIMIT $2 OFFSET $3`;
 
-        // Neue WHERE-Bedingung für countQuery mit $1
+        valuesGames = [`%${search}%`, perPage, offset];
+
         countQuery = `
-        SELECT COUNT(*) FROM games g
-        WHERE g.name ILIKE $1 OR EXISTS (
-          SELECT 1 FROM game_players gp
-          JOIN players p ON gp.player_id = p.id
-          WHERE gp.game_id = g.id AND p.name ILIKE $1
-        )`;
+    SELECT COUNT(*) FROM games g
+    WHERE g.name ILIKE $1 OR EXISTS (
+      SELECT 1 FROM game_players gp
+      JOIN players p ON gp.player_id = p.id
+      WHERE gp.game_id = g.id AND p.name ILIKE $1
+    )`;
         valuesCount = [`%${search}%`];
       } else {
+        gamesQuery = `
+    SELECT g.* FROM games g
+    ORDER BY g.created_at DESC
+    LIMIT $1 OFFSET $2`;
+
+        valuesGames = [perPage, offset];
         countQuery = `SELECT COUNT(*) FROM games g`;
       }
-
-      gamesQuery = `
-      SELECT g.* FROM games g
-      ${where}
-      ORDER BY g.created_at DESC
-      LIMIT $1 OFFSET $2`;
 
       const [gamesResult, countResult] = await Promise.all([
         client.query(gamesQuery, valuesGames),
