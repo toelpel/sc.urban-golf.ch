@@ -42,10 +42,8 @@ const isSaving = ref(false)
 
 // Hauptlogik zum Laden eines bestehenden Spiels
 async function loadGame(id) {
-  const { data } = await axios.get('/games')
-  const match = data.games.find(g => g.id === id)
-
-  gameName.value = match?.name || ''
+  const { data: game } = await axios.get(`/games/${id}`)
+  gameName.value = game?.name || ''
 
   const { data: existing } = await axios.get(`/games/${id}/players`)
   players.value = existing.map(p => ({ id: p.id, name: p.name }))
