@@ -58,7 +58,7 @@
     </ul>
 
     <div v-if="hasMore && !isLoading && games.length > 0" class="mt-6 text-center">
-        <button @click="loadMoreGames" class="button-primary">
+        <button @click="loadMoreGames" class="button-primary w-full text-center">
             {{ $t('Games.ListGames.LoadMore') }}
         </button>
     </div>
