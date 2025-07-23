@@ -68,8 +68,8 @@ const {
 
 // Shorten gamename
 const shortGameName = computed(() => {
-  return gameName.value.length > 30
-    ? gameName.value.slice(0, 27) + '…'
+  return gameName.value.length > 60
+    ? gameName.value.slice(0, 57) + '…'
     : gameName.value;
 });
 

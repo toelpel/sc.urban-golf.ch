@@ -2,7 +2,7 @@
   <!-- Titelzeile mit Optionsmenü -->
   <div class="flex justify-between items-start gap-2 flex-wrap sm:flex-nowrap">
     <h1 class="maintitle">
-      {{ gameName }} – {{ $t('General.Hole') }} {{ hole }}
+      {{ shortGameName }} – {{ $t('General.Hole') }} {{ hole }}
     </h1>
 
     <!-- Menü-Trigger (⋯) -->
@@ -94,6 +94,13 @@ const gameId = computed(() => route.params.gameId)
 const hole = computed(() => parseInt(route.params.holeId));
 
 const { players, scores, holes, gameName, load } = useGamesDetailData(gameId);
+
+// Shorten gamename
+const shortGameName = computed(() => {
+  return gameName.value.length > 60
+    ? gameName.value.slice(0, 57) + '…'
+    : gameName.value;
+});
 
 const showHoleOverview = ref(true);
 const isOptionsOpen = ref(false);
