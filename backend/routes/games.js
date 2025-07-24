@@ -167,22 +167,33 @@ export default async function (fastify, opts) {
               )` : ''}
           ORDER BY g.created_at DESC
           LIMIT $${search ? 2 : 1} OFFSET $${search ? 3 : 2}
+        ),
+        player_stats AS (
+          SELECT
+            g.id AS game_id,
+            p.id AS player_id,
+            p.name,
+            ROUND(AVG(s.strokes)::numeric, 2) AS avg,
+            SUM(s.strokes) AS total
+          FROM filtered_games g
+          JOIN game_players gp ON gp.game_id = g.id
+          JOIN players p ON p.id = gp.player_id
+          LEFT JOIN scores s ON s.game_id = g.id AND s.player_id = p.id
+          GROUP BY g.id, p.id, p.name
         )
         SELECT
           g.*,
           (
             SELECT json_agg(
               jsonb_build_object(
-                'id', p.id,
-                'name', p.name,
-                'avg', ROUND(AVG(s.strokes), 2),
-                'total', SUM(s.strokes)
+                'id', ps.player_id,
+                'name', ps.name,
+                'avg', ps.avg,
+                'total', ps.total
               )
             )
-            FROM game_players gp
-            JOIN players p ON gp.player_id = p.id
-            LEFT JOIN scores s ON s.player_id = p.id AND s.game_id = g.id
-            WHERE gp.game_id = g.id
+            FROM player_stats ps
+            WHERE ps.game_id = g.id
           ) AS players,
           (
             SELECT COUNT(DISTINCT s.hole)
