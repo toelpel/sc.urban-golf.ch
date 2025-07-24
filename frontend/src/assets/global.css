@@ -98,16 +98,6 @@
   @apply bg-blue-50 dark:bg-gray-800;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.1s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 /* Animation für verschobene Listenelemente */
 .game-list-move {
   transition: transform 0.3s ease;
@@ -122,4 +112,12 @@
 .game-list-leave-to {
   opacity: 0;
   transform: translateY(4px);
+}
+
+/* Scroll-To-Top Button */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }

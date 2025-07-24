@@ -58,6 +58,14 @@
         </li>
     </transition-group>
 
+    <!-- Scroll To Top Button -->
+    <transition name="fade">
+        <button v-if="showScrollToTop" @click="scrollToTop"
+            class="fixed bottom-6 right-6 z-50 p-3 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white rounded-full shadow-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition">
+            <ArrowUpIcon class="h-5 w-5" />
+        </button>
+    </transition>
+
     <div class="mt-4 text-center">
         <button @click="loadMoreGames" class="button-primary w-full text-center">
             {{ $t('Games.ListGames.LoadMore') }}
@@ -69,6 +77,7 @@
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
 import { useGamesSummaryData } from '@/composables/useGamesSummaryData.js';
 import { useRouter } from 'vue-router';
+import { ArrowUpIcon } from '@heroicons/vue/24/outline'
 
 const router = useRouter();
 function navigateToGame(id) {
@@ -98,6 +107,23 @@ const {
     page,
     hasMore
 } = useGamesSummaryData();
+
+const showScrollToTop = ref(false);
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function handleScroll() {
+    showScrollToTop.value = window.scrollY > 300 && games.value.length > props.perPage;
+}
+
+onMounted(() => {
+    window.addEventListener('scroll', handleScroll);
+});
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll);
+});
 
 let debounceTimer = null;
 let noGamesTimer = null;
