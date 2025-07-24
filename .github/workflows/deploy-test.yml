@@ -24,7 +24,7 @@ jobs:
         run: |
           cd frontend
           npm install
-          npm run build
+          npm run build:test
 
       - name: Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4

@@ -12,7 +12,7 @@ import fr from './locales/fr.json';
 import nl from './locales/nl.json';
 
 // Axios konfigurieren
-axios.defaults.baseURL = 'https://api.sc.urban-golf.ch/api';
+axios.defaults.baseURL = import.meta.env.VITE_API_BASEURL;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 // i18n initialisieren
