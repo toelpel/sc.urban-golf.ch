@@ -4,34 +4,32 @@
         {{ $t('Games.ListGames.NoGamesFound') }}
     </div>
 
-    <ul class="space-y-4">
+    <transition-group name="game-list" tag="ul" class="space-y-2">
         <li v-for="game in games" :key="game.id"
-            class="relative group bg-white dark:bg-gray-900 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all cursor-pointer"
+            class="relative group bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all cursor-pointer"
             @click="navigateToGame(game.id)">
-            <div class="flex justify-between items-center px-6 py-4 relative z-10">
+            <div class="flex justify-between items-center px-4 py-3 relative z-10">
                 <div class="flex flex-col min-w-0">
-                    <div class="font-semibold text-lg text-gray-900 dark:text-white truncate" :title="game.name">
+                    <div class="font-semibold text-base text-gray-900 dark:text-white truncate" :title="game.name">
                         {{ game.name }}
                     </div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400 truncate"
+                    <div class="text-xs text-gray-500 dark:text-gray-400 truncate"
                         :title="playerMap[game.id]?.join(', ')">
                         {{ formatDate(game.created_at) }}
                         <span v-if="playerMap[game.id]"> – {{ getPlayerListShort(game.id) }}</span>
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-2">
-                    <button @click.stop="toggleDetails(game.id)"
-                        class="z-10 relative flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300">
-                        {{ expandedGameId === game.id ? '▾' : '▸' }}
-                    </button>
-                </div>
+                <button @click.stop="toggleDetails(game.id)"
+                    class="z-10 relative flex items-center justify-center w-7 h-7 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300">
+                    {{ expandedGameId === game.id ? '▾' : '▸' }}
+                </button>
             </div>
 
             <transition name="fade">
                 <div v-if="expandedGameId === game.id"
-                    class="px-6 pb-4 pt-2 border-t border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300">
-                    <div class="mb-2">
+                    class="px-4 pb-3 pt-1 border-t border-gray-200 dark:border-gray-600 text-xs text-gray-700 dark:text-gray-300">
+                    <div class="mb-1">
                         {{ $t('Games.ListGames.HolesPlayed') }}: {{ gameMeta[game.id]?.holes?.length || 0 }}
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
@@ -46,18 +44,18 @@
 
         <!-- Skeleton Loader -->
         <li v-for="n in props.perPage" :key="'skeleton-' + n" v-if="isLoading"
-            class="animate-pulse bg-white/60 dark:bg-gray-800/60 rounded-2xl px-6 py-4 border border-gray-300 dark:border-gray-600">
+            class="animate-pulse bg-white/60 dark:bg-gray-800/60 rounded-xl px-4 py-3 border border-gray-300 dark:border-gray-600">
             <div class="flex justify-between items-center">
-                <div class="space-y-2 w-full">
-                    <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-1/2"></div>
-                    <div class="h-4 bg-gray-200 dark:bg-gray-600 rounded w-3/4"></div>
+                <div class="space-y-1 w-full">
+                    <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/2"></div>
+                    <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded w-3/4"></div>
                 </div>
-                <div class="h-8 w-8 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+                <div class="h-7 w-7 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
             </div>
         </li>
-    </ul>
+    </transition-group>
 
-    <div v-if="hasMore && !isLoading && games.length > 0" class="mt-6 text-center">
+    <div v-if="hasMore && !isLoading && games.length > 0" class="mt-4 text-center">
         <button @click="loadMoreGames" class="button-primary w-full text-center">
             {{ $t('Games.ListGames.LoadMore') }}
         </button>
@@ -65,12 +63,16 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import axios from 'axios';
-import { useGameMetaData } from '@/composables/useGameMetaData';
+import { ref, watch, onUnmounted } from 'vue';
+import { useGamesSummaryData } from '@/composables/useGamesSummaryData.js';
 import { useRouter } from 'vue-router';
-const router = useRouter();
 
+onUnmounted(() => {
+    clearTimeout(debounceTimer);
+    clearTimeout(noGamesTimer);
+});
+
+const router = useRouter();
 function navigateToGame(id) {
     router.push(`/games/${id}`);
 }
@@ -83,29 +85,32 @@ const props = defineProps({
     },
 });
 
-const games = ref([]);
-const totalGames = ref(0);
-const page = ref(1);
-const playerMap = ref({});
-const gameMeta = ref({});
 const expandedGameId = ref(null);
 const hasMore = ref(true);
 const isLoading = ref(true);
 const showNoGamesTimeout = ref(false);
+const page = ref(1);
+
+const {
+    games,
+    playerMap,
+    gameMeta,
+    totalGames,
+    loadGames,
+    reset,
+} = useGamesSummaryData();
 
 let debounceTimer = null;
 let noGamesTimer = null;
 
 watch(
     () => props.searchTerm,
-    (newTerm) => {
+    () => {
         clearTimeout(debounceTimer);
         clearTimeout(noGamesTimer);
 
         debounceTimer = setTimeout(async () => {
-            games.value = [];
-            playerMap.value = {};
-            gameMeta.value = {};
+            reset();
             page.value = 1;
             hasMore.value = true;
             isLoading.value = true;
@@ -124,31 +129,12 @@ watch(
 async function loadMoreGames() {
     isLoading.value = true;
 
-    const params = {
+    await loadGames({
         page: page.value,
-        per_page: props.perPage,
-        search: props.searchTerm || undefined,
-    };
-    const { data } = await axios.get('/games', { params });
+        perPage: props.perPage,
+        search: props.searchTerm || '',
+    });
 
-    if (data.games.length === 0) {
-        hasMore.value = false;
-        isLoading.value = false;
-        return;
-    }
-
-    for (const game of data.games) {
-        const { data: players } = await axios.get(`/games/${game.id}/players`);
-        playerMap.value[game.id] = players.map(p => p.name);
-        const meta = await useGameMetaData(game.id);
-        gameMeta.value[game.id] = {
-            holes: meta.holes,
-            players: meta.players
-        };
-    }
-
-    games.value.push(...data.games);
-    totalGames.value = data.total;
     page.value++;
 
     if (games.value.length >= totalGames.value) {
@@ -174,3 +160,9 @@ function toggleDetails(id) {
     expandedGameId.value = expandedGameId.value === id ? null : id;
 }
 </script>
+
+<style scoped>
+.game-list-move {
+    transition: transform 0.3s ease;
+}
+</style>

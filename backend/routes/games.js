@@ -146,4 +146,57 @@ export default async function (fastify, opts) {
       client.release();
     }
   });
+
+  fastify.get('/summary', async (req, reply) => {
+    const client = await getClient();
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const perPage = Math.min(10, parseInt(req.query.per_page) || 10);
+    const offset = (page - 1) * perPage;
+    const search = req.query.search;
+
+    try {
+      const gamesQuery = `
+      WITH filtered_games AS (
+        SELECT g.*
+        FROM games g
+        WHERE $1::text IS NULL
+          OR g.name ILIKE $1
+          OR EXISTS (
+            SELECT 1 FROM game_players gp
+            JOIN players p ON gp.player_id = p.id
+            WHERE gp.game_id = g.id AND p.name ILIKE $1
+          )
+        ORDER BY g.created_at DESC
+        LIMIT $2 OFFSET $3
+      )
+      SELECT
+        g.*,
+        COALESCE(
+          json_agg(
+            DISTINCT jsonb_build_object(
+              'id', p.id,
+              'name', p.name,
+              'avg', ROUND(AVG(s.strokes) FILTER (WHERE s.hole IS NOT NULL), 2),
+              'total', SUM(s.strokes)
+            )
+          ) FILTER (WHERE p.id IS NOT NULL),
+          '[]'
+        ) AS players,
+        COUNT(DISTINCT s.hole) AS holes_played
+      FROM filtered_games g
+      LEFT JOIN game_players gp ON g.id = gp.game_id
+      LEFT JOIN players p ON gp.player_id = p.id
+      LEFT JOIN scores s ON s.game_id = g.id AND s.player_id = p.id
+      GROUP BY g.id
+    `;
+
+      const values = [search ? `%${search}%` : null, perPage, offset];
+
+      const { rows } = await client.query(gamesQuery);
+
+      reply.send({ games: rows });
+    } finally {
+      client.release();
+    }
+  });
 }
