@@ -9,7 +9,7 @@
         <!-- Scorecard Ansicht -->
         <div class="shrink-0 flex justify-between items-center">
           <h1 class="maintitle truncate max-w-[70vw]" :title="gameName">
-            {{ $t('Scorecard.Title') }} – {{ shortGameName }}
+            {{ shortGameName }}
           </h1>
           <button @click="toggleView" class="flex items-center justify-center w-8 h-8 -mt-2 rounded-md bg-gray-200 text-sm text-gray-800 shadow hover:bg-gray-300
          dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 transition">

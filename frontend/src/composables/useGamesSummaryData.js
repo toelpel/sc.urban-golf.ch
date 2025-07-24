@@ -30,11 +30,7 @@ export function useGamesSummaryData() {
                 playerMap.value[game.id] = (game.players || []).map((p) => p.name);
                 gameMeta.value[game.id] = {
                     players: game.players,
-                    holes: [
-                        ...new Set(
-                            (game.players || []).flatMap(p => (p.scores || []).map(s => s.hole))
-                        )
-                    ]
+                    holes: game.holes || [],
                 };
             }
 

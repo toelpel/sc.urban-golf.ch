@@ -196,10 +196,10 @@ export default async function (fastify, opts) {
             WHERE ps.game_id = g.id
           ) AS players,
           (
-            SELECT COUNT(DISTINCT s.hole)
-            FROM scores s
-            WHERE s.game_id = g.id
-          ) AS holes_played
+          SELECT ARRAY_AGG(DISTINCT s.hole ORDER BY s.hole)
+          FROM scores s
+          WHERE s.game_id = g.id
+        ) AS holes
         FROM filtered_games g
       `;
 
