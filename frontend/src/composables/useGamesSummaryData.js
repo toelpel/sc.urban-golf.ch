@@ -30,16 +30,18 @@ export function useGamesSummaryData() {
                 playerMap.value[game.id] = (game.players || []).map((p) => p.name);
                 gameMeta.value[game.id] = {
                     players: game.players,
-                    holes: [...new Set(game.players.flatMap(p => p.scores?.map(s => s.hole) || []))]
+                    holes: [
+                        ...new Set(
+                            (game.players || []).flatMap(p => (p.scores || []).map(s => s.hole))
+                        )
+                    ]
                 };
             }
 
-            totalGames.value = totalGames.value || data.total || 0;
+            totalGames.value = data.total || 0;
             page.value++;
 
-            if (games.value.length >= totalGames.value) {
-                hasMore.value = false;
-            }
+            hasMore.value = games.value.length < totalGames.value;
         } catch (err) {
             console.error('⚠️ Fehler beim Laden der Spielezusammenfassung (Axios):', err.message);
         }

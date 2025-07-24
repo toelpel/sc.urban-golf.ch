@@ -58,7 +58,7 @@
         </li>
     </transition-group>
 
-    <div v-if="showLoadMoreButton" class="mt-4 text-center">
+    <div class="mt-4 text-center">
         <button @click="loadMoreGames" class="button-primary w-full text-center">
             {{ $t('Games.ListGames.LoadMore') }}
         </button>
@@ -98,10 +98,6 @@ const {
     page,
     hasMore
 } = useGamesSummaryData();
-
-const showLoadMoreButton = computed(() =>
-    !isInitialLoad.value && !isLoading.value && hasMore.value && games.value.length > 0
-);
 
 let debounceTimer = null;
 let noGamesTimer = null;
