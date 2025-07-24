@@ -4,7 +4,22 @@
         {{ $t('Games.ListGames.NoGamesFound') }}
     </div>
 
-    <transition-group name="game-list" tag="ul" class="space-y-2">
+    <!-- Skeleton Loader separat -->
+    <ul v-if="isInitialLoad" class="space-y-2">
+        <li v-for="n in props.perPage" :key="'skeleton-' + n"
+            class="animate-pulse bg-white/60 dark:bg-gray-800/60 rounded-xl px-4 py-3 border border-gray-300 dark:border-gray-600">
+            <div class="flex justify-between items-center">
+                <div class="space-y-1 w-full">
+                    <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/2"></div>
+                    <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded w-3/4"></div>
+                </div>
+                <div class="h-7 w-7 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+            </div>
+        </li>
+    </ul>
+
+    <!-- Spiele-Liste -->
+    <transition-group v-else name="game-list" tag="ul" class="space-y-2">
         <li v-for="game in games" :key="game.id"
             class="relative group bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all cursor-pointer"
             @click="navigateToGame(game.id)">
@@ -41,21 +56,9 @@
                 </div>
             </transition>
         </li>
-
-        <!-- Skeleton Loader -->
-        <li v-for="n in props.perPage" :key="'skeleton-' + n" v-if="isLoading"
-            class="animate-pulse bg-white/60 dark:bg-gray-800/60 rounded-xl px-4 py-3 border border-gray-300 dark:border-gray-600">
-            <div class="flex justify-between items-center">
-                <div class="space-y-1 w-full">
-                    <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/2"></div>
-                    <div class="h-3 bg-gray-200 dark:bg-gray-600 rounded w-3/4"></div>
-                </div>
-                <div class="h-7 w-7 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
-            </div>
-        </li>
     </transition-group>
 
-    <div v-if="hasMore && !isLoading && games.length > 0" class="mt-4 text-center">
+    <div v-if="showLoadMoreButton" class="mt-4 text-center">
         <button @click="loadMoreGames" class="button-primary w-full text-center">
             {{ $t('Games.ListGames.LoadMore') }}
         </button>
@@ -63,14 +66,9 @@
 </template>
 
 <script setup>
-import { ref, watch, onUnmounted } from 'vue';
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
 import { useGamesSummaryData } from '@/composables/useGamesSummaryData.js';
 import { useRouter } from 'vue-router';
-
-onUnmounted(() => {
-    clearTimeout(debounceTimer);
-    clearTimeout(noGamesTimer);
-});
 
 const router = useRouter();
 function navigateToGame(id) {
@@ -86,10 +84,9 @@ const props = defineProps({
 });
 
 const expandedGameId = ref(null);
-const hasMore = ref(true);
-const isLoading = ref(true);
+const isLoading = ref(false);
 const showNoGamesTimeout = ref(false);
-const page = ref(1);
+const isInitialLoad = ref(true);
 
 const {
     games,
@@ -98,10 +95,34 @@ const {
     totalGames,
     loadGames,
     reset,
+    page,
+    hasMore
 } = useGamesSummaryData();
+
+const showLoadMoreButton = computed(() =>
+    !isInitialLoad.value && !isLoading.value && hasMore.value && games.value.length > 0
+);
 
 let debounceTimer = null;
 let noGamesTimer = null;
+
+onMounted(() => {
+    loadMoreGames({ resetFirst: true });
+});
+
+watch(
+    () => games.value.length,
+    (length) => {
+        if (length > 0) {
+            isInitialLoad.value = false;
+        }
+    }
+);
+
+onUnmounted(() => {
+    clearTimeout(debounceTimer);
+    clearTimeout(noGamesTimer);
+});
 
 watch(
     () => props.searchTerm,
@@ -110,37 +131,28 @@ watch(
         clearTimeout(noGamesTimer);
 
         debounceTimer = setTimeout(async () => {
-            reset();
-            page.value = 1;
-            hasMore.value = true;
-            isLoading.value = true;
             showNoGamesTimeout.value = false;
+            await loadMoreGames({ resetFirst: true });
 
             noGamesTimer = setTimeout(() => {
                 showNoGamesTimeout.value = true;
             }, 10000);
-
-            await loadMoreGames();
         }, 300);
     },
-    { immediate: true }
+    { immediate: false }
 );
 
-async function loadMoreGames() {
-    isLoading.value = true;
+async function loadMoreGames({ resetFirst = false } = {}) {
+    if (resetFirst) {
+        reset();
+        isInitialLoad.value = true;
+    }
 
+    isLoading.value = true;
     await loadGames({
-        page: page.value,
         perPage: props.perPage,
         search: props.searchTerm || '',
     });
-
-    page.value++;
-
-    if (games.value.length >= totalGames.value) {
-        hasMore.value = false;
-    }
-
     isLoading.value = false;
 }
 
