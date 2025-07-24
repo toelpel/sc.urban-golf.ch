@@ -8,7 +8,7 @@
       <template v-else>
         <!-- Scorecard Ansicht -->
         <div class="shrink-0 flex justify-between items-center">
-          <h1 class="maintitle truncate max-w-[60vw]" :title="gameName">
+          <h1 class="maintitle truncate max-w-[70vw]" :title="gameName">
             {{ $t('Scorecard.Title') }} – {{ shortGameName }}
           </h1>
           <button @click="toggleView" class="flex items-center justify-center w-8 h-8 -mt-2 rounded-md bg-gray-200 text-sm text-gray-800 shadow hover:bg-gray-300
@@ -68,8 +68,8 @@ const {
 
 // Shorten gamename
 const shortGameName = computed(() => {
-  return gameName.value.length > 60
-    ? gameName.value.slice(0, 57) + '…'
+  return gameName.value.length > 24
+    ? gameName.value.slice(0, 21) + '…'
     : gameName.value;
 });
 

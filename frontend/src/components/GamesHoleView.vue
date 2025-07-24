@@ -1,7 +1,7 @@
 <template>
   <!-- Titelzeile mit Optionsmenü -->
   <div class="flex justify-between items-start gap-2 flex-wrap sm:flex-nowrap">
-    <h1 class="maintitle">
+    <h1 class="maintitle truncate max-w-[70vw]">
       {{ shortGameName }} – {{ $t('General.Hole') }} {{ hole }}
     </h1>
 
@@ -97,8 +97,8 @@ const { players, scores, holes, gameName, load } = useGamesDetailData(gameId);
 
 // Shorten gamename
 const shortGameName = computed(() => {
-  return gameName.value.length > 60
-    ? gameName.value.slice(0, 57) + '…'
+  return gameName.value.length > 24
+    ? gameName.value.slice(0, 21) + '…'
     : gameName.value;
 });
 
