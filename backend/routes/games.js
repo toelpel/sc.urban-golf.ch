@@ -18,28 +18,25 @@ export default async function (fastify, opts) {
     try {
       await client.query('BEGIN');
 
-      // Spiel einfügen oder aktualisieren
       const result = await client.query(
         `INSERT INTO games (id, name)
-       VALUES ($1, $2)
-       ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name
-       RETURNING id, name`,
+         VALUES ($1, $2)
+         ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name
+         RETURNING id, name`,
         [id, name]
       );
 
-      // Spieler-Zuordnung setzen
       for (const playerId of players) {
         if (!isValidId(playerId)) continue;
         await client.query(
           `INSERT INTO game_players (game_id, player_id)
-         VALUES ($1, $2)
-         ON CONFLICT DO NOTHING`,
+           VALUES ($1, $2)
+           ON CONFLICT DO NOTHING`,
           [id, playerId]
         );
       }
 
       await client.query('COMMIT');
-
       reply.send({ ...result.rows[0], status: 'upserted' });
     } catch (err) {
       await client.query('ROLLBACK');
@@ -66,30 +63,30 @@ export default async function (fastify, opts) {
 
       if (search) {
         gamesQuery = `
-    SELECT g.* FROM games g
-    WHERE g.name ILIKE $1 OR EXISTS (
-      SELECT 1 FROM game_players gp
-      JOIN players p ON gp.player_id = p.id
-      WHERE gp.game_id = g.id AND p.name ILIKE $1
-    )
-    ORDER BY g.created_at DESC
-    LIMIT $2 OFFSET $3`;
+          SELECT g.* FROM games g
+          WHERE g.name ILIKE $1 OR EXISTS (
+            SELECT 1 FROM game_players gp
+            JOIN players p ON gp.player_id = p.id
+            WHERE gp.game_id = g.id AND p.name ILIKE $1
+          )
+          ORDER BY g.created_at DESC
+          LIMIT $2 OFFSET $3`;
 
         valuesGames = [`%${search}%`, perPage, offset];
 
         countQuery = `
-    SELECT COUNT(*) FROM games g
-    WHERE g.name ILIKE $1 OR EXISTS (
-      SELECT 1 FROM game_players gp
-      JOIN players p ON gp.player_id = p.id
-      WHERE gp.game_id = g.id AND p.name ILIKE $1
-    )`;
+          SELECT COUNT(*) FROM games g
+          WHERE g.name ILIKE $1 OR EXISTS (
+            SELECT 1 FROM game_players gp
+            JOIN players p ON gp.player_id = p.id
+            WHERE gp.game_id = g.id AND p.name ILIKE $1
+          )`;
         valuesCount = [`%${search}%`];
       } else {
         gamesQuery = `
-    SELECT g.* FROM games g
-    ORDER BY g.created_at DESC
-    LIMIT $1 OFFSET $2`;
+          SELECT g.* FROM games g
+          ORDER BY g.created_at DESC
+          LIMIT $1 OFFSET $2`;
 
         valuesGames = [perPage, offset];
         countQuery = `SELECT COUNT(*) FROM games g`;
@@ -147,85 +144,55 @@ export default async function (fastify, opts) {
     }
   });
 
+  // Zusammenfassung
   fastify.get('/summary', async (req, reply) => {
     const client = await getClient();
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const perPage = Math.min(10, parseInt(req.query.per_page) || 10);
     const offset = (page - 1) * perPage;
     const search = req.query.search;
+    const values = search ? [`%${search}%`, perPage, offset] : [perPage, offset];
 
     try {
-      let gamesQuery;
-      let values;
-
-      if (search) {
-        gamesQuery = `
+      const gamesQuery = `
         WITH filtered_games AS (
           SELECT g.*
           FROM games g
-          WHERE g.name ILIKE $1
-            OR EXISTS (
-              SELECT 1 FROM game_players gp
-              JOIN players p ON gp.player_id = p.id
-              WHERE gp.game_id = g.id AND p.name ILIKE $1
+          ${search ? `
+            WHERE g.name ILIKE $1
+              OR EXISTS (
+                SELECT 1 FROM game_players gp
+                JOIN players p ON gp.player_id = p.id
+                WHERE gp.game_id = g.id AND p.name ILIKE $1
+              )` : ''}
+          ORDER BY g.created_at DESC
+          LIMIT $${search ? 2 : 1} OFFSET $${search ? 3 : 2}
+        )
+        SELECT
+          g.*,
+          (
+            SELECT json_agg(
+              jsonb_build_object(
+                'id', p.id,
+                'name', p.name,
+                'avg', ROUND(AVG(s.strokes), 2),
+                'total', SUM(s.strokes)
+              )
             )
-          ORDER BY g.created_at DESC
-          LIMIT $2 OFFSET $3
-        )
-        SELECT
-          g.*,
-          COALESCE(
-            json_agg(
-              DISTINCT jsonb_build_object(
-                'id', p.id,
-                'name', p.name,
-                'avg', ROUND(AVG(s.strokes) FILTER (WHERE s.hole IS NOT NULL), 2),
-                'total', SUM(s.strokes)
-              )
-            ) FILTER (WHERE p.id IS NOT NULL),
-            '[]'
+            FROM game_players gp
+            JOIN players p ON gp.player_id = p.id
+            LEFT JOIN scores s ON s.player_id = p.id AND s.game_id = g.id
+            WHERE gp.game_id = g.id
           ) AS players,
-          COUNT(DISTINCT s.hole) AS holes_played
+          (
+            SELECT COUNT(DISTINCT s.hole)
+            FROM scores s
+            WHERE s.game_id = g.id
+          ) AS holes_played
         FROM filtered_games g
-        LEFT JOIN game_players gp ON g.id = gp.game_id
-        LEFT JOIN players p ON gp.player_id = p.id
-        LEFT JOIN scores s ON s.game_id = g.id AND s.player_id = p.id
-        GROUP BY g.id
       `;
-        values = [`%${search}%`, perPage, offset];
-      } else {
-        gamesQuery = `
-        WITH filtered_games AS (
-          SELECT g.*
-          FROM games g
-          ORDER BY g.created_at DESC
-          LIMIT $1 OFFSET $2
-        )
-        SELECT
-          g.*,
-          COALESCE(
-            json_agg(
-              DISTINCT jsonb_build_object(
-                'id', p.id,
-                'name', p.name,
-                'avg', ROUND(AVG(s.strokes) FILTER (WHERE s.hole IS NOT NULL), 2),
-                'total', SUM(s.strokes)
-              )
-            ) FILTER (WHERE p.id IS NOT NULL),
-            '[]'
-          ) AS players,
-          COUNT(DISTINCT s.hole) AS holes_played
-        FROM filtered_games g
-        LEFT JOIN game_players gp ON g.id = gp.game_id
-        LEFT JOIN players p ON gp.player_id = p.id
-        LEFT JOIN scores s ON s.game_id = g.id AND s.player_id = p.id
-        GROUP BY g.id
-      `;
-        values = [perPage, offset];
-      }
 
       const { rows } = await client.query(gamesQuery, values);
-
       reply.send({ games: rows });
     } finally {
       client.release();
