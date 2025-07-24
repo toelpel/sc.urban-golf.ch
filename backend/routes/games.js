@@ -155,44 +155,76 @@ export default async function (fastify, opts) {
     const search = req.query.search;
 
     try {
-      const gamesQuery = `
-      WITH filtered_games AS (
-        SELECT g.*
-        FROM games g
-        WHERE $1::text IS NULL
-          OR g.name ILIKE $1
-          OR EXISTS (
-            SELECT 1 FROM game_players gp
-            JOIN players p ON gp.player_id = p.id
-            WHERE gp.game_id = g.id AND p.name ILIKE $1
-          )
-        ORDER BY g.created_at DESC
-        LIMIT $2 OFFSET $3
-      )
-      SELECT
-        g.*,
-        COALESCE(
-          json_agg(
-            DISTINCT jsonb_build_object(
-              'id', p.id,
-              'name', p.name,
-              'avg', ROUND(AVG(s.strokes) FILTER (WHERE s.hole IS NOT NULL), 2),
-              'total', SUM(s.strokes)
+      let gamesQuery;
+      let values;
+
+      if (search) {
+        gamesQuery = `
+        WITH filtered_games AS (
+          SELECT g.*
+          FROM games g
+          WHERE g.name ILIKE $1
+            OR EXISTS (
+              SELECT 1 FROM game_players gp
+              JOIN players p ON gp.player_id = p.id
+              WHERE gp.game_id = g.id AND p.name ILIKE $1
             )
-          ) FILTER (WHERE p.id IS NOT NULL),
-          '[]'
-        ) AS players,
-        COUNT(DISTINCT s.hole) AS holes_played
-      FROM filtered_games g
-      LEFT JOIN game_players gp ON g.id = gp.game_id
-      LEFT JOIN players p ON gp.player_id = p.id
-      LEFT JOIN scores s ON s.game_id = g.id AND s.player_id = p.id
-      GROUP BY g.id
-    `;
+          ORDER BY g.created_at DESC
+          LIMIT $2 OFFSET $3
+        )
+        SELECT
+          g.*,
+          COALESCE(
+            json_agg(
+              DISTINCT jsonb_build_object(
+                'id', p.id,
+                'name', p.name,
+                'avg', ROUND(AVG(s.strokes) FILTER (WHERE s.hole IS NOT NULL), 2),
+                'total', SUM(s.strokes)
+              )
+            ) FILTER (WHERE p.id IS NOT NULL),
+            '[]'
+          ) AS players,
+          COUNT(DISTINCT s.hole) AS holes_played
+        FROM filtered_games g
+        LEFT JOIN game_players gp ON g.id = gp.game_id
+        LEFT JOIN players p ON gp.player_id = p.id
+        LEFT JOIN scores s ON s.game_id = g.id AND s.player_id = p.id
+        GROUP BY g.id
+      `;
+        values = [`%${search}%`, perPage, offset];
+      } else {
+        gamesQuery = `
+        WITH filtered_games AS (
+          SELECT g.*
+          FROM games g
+          ORDER BY g.created_at DESC
+          LIMIT $1 OFFSET $2
+        )
+        SELECT
+          g.*,
+          COALESCE(
+            json_agg(
+              DISTINCT jsonb_build_object(
+                'id', p.id,
+                'name', p.name,
+                'avg', ROUND(AVG(s.strokes) FILTER (WHERE s.hole IS NOT NULL), 2),
+                'total', SUM(s.strokes)
+              )
+            ) FILTER (WHERE p.id IS NOT NULL),
+            '[]'
+          ) AS players,
+          COUNT(DISTINCT s.hole) AS holes_played
+        FROM filtered_games g
+        LEFT JOIN game_players gp ON g.id = gp.game_id
+        LEFT JOIN players p ON gp.player_id = p.id
+        LEFT JOIN scores s ON s.game_id = g.id AND s.player_id = p.id
+        GROUP BY g.id
+      `;
+        values = [perPage, offset];
+      }
 
-      const values = [search ? `%${search}%` : null, perPage, offset];
-
-      const { rows } = await client.query(gamesQuery);
+      const { rows } = await client.query(gamesQuery, values);
 
       reply.send({ games: rows });
     } finally {
