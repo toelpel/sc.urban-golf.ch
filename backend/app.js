@@ -18,13 +18,10 @@ const __dirname = path.dirname(__filename);
 
 const fastify = Fastify({ logger: true });
 
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',').map(origin => origin.trim());
+
 await fastify.register(cors, {
   origin: (origin, cb) => {
-    const allowedOrigins = [
-      'https://sc.urban-golf.ch',
-      'https://sc-test.urban-golf.ch',
-      'http://localhost:4173'
-    ];
     if (!origin || allowedOrigins.includes(origin)) {
       cb(null, true);
     } else {
@@ -46,7 +43,7 @@ await fastify.register(fastifyHelmet, {
       styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       imgSrc: ["'self'", 'data:'],
-      connectSrc: ["'self'", 'https://*.supabase.co', 'http://localhost:4173']
+      connectSrc: ["'self'", 'https://*.supabase.co', ...allowedOrigins]
     }
   }
 });

@@ -32,7 +32,7 @@
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; \
   font-src 'self' https://fonts.gstatic.com; \
   img-src 'self' data: https://www.google-analytics.com; \
-  connect-src 'self' http://localhost:4173 https://*.supabase.co https://api.sc.urban-golf.ch https://api.sc-test.urban-golf.ch https://www.google-analytics.com https://region1.google-analytics.com"
+  connect-src 'self' https://*.supabase.co https://api.sc.urban-golf.ch https://www.google-analytics.com https://region1.google-analytics.com"
 
   # HTTPS erzwingen via HSTS
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"

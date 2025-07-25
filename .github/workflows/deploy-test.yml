@@ -26,6 +26,10 @@ jobs:
           npm install
           npm run build:test
 
+      - name: Prepare test .htaccess
+        run: |
+          cp frontend/.htaccess.test frontend/dist/.htaccess
+
       - name: Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:

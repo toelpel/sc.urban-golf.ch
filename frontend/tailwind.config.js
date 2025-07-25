@@ -1,8 +1,9 @@
 module.exports = {
-  darkMode: 'class', // ← wichtig für manuelle Umschaltung
+  darkMode: 'class',
   content: [
     './index.html',
     './src/**/*.{vue,js,ts}',
+    './src/assets/**/*.css'
   ],
   theme: {
     extend: {},
