@@ -41,6 +41,8 @@ jobs:
             .git/**
             .github
             .github/**
+            .htaccess.test
+            .htaccess.production
             .gitignore
             README.md
             LICENSE

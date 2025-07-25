@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://sc-test.urban-golf.ch/sitemap.xml
+Sitemap: https://sc.urban-golf.ch/sitemap.xml
