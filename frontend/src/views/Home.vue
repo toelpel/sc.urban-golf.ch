@@ -15,6 +15,9 @@
         <router-link to="/feedback" class="button-primary w-full text-center">
           {{ $t('General.Feedback') }}
         </router-link>
+        <router-link to="/roadmap" class="button-primary w-full text-center">
+          {{ $t('General.Roadmap') }}
+        </router-link>
       </div>
       <div
         class="mt-8 max-w-md mx-auto p-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 rounded shadow">

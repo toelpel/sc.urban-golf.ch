@@ -88,7 +88,7 @@ const breadcrumb = computed(() => {
 })
 
 const showBack = computed(() =>
-    ['/games', '/feedback', '/games/new'].some(prefix =>
+    ['/games', '/feedback', '/games/new', '/roadmap'].some(prefix =>
         route.path === prefix || route.path.startsWith(prefix + '/')
     )
 )

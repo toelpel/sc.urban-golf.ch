@@ -21,6 +21,15 @@ const router = createRouter({
       }
     },
     {
+      path: '/roadmap',
+      name: 'Roadmap',
+      component: () => import('./views/Roadmap.vue'),
+      meta: {
+        title: 'General.Roadmap',
+        parent: 'Home'
+      }
+    },
+    {
       path: '/games',
       name: 'GamesList',
       component: () => import('./views/Games.vue'),
