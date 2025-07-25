@@ -66,11 +66,14 @@
         </button>
     </transition>
 
+    <!-- DELETE after testing -> Infinite Scrolling -->
+    <!--
     <div class="mt-4 text-center">
         <button @click="loadMoreGames" class="button-primary w-full text-center">
             {{ $t('Games.ListGames.LoadMore') }}
         </button>
     </div>
+    -->
 </template>
 
 <script setup>
@@ -116,6 +119,11 @@ function scrollToTop() {
 
 function handleScroll() {
     showScrollToTop.value = window.scrollY > 300 && games.value.length > props.perPage;
+
+    const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 500;
+    if (nearBottom && hasMore.value && !isLoading.value) {
+        loadMoreGames();
+    }
 }
 
 onMounted(() => {

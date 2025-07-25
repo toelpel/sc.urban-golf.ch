@@ -20,11 +20,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import GameListContent from './GamesListCompactContent.vue';
 
-const currentPage = ref(1);
-const perPage = 5;
-const searchTerm = ref('');
+function calculatePerPage() {
+    const itemHeight = 65; // durchschnittliche Höhe eines Listenelements in px
+    const availableHeight = window.innerHeight - 310; // grober Abzug für Header etc.
+    return Math.max(5, Math.floor(availableHeight / itemHeight));
+}
 
+const currentPage = ref(1);
+const searchTerm = ref('');
+const perPage = ref(calculatePerPage());
+
+onMounted(() => {
+    window.addEventListener('resize', () => {
+        perPage.value = calculatePerPage();
+    });
+});
 </script>
