@@ -2,11 +2,10 @@
     <DefaultTemplate>
         <h1 class="maintitle mb-6">{{ $t('General.Roadmap') }}</h1>
 
-        <div class="max-w-5xl mx-auto px-4 pb-20 relative">
+        <div class="max-w-3xl mx-auto px-3 pb-20 relative">
             <!-- ZENTRIERTE SVG-Linie -->
-            <svg class="absolute left-[15px] top-0 bottom-0 w-[3px] z-0" viewBox="0 0 1 1000"
-                preserveAspectRatio="none">
-                <path d="M0.5 0 V1000" fill="none" stroke="#9ca3af" stroke-width="2" :style="{
+            <svg class="absolute left-[15px] top-0 bottom-0 w-[3px] z-0" viewBox="0 0 1 100" preserveAspectRatio="none">
+                <path d="M0.5 0 V100" fill="none" stroke="#9ca3af" stroke-width="2" :style="{
                     strokeDasharray: '1000',
                     strokeDashoffset: animateLine ? '0' : '1000',
                     transition: 'stroke-dashoffset 2s ease-out'
@@ -43,7 +42,7 @@
 
             <!-- Feedback-Box -->
             <div
-                class="mt-16 border-l-4 border-indigo-500 pl-6 py-6 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg shadow-md">
+                class="mt-16 border-l-4 border-blue-500 pl-6 py-6 bg-blue-100 dark:bg-blue-800/80 rounded-lg shadow-md">
                 <h3 class="text-lg font-semibold text-indigo-700 dark:text-indigo-300 mb-2">
                     ✨ Hier könnte dein Feature stehen!
                 </h3>
@@ -108,6 +107,30 @@ const features = [
         emoji: '📊',
         label: 'Spieler Statistiken',
         desc: 'Rudimentäre Score-Auswertungen, Rankings und Visualisierungen',
+        done: 0
+    },
+    {
+        emoji: '🏌️‍♂️',
+        label: 'Club Management',
+        desc: 'Erfassung eines Clubs, Hinzufügen von Spielern, Berechtigungsvergabe',
+        done: 0
+    },
+    {
+        emoji: '🖥️',
+        label: 'Optimierung für Desktop-Clients',
+        desc: 'Optimierungen für grössere Screens, Öffentliche Ansicht optimieren',
+        done: 0
+    },
+    {
+        emoji: '🏆',
+        label: 'Turnier Management',
+        desc: 'Erfassung eines Turniers, Anmeldung, Turnier-Leaderboards',
+        done: 0
+    },
+    {
+        emoji: '🎯',
+        label: 'Tournament Management',
+        desc: 'Erfassung einer Tour, Hinterlegen von Tour-Wertungen, Anmeldung zur Tour',
         done: 0
     }
 ]
