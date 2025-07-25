@@ -34,10 +34,9 @@ export function useGamesSummaryData() {
                 };
             }
 
-            totalGames.value = data.total || 0;
             page.value++;
+            hasMore.value = data.games.length === perPage;
 
-            hasMore.value = games.value.length < totalGames.value;
         } catch (err) {
             console.error('⚠️ Fehler beim Laden der Spielezusammenfassung (Axios):', err.message);
         }

@@ -10,7 +10,7 @@
 
     <Suspense>
         <template #default>
-            <GameListContent :search-term="searchTerm" :current-page="currentPage" :per-page="perPage"
+            <GamesListCompactContent :search-term="searchTerm" :current-page="currentPage" :per-page="perPage"
                 @update:currentPage="(val) => currentPage = val" />
         </template>
         <template #fallback>
@@ -21,11 +21,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import GameListContent from './GamesListCompactContent.vue';
+import GamesListCompactContent from './GamesListCompactContent.vue';
 
 function calculatePerPage() {
-    const itemHeight = 65; // durchschnittliche Höhe eines Listenelements in px
-    const availableHeight = window.innerHeight - 310; // grober Abzug für Header etc.
+    const skeleton = document.querySelector('.game-preview-skeleton');
+    const itemHeight = skeleton?.offsetHeight || 70;
+    const availableHeight = window.innerHeight - 320;
     return Math.max(5, Math.floor(availableHeight / itemHeight));
 }
 

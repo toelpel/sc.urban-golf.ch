@@ -7,7 +7,7 @@
     <!-- Skeleton Loader separat -->
     <ul v-if="isInitialLoad" class="space-y-2">
         <li v-for="n in props.perPage" :key="'skeleton-' + n"
-            class="animate-pulse bg-white/60 dark:bg-gray-800/60 rounded-xl px-4 py-3 border border-gray-300 dark:border-gray-600">
+            class="game-preview-skeleton animate-pulse bg-white/60 dark:bg-gray-800/60 rounded-xl px-4 py-3 border border-gray-300 dark:border-gray-600">
             <div class="flex justify-between items-center">
                 <div class="space-y-1 w-full">
                     <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/2"></div>
@@ -57,6 +57,8 @@
             </transition>
         </li>
     </transition-group>
+    <!-- Beobachtungspunkt für Infinite Scroll -->
+    <div ref="target" class="h-8" />
 
     <!-- Scroll To Top Button -->
     <transition name="fade">
@@ -78,6 +80,7 @@
 
 <script setup>
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
+import { useIntersectionObserver, useWindowScroll } from '@vueuse/core'
 import { useGamesSummaryData } from '@/composables/useGamesSummaryData.js';
 import { useRouter } from 'vue-router';
 import { ArrowUpIcon } from '@heroicons/vue/24/outline'
@@ -99,6 +102,8 @@ const expandedGameId = ref(null);
 const isLoading = ref(false);
 const showNoGamesTimeout = ref(false);
 const isInitialLoad = ref(true);
+const target = ref(null)
+const showScrollToTop = ref(false);
 
 const {
     games,
@@ -111,34 +116,36 @@ const {
     hasMore
 } = useGamesSummaryData();
 
-const showScrollToTop = ref(false);
+const { y } = useWindowScroll()
 
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+watch(y, (value) => {
+    showScrollToTop.value = value > 300
+})
 
-function handleScroll() {
-    showScrollToTop.value = window.scrollY > 300 && games.value.length > props.perPage;
-
-    const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 500;
-    if (nearBottom && hasMore.value && !isLoading.value) {
-        loadMoreGames();
+useIntersectionObserver(target, ([{ isIntersecting }]) => {
+    if (isIntersecting && hasMore.value && !isLoading.value) {
+        loadMoreGames()
     }
-}
+})
 
 onMounted(() => {
-    window.addEventListener('scroll', handleScroll);
+    loadMoreGames({ resetFirst: true }).then(() => {
+        setTimeout(() => {
+            const targetEl = target.value;
+            if (targetEl && targetEl.getBoundingClientRect().top < window.innerHeight) {
+                loadMoreGames();
+            }
+        }, 200);
+    });
 });
+
 onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll);
+    clearTimeout(debounceTimer);
+    clearTimeout(noGamesTimer);
 });
 
 let debounceTimer = null;
 let noGamesTimer = null;
-
-onMounted(() => {
-    loadMoreGames({ resetFirst: true });
-});
 
 watch(
     () => games.value.length,
@@ -148,11 +155,6 @@ watch(
         }
     }
 );
-
-onUnmounted(() => {
-    clearTimeout(debounceTimer);
-    clearTimeout(noGamesTimer);
-});
 
 watch(
     () => props.searchTerm,
@@ -173,6 +175,8 @@ watch(
 );
 
 async function loadMoreGames({ resetFirst = false } = {}) {
+    if (isLoading.value) return;
+
     if (resetFirst) {
         reset();
         isInitialLoad.value = true;
