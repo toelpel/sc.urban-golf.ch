@@ -26,7 +26,7 @@ jobs:
 
       - name: Prepare test .htaccess
         run: |
-          cp frontend/.htaccess.production frontend/dist/.htaccess
+          cp frontend/public/.htaccess.production frontend/dist/.htaccess
 
       - name: Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
