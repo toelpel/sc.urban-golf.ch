@@ -122,6 +122,11 @@ watch(y, (value) => {
     showScrollToTop.value = value > 300
 })
 
+function scrollToTop() {
+    const scrollEl = document.documentElement || document.body;
+    scrollEl.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 useIntersectionObserver(target, ([{ isIntersecting }]) => {
     if (isIntersecting && hasMore.value && !isLoading.value) {
         loadMoreGames()
