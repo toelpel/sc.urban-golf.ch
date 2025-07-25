@@ -6,7 +6,6 @@
     "Game": "Partie",
     "Feedback": "Retour",
     "Scorecard": "Carte de score",
-    "Roadmap": "Feuille de route",
     "Hole": "Trou",
     "Player": "Joueur",
     "Total": "Total",
@@ -20,6 +19,64 @@
     "Beta": {
       "Title": "⚠️ Cette application est encore en phase bêta.",
       "Text": "Nous apprécions ton"
+    }
+  },
+  "AboutUs": {
+    "Title": "À propos de nous",
+    "Paragraph1": "Nous sommes un club d’Urban Golf basé à Winterthour, en Suisse – passionnés par ce sport et amoureux de la technologie. Nous voulons contribuer activement à son développement.",
+    "Paragraph2": "Avec cette application, nous souhaitons offrir un outil moderne et simple pour la communauté : une carte de score mobile pour le street golf. Note tes scores facilement – entre amis ou en tournoi.",
+    "Paragraph3": "Ce n’est que le début : des fonctionnalités comme les statistiques de joueurs, la gestion de tournois ou des outils pour les clubs arriveront bientôt.",
+    "Paragraph4": "Nous tenons à l’open source ❤️ – c’est pourquoi notre code est public. Toutes les idées, remarques ou contributions sont les bienvenues. Construisons ça ensemble !",
+    "RoadmapLink": "Voir notre feuille de route →",
+    "Roadmap": {
+      "Title": "Feuille de route",
+      "Features": {
+        "TestProd": {
+          "Label": "Environnement Test/Prod propre",
+          "Desc": "Déploiements et configurations séparés"
+        },
+        "Documentation": {
+          "Label": "Documentation & Readme",
+          "Desc": "Installation, guide de contribution, stack technologique"
+        },
+        "InitialRelease": {
+          "Label": "Version Initiale",
+          "Desc": "MVP ScoreCard publié"
+        },
+        "OpenSource": {
+          "Label": "Open Source",
+          "Desc": "Le code sera disponible publiquement sur GitHub.\nCollaboration vivement souhaitée 🤩"
+        },
+        "UserManagement": {
+          "Label": "Gestion des utilisateurs",
+          "Desc": "Inscription et connexion, mise en œuvre de 'Mes parties'"
+        },
+        "Stats": {
+          "Label": "Statistiques des joueurs",
+          "Desc": "Analyses de scores de base, classements et visualisations"
+        },
+        "Club": {
+          "Label": "Gestion de club",
+          "Desc": "Création d’un club, ajout de joueurs, gestion des droits"
+        },
+        "Desktop": {
+          "Label": "Optimisation pour desktop",
+          "Desc": "Améliorations pour les grands écrans, vue publique optimisée"
+        },
+        "Tournament": {
+          "Label": "Gestion des tournois",
+          "Desc": "Création d’un tournoi, inscriptions, classements"
+        },
+        "Tour": {
+          "Label": "Gestion de tournée",
+          "Desc": "Création d’une tournée, scores de tournée, inscription"
+        }
+      },
+      "CallToAction": {
+        "Title": "✨ Votre fonctionnalité pourrait être ici !",
+        "Text": "Vous avez une idée de fonctionnalité ? Faites-nous en part –",
+        "Link": "vers le formulaire de feedback"
+      }
     }
   },
   "Feedback": {

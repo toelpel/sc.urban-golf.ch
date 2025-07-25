@@ -6,7 +6,6 @@
     "Game": "Spel",
     "Feedback": "Feedback",
     "Scorecard": "Scorekaart",
-    "Roadmap": "Stappenplan",
     "Hole": "Hole",
     "Player": "Speler",
     "Total": "Totaal",
@@ -20,6 +19,64 @@
     "Beta": {
       "Title": "⚠️ Deze app bevindt zich nog in de bètafase.",
       "Text": "We horen graag jouw"
+    }
+  },
+  "AboutUs": {
+    "Title": "Over ons",
+    "Paragraph1": "Wij zijn een Urban Golf-club uit Winterthur, Zwitserland – gepassioneerd door de sport en met een grote liefde voor technologie. Ons doel is om actief bij te dragen aan de ontwikkeling van Urban Golf.",
+    "Paragraph2": "Met deze app willen we een bijdrage leveren aan de community: een eenvoudige, moderne en mobiele scorekaart voor Urban Golf. Zo kun je eenvoudig je scores bijhouden – of je nu casual speelt met vrienden of deelneemt aan een toernooi.",
+    "Paragraph3": "En dit is nog maar het begin: er komen nog veel functies bij, van spelersstatistieken tot toernooibeheer en clubfuncties.",
+    "Paragraph4": "Open source ligt ons nauw aan het hart ❤️ – daarom is de code publiek toegankelijk. We waarderen feedback, ideeën en bijdragen enorm. Laten we dit samen bouwen!",
+    "RoadmapLink": "Bekijk onze roadmap →",
+    "Roadmap": {
+      "Title": "Routekaart",
+      "Features": {
+        "TestProd": {
+          "Label": "Scheidbare Test/Prod-omgeving",
+          "Desc": "Gescheiden deployments en configuratie"
+        },
+        "Documentation": {
+          "Label": "Documentatie & Readme",
+          "Desc": "Setup, bijdragegids, technologie-stack"
+        },
+        "InitialRelease": {
+          "Label": "Initiële Release",
+          "Desc": "ScoreCard MVP uitgebracht"
+        },
+        "OpenSource": {
+          "Label": "Open Source",
+          "Desc": "Code wordt openbaar beschikbaar op GitHub.\nSamenwerking zeer gewenst 🤩"
+        },
+        "UserManagement": {
+          "Label": "Gebruikersbeheer",
+          "Desc": "Registratie en login, implementatie van 'Mijn Spellen'"
+        },
+        "Stats": {
+          "Label": "Spelerstatistieken",
+          "Desc": "Basisanalyses van scores, ranglijsten en visualisaties"
+        },
+        "Club": {
+          "Label": "Clubbeheer",
+          "Desc": "Club registreren, spelers toevoegen, rechten toekennen"
+        },
+        "Desktop": {
+          "Label": "Optimalisatie voor desktops",
+          "Desc": "Verbeteringen voor grote schermen, publieke weergave optimaliseren"
+        },
+        "Tournament": {
+          "Label": "Toernooi Beheer",
+          "Desc": "Toernooi aanmaken, inschrijving, ranglijsten"
+        },
+        "Tour": {
+          "Label": "Tour Beheer",
+          "Desc": "Tour aanmaken, scores registreren, inschrijving voor tour"
+        }
+      },
+      "CallToAction": {
+        "Title": "✨ Jouw feature kan hier staan!",
+        "Text": "Heb je een idee wat nog ontbreekt? Deel het met ons –",
+        "Link": "naar het feedbackformulier"
+      }
     }
   },
   "Feedback": {

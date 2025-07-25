@@ -6,7 +6,6 @@
     "Game": "Spiel",
     "Feedback": "Feedback",
     "Scorecard": "Scorecard",
-    "Roadmap": "Roadmap",
     "Hole": "Loch",
     "Player": "Spieler",
     "Total": "Total",
@@ -20,6 +19,64 @@
     "Beta": {
       "Title": "⚠️ Diese App befindet sich noch im Beta-Stadium.",
       "Text": "Wir freuen uns über dein"
+    }
+  },
+  "AboutUs": {
+    "Title": "Über uns",
+    "Paragraph1": "Wir sind ein Urban-Golf-Verein aus Winterthur in der Schweiz – mit Herzblut für den Sport und einer großen Portion Leidenschaft für Technik. Unser Ziel ist es, Urban Golf weiterzuentwickeln und aktiv mitzugestalten.",
+    "Paragraph2": "Mit dieser App möchten wir einen Beitrag für die Community leisten: eine einfache, moderne und mobile ScoreCard für Urban Golf. So kannst du unkompliziert deine Scores erfassen – egal ob spontan mit Freunden oder organisiert im Turnier.",
+    "Paragraph3": "Die App ist erst der Anfang: In Zukunft sollen weitere Funktionen dazukommen, von Spielerstatistiken über Turnierverwaltung bis hin zu Club-Management.",
+    "Paragraph4": "Uns liegt Open Source am Herzen ❤️ – darum ist der Code öffentlich zugänglich. Wir freuen uns über Feedback, Ideen oder tatkräftige Mithilfe. Let’s build this together!",
+    "RoadmapLink": "Unsere Roadmap ansehen →",
+    "Roadmap": {
+      "Title": "Roadmap",
+      "Features": {
+        "TestProd": {
+          "Label": "Saubere Test/Prod Umgebung",
+          "Desc": "Getrennte Deployments und Konfiguration"
+        },
+        "Documentation": {
+          "Label": "Dokumentation & Readme",
+          "Desc": "Setup, Contribution Guide, Techstack"
+        },
+        "InitialRelease": {
+          "Label": "Initial Release",
+          "Desc": "ScoreCard MVP veröffentlicht"
+        },
+        "OpenSource": {
+          "Label": "Open Source",
+          "Desc": "Code wird öffentlich auf GitHub verfügbar.\nKollaboration sehr erwünscht 🤩"
+        },
+        "UserManagement": {
+          "Label": "User-Verwaltung",
+          "Desc": "Registrierung und Login, Implementation von 'Meine Spiele'"
+        },
+        "Stats": {
+          "Label": "Spieler Statistiken",
+          "Desc": "Rudimentäre Score-Auswertungen, Rankings und Visualisierungen"
+        },
+        "Club": {
+          "Label": "Club Management",
+          "Desc": "Erfassung eines Clubs, Hinzufügen von Spielern, Berechtigungsvergabe"
+        },
+        "Desktop": {
+          "Label": "Optimierung für Desktop-Clients",
+          "Desc": "Optimierungen für grössere Screens, Öffentliche Ansicht optimieren"
+        },
+        "Tournament": {
+          "Label": "Turnier Management",
+          "Desc": "Erfassung eines Turniers, Anmeldung, Turnier-Leaderboards"
+        },
+        "Tour": {
+          "Label": "Tournament Management",
+          "Desc": "Erfassung einer Tour, Hinterlegen von Tour-Wertungen, Anmeldung zur Tour"
+        }
+      },
+      "CallToAction": {
+        "Title": "✨ Hier könnte dein Feature stehen!",
+        "Text": "Hast du eine Idee, was noch fehlt? Teile sie mit uns –",
+        "Link": "zum Feedback-Formular"
+      }
     }
   },
   "Feedback": {

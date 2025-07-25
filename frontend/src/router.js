@@ -21,12 +21,21 @@ const router = createRouter({
       }
     },
     {
-      path: '/roadmap',
+      path: '/aboutus',
+      name: 'About Us',
+      component: () => import('./views/AboutUs.vue'),
+      meta: {
+        title: 'AboutUs.Title',
+        parent: 'Home'
+      },
+    },
+    {
+      path: '/aboutus/roadmap',
       name: 'Roadmap',
       component: () => import('./views/Roadmap.vue'),
       meta: {
         title: 'General.Roadmap',
-        parent: 'Home'
+        parent: 'About Us'
       }
     },
     {
