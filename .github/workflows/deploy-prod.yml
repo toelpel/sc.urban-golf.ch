@@ -1,12 +1,9 @@
-name: Deploy Test Branch
+name: Deploy Production
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - test
-    paths:
-      - 'frontend/**'
+  release:
+    types: [published]
 
 jobs:
   deploy:
@@ -25,18 +22,18 @@ jobs:
         run: |
           cd frontend
           npm install
-          npm run build:test
+          npm run build:prod
 
       - name: Prepare test .htaccess
         run: |
-          cp frontend/.htaccess.test frontend/dist/.htaccess
+          cp frontend/.htaccess.production frontend/dist/.htaccess
 
       - name: Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST_TEST }}
-          username: ${{ secrets.FTP_USER_TEST }}
-          password: ${{ secrets.FTP_PASS_TEST }}
+          server: ${{ secrets.FTP_HOST_PROD }}
+          username: ${{ secrets.FTP_USER_PROD }}
+          password: ${{ secrets.FTP_PASS_PROD }}
           local-dir: frontend/dist/
           server-dir: /
           exclude: |
