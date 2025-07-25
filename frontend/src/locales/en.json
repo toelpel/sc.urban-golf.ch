@@ -1,0 +1,58 @@
+{
+  "General": {
+    "Home": "Home",
+    "NewGame": "New Game",
+    "Games": "Games",
+    "Game": "Game",
+    "Feedback": "Feedback",
+    "Scorecard": "Scorecard",
+    "Hole": "Hole",
+    "Player": "Player",
+    "Total": "Total",
+    "Back": "Back",
+    "Forward": "Next",
+    "Send": "Submit"
+  },
+  "Home": {
+    "Title": "Urban-Golf.ch - ScoreCard",
+    "Text": "Create a new game or view existing games.",
+    "Beta": {
+      "Title": "⚠️ This app is still in beta.",
+      "Text": "We appreciate your"
+    }
+  },
+  "Feedback": {
+    "Title": "Feedback on the Scorecard",
+    "ThankYou": "Thank you for your feedback! 🍀",
+    "RatingTitle": "Rating",
+    "Text": "Feedback",
+    "Name": "Name (optional)",
+    "Email": "Email (optional)"
+  },
+  "Scorecard": {
+    "Loading": "Loading players and scores..."
+  },
+  "Games": {
+    "ListGames": {
+      "AllGames": "All Games",
+      "NoGamesFound": "No games found",
+      "HolesPlayed": "Holes Played",
+      "SearchText": "Game- or Playername",
+      "LoadMore": "Load more games"
+    },
+    "NewGame": {
+      "TitleNew": "Create New Game",
+      "TitleEdit": "Edit Game",
+      "GameName": "Game Name",
+      "PlayerName": "Player",
+      "SaveChanges": "Save Changes",
+      "StartGame": "Start Game",
+      "AddPlayer": "Add Player"
+    },
+    "HoleView": {
+      "EditGame": "Edit game",
+      "HideHoleOverview": "Hide Hole Overview",
+      "ShowHoleOverview": "Show Hole Overview"
+    }
+  }
+}

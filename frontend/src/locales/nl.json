@@ -1,0 +1,58 @@
+{
+  "General": {
+    "Home": "Home",
+    "NewGame": "Nieuw spel",
+    "Games": "Spellen",
+    "Game": "Spel",
+    "Feedback": "Feedback",
+    "Scorecard": "Scorekaart",
+    "Hole": "Hole",
+    "Player": "Speler",
+    "Total": "Totaal",
+    "Back": "Terug",
+    "Forward": "Volgende",
+    "Send": "Verzenden"
+  },
+  "Home": {
+    "Title": "Urban-Golf.ch - ScoreCard",
+    "Text": "Maak een nieuw spel aan of bekijk bestaande spellen.",
+    "Beta": {
+      "Title": "⚠️ Deze app bevindt zich nog in de bètafase.",
+      "Text": "We horen graag jouw"
+    }
+  },
+  "Feedback": {
+    "Title": "Feedback over de scorecard",
+    "ThankYou": "Bedankt voor je feedback! 🍀",
+    "RatingTitle": "Beoordeling",
+    "Text": "Feedback",
+    "Name": "Naam (optioneel)",
+    "Email": "E-mail (optioneel)"
+  },
+  "Scorecard": {
+    "Loading": "Spelers en scores laden..."
+  },
+  "Games": {
+    "ListGames": {
+      "AllGames": "Alle spellen",
+      "NoGamesFound": "Geen spellen gevonden",
+      "HolesPlayed": "Gespeelde holes",
+      "SearchText": "Spel- of spelersnaam",
+      "LoadMore": "Meer spellen laden"
+    },
+    "NewGame": {
+      "TitleNew": "Nieuw spel aanmaken",
+      "TitleEdit": "Spel bewerken",
+      "GameName": "Spelnaam",
+      "PlayerName": "Speler",
+      "SaveChanges": "Wijzigingen opslaan",
+      "StartGame": "Spel starten",
+      "AddPlayer": "Speler toevoegen"
+    },
+    "HoleView": {
+      "EditGame": "Spel bewerken",
+      "HideHoleOverview": "Verborgen gaten overzicht",
+      "ShowHoleOverview": "Overzicht gaten tonen"
+    }
+  }
+}

@@ -1,6 +1,7 @@
-name: Deploy Release to FTP
+name: Deploy Production
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 
@@ -12,30 +13,35 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Create db_config.php from template
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies & build frontend
         run: |
-          sed -e "s|{{DB_HOST}}|${{ secrets.DB_HOST }}|g" \
-              -e "s|{{DB_USERNAME}}|${{ secrets.DB_USERNAME }}|g" \
-              -e "s|{{DB_PASSWORD}}|${{ secrets.DB_PASSWORD }}|g" \
-              -e "s|{{DB_NAME}}|${{ secrets.DB_NAME }}|g" \
-              includes/db_config.template.php > includes/db_config.php
+          cd frontend
+          npm install
+          npm run build:prod
+
+      - name: Prepare test .htaccess
+        run: |
+          cp frontend/.htaccess.production frontend/dist/.htaccess
 
       - name: Upload via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          local-dir: ./
+          server: ${{ secrets.FTP_HOST_PROD }}
+          username: ${{ secrets.FTP_USER_PROD }}
+          password: ${{ secrets.FTP_PASS_PROD }}
+          local-dir: frontend/dist/
+          server-dir: /
           exclude: |
             .git
             .git/**
             .github
             .github/**
             .gitignore
-            db
-            db/**
-            includes/db_config.template.php
             README.md
             LICENSE
             *.zip

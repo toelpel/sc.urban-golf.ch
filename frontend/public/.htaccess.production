@@ -1,0 +1,48 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # sitemap.xml redirect
+  RewriteCond %{REQUEST_URI} ^/sitemap\.xml$ [NC]
+  RewriteRule ^ - [L]
+
+  # Default rewrite logic
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Schutz vor Clickjacking
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # MIME Sniffing verhindern
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Referrer-Policy
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Permissions Policy (ehemals Feature Policy)
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  # Content Security Policy (anpassen je nach externem JS/CSS/CDN)
+  Header always set Content-Security-Policy "default-src 'self'; \
+  script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com 'unsafe-inline'; \
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; \
+  font-src 'self' https://fonts.gstatic.com; \
+  img-src 'self' data: https://www.google-analytics.com; \
+  connect-src 'self' https://*.supabase.co https://api.sc.urban-golf.ch https://www.google-analytics.com https://region1.google-analytics.com"
+
+  # HTTPS erzwingen via HSTS
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+  # Optional for cross-origin isolation.
+  Header always set Cross-Origin-Embedder-Policy "require-corp"
+
+  # Protects resources from unauthorized cross-origin requests
+  Header always set Cross-Origin-Resource-Policy "same-origin"
+
+  # Helps with cross-origin isolation
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+</IfModule>

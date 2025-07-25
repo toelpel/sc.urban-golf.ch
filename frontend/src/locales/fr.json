@@ -1,0 +1,58 @@
+{
+  "General": {
+    "Home": "Home",
+    "NewGame": "Nouvelle parti",
+    "Games": "Parties",
+    "Game": "Partie",
+    "Feedback": "Retour",
+    "Scorecard": "Carte de score",
+    "Hole": "Trou",
+    "Player": "Joueur",
+    "Total": "Total",
+    "Back": "Retour",
+    "Forward": "Suivant",
+    "Send": "Envoyer"
+  },
+  "Home": {
+    "Title": "Urban-Golf.ch - ScoreCard",
+    "Text": "Crée une nouvelle partie ou consulte les parties existantes.",
+    "Beta": {
+      "Title": "⚠️ Cette application est encore en phase bêta.",
+      "Text": "Nous apprécions ton"
+    }
+  },
+  "Feedback": {
+    "Title": "Retour sur la scorecard",
+    "ThankYou": "Merci pour ton retour ! 🍀",
+    "RatingTitle": "Évaluation",
+    "Text": "Retour",
+    "Name": "Nom (optionnel)",
+    "Email": "Email (optionnel)"
+  },
+  "Scorecard": {
+    "Loading": "Chargement des joueurs et des scores..."
+  },
+  "Games": {
+    "ListGames": {
+      "AllGames": "Toutes les parties",
+      "NoGamesFound": "Aucune partie trouvée",
+      "HolesPlayed": "Trous joués",
+      "SearchText": "Nom du jeu ou du joueur",
+      "LoadMore": "Charger d'autres jeux"
+    },
+    "NewGame": {
+      "TitleNew": "Créer une nouvelle partie",
+      "TitleEdit": "Modifier la partie",
+      "GameName": "Nom de la partie",
+      "PlayerName": "Joueur",
+      "SaveChanges": "Enregistrer les modifications",
+      "StartGame": "Démarrer la partie",
+      "AddPlayer": "Ajouter un joueur"
+    },
+    "HoleView": {
+      "EditGame": "Modifier la partie",
+      "HideHoleOverview": "Cache la vue d'ensemble des trous",
+      "ShowHoleOverview": "Affiche l'aperçu des trous"
+    }
+  }
+}

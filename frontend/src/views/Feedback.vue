@@ -1,0 +1,72 @@
+<template>
+  <DefaultTemplate>
+    <h1 class="maintitle">{{ $t('Feedback.Title') }}</h1>
+
+    <div v-if="submitted" class="text-green-600 dark:text-green-400">
+      {{ $t('Feedback.ThankYou') }}
+    </div>
+
+    <form v-else @submit.prevent="submitFeedback" class="space-y-4">
+      <label class="label">{{ $t('Feedback.RatingTitle') }}</label>
+      <div class="flex space-x-2">
+        <button v-for="n in 5" :key="n" type="button" @click="rating = n" class="text-2xl"
+          :class="rating >= n ? 'text-yellow-400' : 'text-gray-300'">
+          ★
+        </button>
+      </div>
+      <div>
+        <label class="label" for="message">{{ $t('Feedback.Text') }}</label>
+        <textarea id="message" v-model="message" class="textarea-field" required></textarea>
+      </div>
+      <div>
+        <label class="label" for="name">{{ $t('Feedback.Name') }}</label>
+        <input id="name" v-model="name" class="input-field" />
+      </div>
+      <div>
+        <label class="label" for="email">{{ $t('Feedback.Email') }}</label>
+        <input id="email" type="email" v-model="email" class="input-field" />
+      </div>
+      <div class="mt-6">
+        <button type="submit" class="button-primary w-full">{{ $t('General.Send') }}</button>
+      </div>
+    </form>
+  </DefaultTemplate>
+</template>
+
+<script setup>
+import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
+import { ref } from 'vue'
+import axios from 'axios'
+
+const rating = ref(0)
+const message = ref('')
+const name = ref('')
+const email = ref('')
+const submitted = ref(false)
+
+const submitFeedback = async () => {
+  if (rating.value < 1 || rating.value > 5) {
+    alert('Please give a rating from 1 to 5 stars.');
+    return;
+  }
+
+  if (!message.value.trim()) {
+    alert('Please enter feedback.');
+    return;
+  }
+
+  try {
+    await axios.post('/feedback', {
+      rating: rating.value,
+      message: message.value,
+      name: name.value,
+      email: email.value
+    });
+
+    submitted.value = true;
+  } catch (err) {
+    console.error('Error when sending:', err);
+    alert('Sorry, your feedback could not be sent.');
+  }
+};
+</script>

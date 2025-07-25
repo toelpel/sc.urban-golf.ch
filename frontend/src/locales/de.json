@@ -1,0 +1,58 @@
+{
+  "General": {
+    "Home": "Home",
+    "NewGame": "Neues Spiel",
+    "Games": "Spiele",
+    "Game": "Spiel",
+    "Feedback": "Feedback",
+    "Scorecard": "Scorecard",
+    "Hole": "Loch",
+    "Player": "Spieler",
+    "Total": "Total",
+    "Back": "Zurück",
+    "Forward": "Weiter",
+    "Send": "Absenden"
+  },
+  "Home": {
+    "Title": "Urban-Golf.ch - ScoreCard",
+    "Text": "Erstelle ein neues Spiel oder sieh dir bestehende Spiele an.",
+    "Beta": {
+      "Title": "⚠️ Diese App befindet sich noch im Beta-Stadium.",
+      "Text": "Wir freuen uns über dein"
+    }
+  },
+  "Feedback": {
+    "Title": "Feedback zur Scorecard",
+    "ThankYou": "Vielen Dank für dein Feedback! 🍀",
+    "RatingTitle": "Bewertung",
+    "Text": "Feedback",
+    "Name": "Name (optional)",
+    "Email": "Email (optional)"
+  },
+  "Scorecard": {
+    "Loading": "Lade Spieler und Scores ..."
+  },
+  "Games": {
+    "ListGames": {
+      "AllGames": "Alle Spiele",
+      "NoGamesFound": "Keine Spiele gefunden",
+      "HolesPlayed": "Gespielte Löcher",
+      "SearchText": "Spiel- oder Spielername",
+      "LoadMore": "Weitere Spiele laden"
+    },
+    "NewGame": {
+      "TitleNew": "Neues Spiel erstellen",
+      "TitleEdit": "Spiel bearbeiten",
+      "GameName": "Spielname",
+      "PlayerName": "Spieler",
+      "SaveChanges": "Änderungen speichern",
+      "StartGame": "Spiel starten",
+      "AddPlayer": "Spieler hinzufügen"
+    },
+    "HoleView": {
+      "EditGame": "Spiel bearbeiten",
+      "HideHoleOverview": "Verstecke die Lochübersicht",
+      "ShowHoleOverview": "Zeige die Lochübersicht an"
+    }
+  }
+}
