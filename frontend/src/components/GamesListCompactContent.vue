@@ -1,11 +1,11 @@
 <template>
-    <div v-if="games.length === 0 && !isLoading && showNoGamesTimeout"
+    <div v-if="games.length === 0 && !loading && showNoGamesTimeout"
         class="text-center text-gray-500 dark:text-gray-400">
         {{ $t('Games.ListGames.NoGamesFound') }}
     </div>
 
     <!-- Skeleton Loader separat -->
-    <ul v-if="isInitialLoad" class="space-y-2">
+    <ul v-if="games.length === 0 && loading" class="space-y-2">
         <li v-for="n in props.perPage" :key="'skeleton-' + n"
             class="game-preview-skeleton animate-pulse bg-white/60 dark:bg-gray-800/60 rounded-xl px-4 py-3 border border-gray-300 dark:border-gray-600">
             <div class="flex justify-between items-center">
@@ -80,8 +80,10 @@
 
 <script setup>
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
-import { useIntersectionObserver, useWindowScroll } from '@vueuse/core'
+import { useWindowScroll, useDebounceFn } from '@vueuse/core'
 import { useGamesSummaryData } from '@/composables/useGamesSummaryData.js';
+import { useInfiniteLoader } from '@/composables/useInfiniteLoader.js'
+import { useScrollToTopButton } from '@/composables/useScrollToTopButton.js'
 import { useRouter } from 'vue-router';
 import { ArrowUpIcon } from '@heroicons/vue/24/outline'
 
@@ -99,11 +101,10 @@ const props = defineProps({
 });
 
 const expandedGameId = ref(null);
-const isLoading = ref(false);
 const showNoGamesTimeout = ref(false);
-const isInitialLoad = ref(true);
 const target = ref(null)
-const showScrollToTop = ref(false);
+const loading = ref(false)
+const { showScrollToTop, scrollToTop } = useScrollToTopButton()
 
 const {
     games,
@@ -116,91 +117,58 @@ const {
     hasMore
 } = useGamesSummaryData();
 
-const { y } = useWindowScroll()
-
-watch(y, (value) => {
-    showScrollToTop.value = value > 300
-})
-
-function scrollToTop() {
-    const scrollEl = document.documentElement || document.body;
-    scrollEl.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-useIntersectionObserver(target, ([{ isIntersecting }]) => {
-    if (isIntersecting && hasMore.value && !isLoading.value) {
-        loadMoreGames()
-    }
+const { loadMore, isInitialLoad, isLoading } = useInfiniteLoader({
+    loadFn: ({ reset = false } = {}) => loadMoreGames({ resetFirst: reset }),
+    target,
+    hasMore,
+    isLoading: loading,
 })
 
 onMounted(() => {
-    loadMoreGames({ resetFirst: true }).then(() => {
-        setTimeout(() => {
-            const targetEl = target.value;
-            if (targetEl && targetEl.getBoundingClientRect().top < window.innerHeight) {
-                loadMoreGames();
-            }
-        }, 200);
-    });
+    loadMore({ reset: true })
 });
 
 onUnmounted(() => {
-    clearTimeout(debounceTimer);
     clearTimeout(noGamesTimer);
+    debouncedSearch.cancel?.();
 });
 
-let debounceTimer = null;
 let noGamesTimer = null;
 
-watch(
-    () => games.value.length,
-    (length) => {
-        if (length > 0) {
-            isInitialLoad.value = false;
-        }
-    }
-);
+const debouncedSearch = useDebounceFn(async () => {
+    showNoGamesTimeout.value = false;
+    await loadMoreGames({ resetFirst: true });
+
+    noGamesTimer = setTimeout(() => {
+        showNoGamesTimeout.value = true;
+    }, 10000);
+}, 300);
 
 watch(
     () => props.searchTerm,
     () => {
-        clearTimeout(debounceTimer);
         clearTimeout(noGamesTimer);
-
-        debounceTimer = setTimeout(async () => {
-            showNoGamesTimeout.value = false;
-            await loadMoreGames({ resetFirst: true });
-
-            noGamesTimer = setTimeout(() => {
-                showNoGamesTimeout.value = true;
-            }, 10000);
-        }, 300);
+        debouncedSearch();
     },
     { immediate: false }
 );
 
 async function loadMoreGames({ resetFirst = false } = {}) {
-    if (isLoading.value) return;
-
     if (resetFirst) {
         reset();
-        isInitialLoad.value = true;
     }
 
-    isLoading.value = true;
     await loadGames({
         perPage: props.perPage,
         search: props.searchTerm || '',
     });
-    isLoading.value = false;
 }
 
-function formatDate(ts) {
-    return new Date(ts).toLocaleString('de-CH', {
+const formatDate = (ts) =>
+    new Date(ts).toLocaleString('de-CH', {
         dateStyle: 'medium',
         timeStyle: 'short',
     });
-}
 
 function getPlayerListShort(gameId) {
     const list = (playerMap.value[gameId] || []).join(', ');
