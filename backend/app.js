@@ -18,7 +18,9 @@ const __dirname = path.dirname(__filename);
 
 const fastify = Fastify({ logger: true });
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',').map(origin => origin.trim());
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+  : [];
 
 await fastify.register(cors, {
   origin: (origin, cb) => {
