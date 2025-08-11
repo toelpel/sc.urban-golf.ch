@@ -2,7 +2,7 @@
 
 ---
 
-## [2.0.1] – 2025-07-xx
+## [2.0.1] – 2025-08-12
 ### 🎉 New features
 - Infinite scolling in Games-List
 - About, Roadmap and Changelog implemented
