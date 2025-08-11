@@ -1,7 +1,7 @@
 <template>
   <!-- Titelzeile mit Optionsmenü -->
   <div class="flex justify-between items-start gap-2 flex-wrap sm:flex-nowrap">
-    <h1 class="maintitle truncate max-w-[70vw]">
+    <h1 class="maintitle mb-4 truncate max-w-[70vw]">
       {{ shortGameName }} – {{ $t('General.Hole') }} {{ hole }}
     </h1>
 

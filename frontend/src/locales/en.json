@@ -22,13 +22,16 @@
       "Text": "We appreciate your"
     }
   },
-  "AboutUs": {
-    "Title": "About Us",
+  "About": {
+    "Title": "About",
     "Paragraph1": "We are an Urban Golf club from Winterthur, Switzerland – passionate about the sport and with a strong love for technology. Our mission is to help shape and grow the game.",
     "Paragraph2": "With this app, we want to contribute to the community: a simple, modern and mobile ScoreCard for Urban Golf. Easily track your scores – whether casually with friends or in organized tournaments.",
     "Paragraph3": "And this is just the beginning: more features will follow, from player stats to tournament management and club tools.",
     "Paragraph4": "We care deeply about open source ❤️ – that’s why the code is public. We welcome your ideas, feedback and contributions. Let’s build this together!",
     "RoadmapLink": "View our roadmap →",
+    "ChangeLog": {
+      "Title": "Change Log"
+    },
     "Roadmap": {
       "Title": "Roadmap",
       "Features": {

@@ -21,22 +21,43 @@ const router = createRouter({
       }
     },
     {
-      path: '/aboutus',
-      name: 'About Us',
-      component: () => import('./views/AboutUs.vue'),
+      path: '/about',
+      name: 'About',
+      component: () => import('./views/About.vue'),
       meta: {
-        title: 'AboutUs.Title',
-        parent: 'Home'
+        title: 'About.Title',
+        parent: 'Home',
+        hideFromBreadcrumb: true
       },
-    },
-    {
-      path: '/aboutus/roadmap',
-      name: 'Roadmap',
-      component: () => import('./views/Roadmap.vue'),
-      meta: {
-        title: 'General.Roadmap',
-        parent: 'About Us'
-      }
+      children: [
+        {
+          path: '',
+          name: 'AboutHome',
+          component: () => import('./components/AboutHome.vue'),
+          meta: {
+            title: 'About.Title',
+            parent: 'About'
+          }
+        },
+        {
+          path: 'roadmap',
+          name: 'Roadmap',
+          component: () => import('./components/Roadmap.vue'),
+          meta: {
+            title: 'About.Roadmap.Title',
+            parent: 'AboutHome'
+          }
+        },
+        {
+          path: 'changelog',
+          name: 'ChangeLog',
+          component: () => import('./components/ChangeLog.vue'),
+          meta: {
+            title: 'About.ChangeLog.Title',
+            parent: 'AboutHome'
+          }
+        }
+      ]
     },
     {
       path: '/games',

@@ -1,5 +1,5 @@
 <template>
-    <h2 class="maintitle mb-4">{{ $t('Games.ListGames.AllGames') }}</h2>
+    <h1 class="maintitle">{{ $t('Games.ListGames.AllGames') }}</h1>
 
     <div class="relative mb-4">
         <input type="text" v-model="searchTerm" :placeholder="`🔍 ${$t('Games.ListGames.SearchText')}`"

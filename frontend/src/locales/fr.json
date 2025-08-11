@@ -21,13 +21,16 @@
       "Text": "Nous apprécions ton"
     }
   },
-  "AboutUs": {
+  "About": {
     "Title": "À propos de nous",
     "Paragraph1": "Nous sommes un club d’Urban Golf basé à Winterthour, en Suisse – passionnés par ce sport et amoureux de la technologie. Nous voulons contribuer activement à son développement.",
     "Paragraph2": "Avec cette application, nous souhaitons offrir un outil moderne et simple pour la communauté : une carte de score mobile pour le street golf. Note tes scores facilement – entre amis ou en tournoi.",
     "Paragraph3": "Ce n’est que le début : des fonctionnalités comme les statistiques de joueurs, la gestion de tournois ou des outils pour les clubs arriveront bientôt.",
     "Paragraph4": "Nous tenons à l’open source ❤️ – c’est pourquoi notre code est public. Toutes les idées, remarques ou contributions sont les bienvenues. Construisons ça ensemble !",
     "RoadmapLink": "Voir notre feuille de route →",
+    "ChangeLog": {
+      "Title": "Journal des modifications"
+    },
     "Roadmap": {
       "Title": "Feuille de route",
       "Features": {
@@ -64,12 +67,12 @@
           "Desc": "Améliorations pour les grands écrans, vue publique optimisée"
         },
         "Tournament": {
-          "Label": "Gestion des tournois",
-          "Desc": "Création d’un tournoi, inscriptions, classements"
+          "Label": "Gestion de tournoi",
+          "Desc": "Enregistrer un tournoi, s'inscrire, classements de tournoi"
         },
         "Tour": {
           "Label": "Gestion de tournée",
-          "Desc": "Création d’une tournée, scores de tournée, inscription"
+          "Desc": "Enregistrer une tournée, ajouter des scores de tournée, s'inscrire à la tournée"
         }
       },
       "CallToAction": {

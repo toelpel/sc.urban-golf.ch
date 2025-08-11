@@ -13,5 +13,5 @@ module.exports = {
       pattern: /^(sticky|min-w-max|left|right)-/,
     },
   ],
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 };

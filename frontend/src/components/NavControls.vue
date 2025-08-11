@@ -13,9 +13,9 @@
             :class="{ 'material-nav-link--active': $route.path === '/feedback' }">
             💬 {{ $t('General.Feedback') }}
         </router-link>
-        <router-link to="/aboutus" class="material-nav-link"
-            :class="{ 'material-nav-link--active': $route.path === '/aboutus' }">
-            👥 {{ $t('AboutUs.Title') }}
+        <router-link to="/about" class="material-nav-link"
+            :class="{ 'material-nav-link--active': $route.path === '/about' }">
+            👥 {{ $t('About.Title') }}
         </router-link>
 
         <div class="flex items-center gap-2 ml-2">
@@ -69,9 +69,9 @@
                         :class="{ 'dropdown-item--active': $route.path === '/feedback' }" @click="isOpen = false">
                         💬 {{ $t('General.Feedback') }}
                     </router-link>
-                    <router-link to="/aboutus" class="dropdown-item"
-                        :class="{ 'dropdown-item--active': $route.path === '/aboutus' }" @click="isOpen = false">
-                        👥 {{ $t('AboutUs.Title') }}
+                    <router-link to="/about" class="dropdown-item"
+                        :class="{ 'dropdown-item--active': $route.path === '/about' }" @click="isOpen = false">
+                        👥 {{ $t('About.Title') }}
                     </router-link>
                     <button class="dropdown-item" @click="toggleDark">
                         {{ isDark ? '☀️ Lightmode' : '🌙 Darkmode' }}

@@ -63,18 +63,20 @@ const breadcrumb = computed(() => {
     const chain = []
     const routeByName = Object.fromEntries(router.getRoutes().map(r => [r.name, r]))
     let current = routeByName[route.name]
+    const visited = new Set()
 
     while (current) {
-        if (current.meta?.title) {
+        // Endlosschleifen absichern
+        if (visited.has(current.name)) break
+        visited.add(current.name)
+
+        // Breadcrumb nur wenn erlaubt
+        if (current.meta?.title && !current.meta?.hideFromBreadcrumb) {
             const path = current.path.includes(':') ? buildDynamicPath(current) : current.path
 
             const label = (() => {
-                if (current.name === 'GamesDetail') {
-                    return t('General.Scorecard')
-                }
-                if (current.name === 'GamesHole') {
-                    return route.params.holeId
-                }
+                if (current.name === 'GamesDetail') return t('General.Scorecard')
+                if (current.name === 'GamesHole') return route.params.holeId
                 return t(current.meta.title)
             })()
 
@@ -88,7 +90,7 @@ const breadcrumb = computed(() => {
 })
 
 const showBack = computed(() =>
-    ['/games', '/feedback', '/games/new', '/aboutus'].some(prefix =>
+    ['/games', '/feedback', '/games/new', '/about'].some(prefix =>
         route.path === prefix || route.path.startsWith(prefix + '/')
     )
 )

@@ -21,13 +21,16 @@
       "Text": "We horen graag jouw"
     }
   },
-  "AboutUs": {
+  "About": {
     "Title": "Over ons",
     "Paragraph1": "Wij zijn een Urban Golf-club uit Winterthur, Zwitserland – gepassioneerd door de sport en met een grote liefde voor technologie. Ons doel is om actief bij te dragen aan de ontwikkeling van Urban Golf.",
     "Paragraph2": "Met deze app willen we een bijdrage leveren aan de community: een eenvoudige, moderne en mobiele scorekaart voor Urban Golf. Zo kun je eenvoudig je scores bijhouden – of je nu casual speelt met vrienden of deelneemt aan een toernooi.",
     "Paragraph3": "En dit is nog maar het begin: er komen nog veel functies bij, van spelersstatistieken tot toernooibeheer en clubfuncties.",
     "Paragraph4": "Open source ligt ons nauw aan het hart ❤️ – daarom is de code publiek toegankelijk. We waarderen feedback, ideeën en bijdragen enorm. Laten we dit samen bouwen!",
     "RoadmapLink": "Bekijk onze roadmap →",
+    "ChangeLog": {
+      "Title": "Wijzigingslogboek"
+    },
     "Roadmap": {
       "Title": "Routekaart",
       "Features": {
@@ -64,12 +67,12 @@
           "Desc": "Verbeteringen voor grote schermen, publieke weergave optimaliseren"
         },
         "Tournament": {
-          "Label": "Toernooi Beheer",
-          "Desc": "Toernooi aanmaken, inschrijving, ranglijsten"
+          "Label": "Toernooibeheer",
+          "Desc": "Een toernooi registreren, inschrijven, toernooiklassementen"
         },
         "Tour": {
-          "Label": "Tour Beheer",
-          "Desc": "Tour aanmaken, scores registreren, inschrijving voor tour"
+          "Label": "Tourbeheer",
+          "Desc": "Een tour registreren, tourscores toevoegen, inschrijven voor tour"
         }
       },
       "CallToAction": {

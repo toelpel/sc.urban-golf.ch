@@ -21,13 +21,16 @@
       "Text": "Wir freuen uns über dein"
     }
   },
-  "AboutUs": {
+  "About": {
     "Title": "Über uns",
     "Paragraph1": "Wir sind ein Urban-Golf-Verein aus Winterthur in der Schweiz – mit Herzblut für den Sport und einer großen Portion Leidenschaft für Technik. Unser Ziel ist es, Urban Golf weiterzuentwickeln und aktiv mitzugestalten.",
     "Paragraph2": "Mit dieser App möchten wir einen Beitrag für die Community leisten: eine einfache, moderne und mobile ScoreCard für Urban Golf. So kannst du unkompliziert deine Scores erfassen – egal ob spontan mit Freunden oder organisiert im Turnier.",
     "Paragraph3": "Die App ist erst der Anfang: In Zukunft sollen weitere Funktionen dazukommen, von Spielerstatistiken über Turnierverwaltung bis hin zu Club-Management.",
     "Paragraph4": "Uns liegt Open Source am Herzen ❤️ – darum ist der Code öffentlich zugänglich. Wir freuen uns über Feedback, Ideen oder tatkräftige Mithilfe. Let’s build this together!",
     "RoadmapLink": "Unsere Roadmap ansehen →",
+    "ChangeLog": {
+      "Title": "Change Log"
+    },
     "Roadmap": {
       "Title": "Roadmap",
       "Features": {
@@ -64,12 +67,12 @@
           "Desc": "Optimierungen für grössere Screens, Öffentliche Ansicht optimieren"
         },
         "Tournament": {
-          "Label": "Turnier Management",
-          "Desc": "Erfassung eines Turniers, Anmeldung, Turnier-Leaderboards"
+          "Label": "Turnierverwaltung",
+          "Desc": "Ein Turnier registrieren, anmelden, Turnier-Ranglisten"
         },
         "Tour": {
-          "Label": "Tournament Management",
-          "Desc": "Erfassung einer Tour, Hinterlegen von Tour-Wertungen, Anmeldung zur Tour"
+          "Label": "Tourverwaltung",
+          "Desc": "Eine Tour registrieren, Tour-Ergebnisse hinzufügen, für Tour anmelden"
         }
       },
       "CallToAction": {
