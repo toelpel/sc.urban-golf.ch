@@ -55,11 +55,19 @@
           "Label": "User Management",
           "Desc": "Registration and login, 'My Games' implementation"
         },
+        "CourseManagement": {
+          "Label": "Course Management",
+          "Desc": "Define courses from different holes – perfect for recurring training and long-term score tracking."
+        },
         "Stats": {
           "Label": "Player Statistics",
           "Desc": "Basic score analytics, rankings and visualizations"
         },
-        "Club": {
+        "DesignImprovements": {
+          "Label": "Design & Layout Improvements",
+          "Desc": "General style enhancements and a minimalist design system for a modern, consistent look."
+        },
+        "ClubManagement": {
           "Label": "Club Management",
           "Desc": "Register a club, add players, manage permissions"
         },
@@ -67,11 +75,11 @@
           "Label": "Optimization for Desktop Clients",
           "Desc": "Improvements for larger screens, public view enhancements"
         },
-        "Tournament": {
+        "TournamentManagement": {
           "Label": "Tournament Management",
           "Desc": "Register a tournament, signup, tournament leaderboards"
         },
-        "Tour": {
+        "TourManagement": {
           "Label": "Tour Management",
           "Desc": "Register a tour, add tour scores, signup for tour"
         }

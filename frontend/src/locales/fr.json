@@ -54,11 +54,19 @@
           "Label": "Gestion des utilisateurs",
           "Desc": "Inscription et connexion, mise en œuvre de 'Mes parties'"
         },
+        "CourseManagement": {
+          "Label": "Gestion de parcours",
+          "Desc": "Définir des parcours composés de différents trous – idéal pour des entraînements réguliers et l’analyse des scores à long terme."
+        },
         "Stats": {
           "Label": "Statistiques des joueurs",
           "Desc": "Analyses de scores de base, classements et visualisations"
         },
-        "Club": {
+        "DesignImprovements": {
+          "Label": "Améliorations du design et de la mise en page",
+          "Desc": "Améliorations générales du style et système de design minimaliste pour une apparence moderne et cohérente."
+        },
+        "ClubManagement": {
           "Label": "Gestion de club",
           "Desc": "Création d’un club, ajout de joueurs, gestion des droits"
         },
@@ -66,11 +74,11 @@
           "Label": "Optimisation pour desktop",
           "Desc": "Améliorations pour les grands écrans, vue publique optimisée"
         },
-        "Tournament": {
+        "TournamentManagement": {
           "Label": "Gestion de tournoi",
           "Desc": "Enregistrer un tournoi, s'inscrire, classements de tournoi"
         },
-        "Tour": {
+        "TourManagement": {
           "Label": "Gestion de tournée",
           "Desc": "Enregistrer une tournée, ajouter des scores de tournée, s'inscrire à la tournée"
         }

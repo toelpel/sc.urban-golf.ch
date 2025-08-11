@@ -54,11 +54,19 @@
           "Label": "Gebruikersbeheer",
           "Desc": "Registratie en login, implementatie van 'Mijn Spellen'"
         },
+        "CourseManagement": {
+          "Label": "Baanbeheer",
+          "Desc": "Bepaal banen met verschillende holes – ideaal voor herhalende trainingen en langdurige score-analyses."
+        },
         "Stats": {
           "Label": "Spelerstatistieken",
           "Desc": "Basisanalyses van scores, ranglijsten en visualisaties"
         },
-        "Club": {
+        "DesignImprovements": {
+          "Label": "Ontwerp- en lay-outverbeteringen",
+          "Desc": "Algemene stijlverbeteringen en een minimalistisch ontwerpsysteem voor een moderne, consistente uitstraling."
+        },
+        "ClubManagement": {
           "Label": "Clubbeheer",
           "Desc": "Club registreren, spelers toevoegen, rechten toekennen"
         },
@@ -66,11 +74,11 @@
           "Label": "Optimalisatie voor desktops",
           "Desc": "Verbeteringen voor grote schermen, publieke weergave optimaliseren"
         },
-        "Tournament": {
+        "TournamentManagement": {
           "Label": "Toernooibeheer",
           "Desc": "Een toernooi registreren, inschrijven, toernooiklassementen"
         },
-        "Tour": {
+        "TourManagement": {
           "Label": "Tourbeheer",
           "Desc": "Een tour registreren, tourscores toevoegen, inschrijven voor tour"
         }

@@ -73,7 +73,9 @@ import {
     RocketLaunchIcon,
     GlobeAltIcon,
     UserIcon,
+    ClipboardDocumentListIcon,
     ChartBarIcon,
+    AdjustmentsHorizontalIcon,
     UsersIcon,
     ComputerDesktopIcon,
     TrophyIcon,
@@ -91,11 +93,13 @@ const features = [
     { key: 'InitialRelease', icon: RocketLaunchIcon, done: true, visible: true },
     { key: 'OpenSource', icon: GlobeAltIcon, done: false, visible: true },
     { key: 'UserManagement', icon: UserIcon, done: false, visible: true },
+    { key: 'CourseManagement', icon: ClipboardDocumentListIcon, done: false, visible: true },
     { key: 'Stats', icon: ChartBarIcon, done: false, visible: true },
-    { key: 'Club', icon: UsersIcon, done: false, visible: true },
+    { key: 'DesignImprovements', icon: AdjustmentsHorizontalIcon, done: false, visible: true },
+    { key: 'ClubManagement', icon: UsersIcon, done: false, visible: true },
     { key: 'Desktop', icon: ComputerDesktopIcon, done: false, visible: true },
-    { key: 'Tournament', icon: TrophyIcon, done: false, visible: false },
-    { key: 'Tour', icon: MapIcon, done: false, visible: false }
+    { key: 'TournamentManagement', icon: TrophyIcon, done: false, visible: false },
+    { key: 'TourManagement', icon: MapIcon, done: false, visible: false }
 ]
 
 // Sichtbare Liste (Default: visible !== false)

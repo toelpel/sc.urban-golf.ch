@@ -54,23 +54,31 @@
           "Label": "User-Verwaltung",
           "Desc": "Registrierung und Login, Implementation von 'Meine Spiele'"
         },
+        "CourseManagement": {
+          "Label": "Kursverwaltung",
+          "Desc": "Kurse aus verschiedenen Löchern definieren – ideal für wiederkehrende Trainings und langfristige Score-Analysen."
+        },
         "Stats": {
           "Label": "Spieler Statistiken",
           "Desc": "Rudimentäre Score-Auswertungen, Rankings und Visualisierungen"
         },
-        "Club": {
-          "Label": "Club Management",
+        "DesignImprovements": {
+          "Label": "Design- und Layout-Optimierungen",
+          "Desc": "Allgemeine Style-Verbesserungen und ein minimalistisches Designsystem für ein modernes, einheitliches Erscheinungsbild."
+        },
+        "ClubManagement": {
+          "Label": "Clubverwaltung",
           "Desc": "Erfassung eines Clubs, Hinzufügen von Spielern, Berechtigungsvergabe"
         },
         "Desktop": {
           "Label": "Optimierung für Desktop-Clients",
           "Desc": "Optimierungen für grössere Screens, Öffentliche Ansicht optimieren"
         },
-        "Tournament": {
+        "TournamentManagement": {
           "Label": "Turnierverwaltung",
           "Desc": "Ein Turnier registrieren, anmelden, Turnier-Ranglisten"
         },
-        "Tour": {
+        "TourManagement": {
           "Label": "Tourverwaltung",
           "Desc": "Eine Tour registrieren, Tour-Ergebnisse hinzufügen, für Tour anmelden"
         }
