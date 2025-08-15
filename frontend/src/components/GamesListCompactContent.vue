@@ -25,19 +25,20 @@
             @click="navigateToGame(game.id)">
             <div class="card-inner">
                 <!-- Header -->
-                <div class="card-row relative">
-
-                    <div class="flex flex-col min-w-0 z-10">
-                        <div class="list-title" :title="game.name">
+                <div class="card-row relative flex items-center gap-3">
+                    <!-- Textbereich -->
+                    <div class="flex-1 min-w-0 flex flex-col z-10">
+                        <div class="list-title truncate" :title="game.name">
                             {{ game.name }}
                         </div>
-                        <div class="list-meta" :title="playerMap[game.id]?.join(', ')">
+                        <div class="list-meta truncate" :title="playerMap[game.id]?.join(', ')">
                             {{ formatDate(game.created_at) }}
                             <span v-if="playerMap[game.id]"> – {{ getPlayerListShort(game.id) }}</span>
                         </div>
                     </div>
 
-                    <button @click.stop="toggleDetails(game.id)" class="chevron-btn z-10"
+                    <!-- Chevron immer volle Größe, nicht schrumpfen -->
+                    <button @click.stop="toggleDetails(game.id)" class="chevron-btn z-10 shrink-0"
                         :aria-expanded="expandedGameId === game.id" :aria-controls="`game-details-${game.id}`"
                         :aria-label="expandedGameId === game.id ? 'Collapse' : 'Expand'" title="Details">
                         <ChevronRightIcon class="w-5 h-5 transition-transform duration-200"

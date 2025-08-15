@@ -4,8 +4,8 @@
     <!-- Search: Glass-Input mit Icon & Clear -->
     <div class="relative mb-4">
         <!-- Icon -->
-        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
-            <!-- Heroicon: Magnifying Glass -->
+        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2
+           text-gray-500 dark:text-gray-400 z-10" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -15,15 +15,13 @@
 
         <!-- Glass Input -->
         <input type="search" v-model="searchTerm" :placeholder="` ${$t('Games.ListGames.SearchText')}`"
-            class="input-field input-compact w-full pl-10 pr-10" inputmode="search" autocomplete="off"
+            class="input-field input-compact w-full pl-10 pr-10 relative z-0" inputmode="search" autocomplete="off"
             aria-label="Search games" />
 
         <!-- Clear -->
-        <button v-if="searchTerm" @click="searchTerm = ''"
-            class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition"
-            aria-label="Clear search" type="button">
-            ✕
-        </button>
+        <button v-if="searchTerm" @click="searchTerm = ''" class="absolute right-2 top-1/2 -translate-y-1/2 p-1
+           text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100
+           transition z-10" aria-label="Clear search" type="button">✕</button>
     </div>
 
     <Suspense>
