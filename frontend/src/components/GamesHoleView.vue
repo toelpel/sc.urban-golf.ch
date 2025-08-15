@@ -5,20 +5,26 @@
       {{ shortGameName }} – {{ $t('General.Hole') }} {{ hole }}
     </h1>
 
-    <!-- Menü-Trigger (⋯) -->
+    <!-- Menü-Trigger -->
     <div ref="optionsWrapper" class="relative">
-      <button @click="isOptionsOpen = !isOptionsOpen" class="icon-button text-2xl leading-none">
-        ...
+      <button @click="isOptionsOpen = !isOptionsOpen"
+        class="icon-button w-10 h-10 text-2xl hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+        aria-label="Options" type="button">
+        <!-- Heroicon: Ellipsis Vertical (inline) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 6.75a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+        </svg>
       </button>
 
-      <!-- Dropdown-Menü -->
+      <!-- Dropdown -->
       <transition name="fade-slide">
-        <div v-if="isOptionsOpen"
-          class="absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-lg ring-1 ring-black/10 text-sm dark:bg-gray-800 dark:text-white z-10">
+        <div v-if="isOptionsOpen" class="absolute right-0 mt-2 w-56 rounded-xl bg-white/85 dark:bg-gray-800/85
+             backdrop-blur-md ring-1 ring-black/10 shadow-lg text-sm z-10 overflow-hidden">
           <router-link :to="`/games/new/${gameId}`" class="dropdown-item" @click="isOptionsOpen = false">
             {{ $t('Games.HoleView.EditGame') }}
           </router-link>
-          <button class="dropdown-item" @click="toggleHoleOverview">
+          <button class="dropdown-item w-full text-left" @click="toggleHoleOverview">
             {{ showHoleOverview ? $t('Games.HoleView.HideHoleOverview') : $t('Games.HoleView.ShowHoleOverview') }}
           </button>
         </div>
@@ -26,44 +32,50 @@
     </div>
   </div>
 
-  <!-- Lochübersicht -->
-  <div v-if="showHoleOverview"
-    class="flex justify-center items-center flex-wrap gap-2 mb-2 text-sm text-gray-700 dark:text-gray-300">
-    <router-link v-for="n in holes" :key="n" :to="`/games/${gameId}/${n}`" class="px-3 py-1 rounded border font-semibold 
-             bg-gray-200 hover:bg-gray-300 text-gray-800 
-             dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white" :class="{ 'ring-2 ring-green-500': n === hole }">
+  <!-- Lochübersicht: Glass-Chips -->
+  <div v-if="showHoleOverview" class="flex justify-center items-center flex-wrap gap-2 mb-3 text-sm">
+    <router-link v-for="n in holes" :key="n" :to="'/games/' + gameId + '/' + n"
+      class="px-3 py-1 rounded-full backdrop-blur-md transition text-gray-800 dark:text-gray-200 hover:bg-white/60"
+      :class="n === hole ? 'ring-2 ring-green-500 bg-white/60 dark:bg-gray-900/60 text-gray-900 dark:text-white' : 'ring-1 ring-white/50 bg-white/40 dark:bg-gray-900/40'">
       {{ n }}
     </router-link>
   </div>
 
-  <!-- Score-Editor -->
-  <div v-for="player in players" :key="player.id" class="mb-2 border-t pt-2">
-    <div class="flex items-center space-x-4">
-      <div
-        class="w-64 truncate self-center text-left text-lg font-bold text-gray-800 dark:text-gray-100 leading-tight pr-2"
-        :title="player.name">
-        {{ player.name }}
+  <!-- Spieler-Liste als Glass-Card mit Divider -->
+  <div class="glass-list mt-2">
+    <div class="card-inner">
+      <div v-for="player in players" :key="player.id" class="flex items-center justify-between px-4 py-3 gap-3">
+        <!-- Name -->
+        <div class="min-w-0 flex-1 truncate text-left text-base font-semibold
+                 text-gray-900 dark:text-gray-100" :title="player.name">
+          {{ player.name }}
+        </div>
+
+        <!-- Stepper: - [select] +  -->
+        <div class="flex items-center gap-2 shrink-0">
+          <button @click="changeStrokes(player.id, -1)" class="chevron-btn w-10 h-10" aria-label="Weniger Schläge"
+            type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" d="M6 12h12" />
+            </svg>
+          </button>
+
+          <select v-model="scores[player.id][hole]" @change="saveScore(player.id)" class="select-field w-16 text-center px-2 py-2
+                   bg-white/50 dark:bg-gray-900/50 backdrop-blur-md
+                   border-white/50 dark:border-white/30">
+            <option v-for="n in range(-3, 15)" :key="n" :value="n">{{ n }}</option>
+          </select>
+
+          <button @click="changeStrokes(player.id, 1)" class="chevron-btn w-10 h-10" aria-label="Mehr Schläge"
+            type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" d="M12 6v12M6 12h12" />
+            </svg>
+          </button>
+        </div>
       </div>
-
-      <button @click="changeStrokes(player.id, -1)" class="button-primary w-10 h-10 flex items-center justify-center"
-        aria-label="Weniger Schläge">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 -translate-y-[1px] -translate-x-[10px]" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor" stroke-width="4" stroke-linecap="butt">
-          <path d="M5 12h14" />
-        </svg>
-      </button>
-
-      <select v-model="scores[player.id][hole]" @change="saveScore(player.id)" class="select-field w-12 text-center">
-        <option v-for="n in range(-3, 15)" :key="n" :value="n">{{ n }}</option>
-      </select>
-
-      <button @click="changeStrokes(player.id, 1)" class="button-primary w-10 h-10 flex items-center justify-center"
-        aria-label="Mehr Schläge">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 -translate-y-[1px] -translate-x-[10px]" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor" stroke-width="4" stroke-linecap="butt">
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-      </button>
     </div>
   </div>
 

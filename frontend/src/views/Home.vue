@@ -19,12 +19,6 @@
           {{ $t('About.Title') }}
         </router-link>
       </div>
-      <div
-        class="mt-8 max-w-md mx-auto p-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 rounded shadow">
-        {{ $t('Home.Beta.Title') }}<br />
-        {{ $t('Home.Beta.Text') }} <router-link to="/feedback"
-          class="underline hover:text-yellow-700 dark:hover:text-yellow-200">{{ $t('General.Feedback') }}</router-link>!
-      </div>
     </div>
   </DefaultTemplate>
 </template>

@@ -1,31 +1,34 @@
 <template>
-    <!-- Outer container: scrolls -->
-    <div class="max-h-[calc(100dvh-11rem)] overflow-y-auto">
-        <!-- Inner container: sticky ist hier sichtbar -->
-        <div class="relative rounded-lg shadow-lg border border-gray-300 dark:border-gray-700">
-            <table class="scorecard-table w-full">
-                <thead class="bg-white/80 dark:bg-gray-900/80">
+    <!-- Outer container: vertikal + horizontal scroll -->
+    <div class="max-h-[calc(100dvh-11rem)] overflow-y-auto overflow-x-auto">
+        <!-- Glass-Card Wrapper -->
+        <div class="glass-card p-0 overflow-hidden inline-block min-w-full">
+            <table class="scorecard-table w-full min-w-max border-collapse">
+                <thead class="backdrop-blur-md bg-white/40 dark:bg-gray-900/40">
                     <tr>
-                        <th
-                            class="scorecard-header-cell text-left left-0 sticky top-0 z-10 w-20">
+                        <th class="scorecard-header-cell text-left first:rounded-tl-2xl">
                             {{ $t('General.Hole') }}
                         </th>
-                        <th v-for="player in sortedPlayers" :key="player.id"
-                            class="scorecard-header-cell text-center sticky top-0 z-10 max-w-[10rem] truncate"
-                            :title="player.name">
+
+                        <th v-for="(player, idx) in sortedPlayers" :key="player.id" class="scorecard-header-cell text-center max-w-[10rem] truncate
+                     first:border-l-0 border-l border-white/30 dark:border-white/10
+                     last:rounded-tr-2xl" :title="player.name">
                             {{ player.name }}
                         </th>
                     </tr>
                 </thead>
+
                 <tbody>
                     <!-- Loch-Zeilen -->
-                    <tr v-for="hole in holes" :key="hole" class="scorecard-hover-row">
-                        <td class="scorecard-cell text-left font-semibold left-0">
-                            <router-link :to="`/games/${gameId}/${hole}`"
+                    <tr v-for="hole in holes" :key="hole"
+                        class="hover:bg-white/30 dark:hover:bg-gray-800/30 transition">
+                        <td class="scorecard-cell text-left font-semibold">
+                            <router-link :to="'/games/' + gameId + '/' + hole"
                                 class="text-blue-600 dark:text-blue-400 hover:underline">
                                 {{ hole }}
                             </router-link>
                         </td>
+
                         <td v-for="player in sortedPlayers" :key="player.id"
                             class="scorecard-cell max-w-[10rem] truncate">
                             {{ scores[player.id]?.[hole] ?? '–' }}
@@ -33,9 +36,9 @@
                     </tr>
 
                     <!-- Durchschnitt -->
-                    <tr class="font-semibold text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors"
+                    <tr class="font-semibold cursor-pointer hover:bg-white/30 dark:hover:bg-gray-800/30 transition"
                         @click="$emit('sort', 'average')">
-                        <td class="scorecard-cell text-left sticky left-0 z-10">
+                        <td class="scorecard-cell text-left">
                             Ø
                             <span v-if="sortColumn === 'average'">
                                 {{ sortDirection === 'asc' ? '↑' : '↓' }}
@@ -47,9 +50,9 @@
                     </tr>
 
                     <!-- Total -->
-                    <tr class="font-semibold text-gray-800 dark:text-gray-100 cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-800 transition-colors"
+                    <tr class="font-semibold cursor-pointer hover:bg-white/40 dark:hover:bg-gray-800/40 transition"
                         @click="$emit('sort', 'total')">
-                        <td class="scorecard-cell text-left sticky left-0 z-10">
+                        <td class="scorecard-cell text-left">
                             {{ $t('General.Total') }}
                             <span v-if="sortColumn === 'total'">
                                 {{ sortDirection === 'asc' ? '↑' : '↓' }}
@@ -64,6 +67,7 @@
         </div>
     </div>
 </template>
+
 
 <script setup>
 const {

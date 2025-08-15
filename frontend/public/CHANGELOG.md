@@ -2,11 +2,12 @@
 
 ---
 
-## [2.0.1] – 2025-08-12
+## [2.0.1] – 2025-08-15
 ### 🎉 New features
 - Infinite scolling in Games-List
 - About, Roadmap and Changelog implemented
 - Dependencies updated
+- UX and style improvements
 
 ### 🪲 Bugfixes
 - Scores could not be entered, database schema had to be adjusted
