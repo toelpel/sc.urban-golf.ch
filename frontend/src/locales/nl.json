@@ -16,9 +16,78 @@
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Maak een nieuw spel aan of bekijk bestaande spellen.",
-    "Beta": {
-      "Title": "⚠️ Deze app bevindt zich nog in de bètafase.",
-      "Text": "We horen graag jouw"
+    "OpenSource": {
+      "Title": "Open source - doe mee!",
+      "Text": "Begin met een ⭐️, meld issues of stuur pull requests. We kijken uit naar je bijdrage 🤩"
+    }
+  },
+  "About": {
+    "Title": "Over ons",
+    "Paragraph1": "Wij zijn een Urban Golf-club uit Winterthur, Zwitserland – gepassioneerd door de sport en met een grote liefde voor technologie. Ons doel is om actief bij te dragen aan de ontwikkeling van Urban Golf.",
+    "Paragraph2": "Met deze app willen we een bijdrage leveren aan de community: een eenvoudige, moderne en mobiele scorekaart voor Urban Golf. Zo kun je eenvoudig je scores bijhouden – of je nu casual speelt met vrienden of deelneemt aan een toernooi.",
+    "Paragraph3": "En dit is nog maar het begin: er komen nog veel functies bij, van spelersstatistieken tot toernooibeheer en clubfuncties.",
+    "Paragraph4": "Open source ligt ons nauw aan het hart ❤️ – daarom is de code publiek toegankelijk. We waarderen feedback, ideeën en bijdragen enorm. Laten we dit samen bouwen!",
+    "RoadmapLink": "Bekijk onze roadmap →",
+    "ChangeLog": {
+      "Title": "Wijzigingslogboek"
+    },
+    "Roadmap": {
+      "Title": "Routekaart",
+      "Features": {
+        "TestProd": {
+          "Label": "Scheidbare Test/Prod-omgeving",
+          "Desc": "Gescheiden deployments en configuratie"
+        },
+        "Documentation": {
+          "Label": "Documentatie & Readme",
+          "Desc": "Setup, bijdragegids, technologie-stack"
+        },
+        "InitialRelease": {
+          "Label": "Initiële Release",
+          "Desc": "ScoreCard MVP uitgebracht"
+        },
+        "OpenSource": {
+          "Label": "Open Source",
+          "Desc": "Code wordt openbaar beschikbaar op GitHub.\nSamenwerking zeer gewenst 🤩\n → https://github.com/toelpel/sc.urban-golf.ch"
+        },
+        "UserManagement": {
+          "Label": "Gebruikersbeheer",
+          "Desc": "Registratie en login, implementatie van 'Mijn Spellen'"
+        },
+        "CourseManagement": {
+          "Label": "Baanbeheer",
+          "Desc": "Bepaal banen met verschillende holes – ideaal voor herhalende trainingen en langdurige score-analyses."
+        },
+        "Stats": {
+          "Label": "Spelerstatistieken",
+          "Desc": "Basisanalyses van scores, ranglijsten en visualisaties"
+        },
+        "DesignImprovements": {
+          "Label": "Ontwerp- en lay-outverbeteringen",
+          "Desc": "Algemene stijlverbeteringen en een minimalistisch ontwerpsysteem voor een moderne, consistente uitstraling."
+        },
+        "ClubManagement": {
+          "Label": "Clubbeheer",
+          "Desc": "Club registreren, spelers toevoegen, rechten toekennen"
+        },
+        "Desktop": {
+          "Label": "Optimalisatie voor desktops",
+          "Desc": "Verbeteringen voor grote schermen, publieke weergave optimaliseren"
+        },
+        "TournamentManagement": {
+          "Label": "Toernooibeheer",
+          "Desc": "Een toernooi registreren, inschrijven, toernooiklassementen"
+        },
+        "TourManagement": {
+          "Label": "Tourbeheer",
+          "Desc": "Een tour registreren, tourscores toevoegen, inschrijven voor tour"
+        }
+      },
+      "CallToAction": {
+        "Title": "✨ Jouw feature kan hier staan!",
+        "Text": "Heb je een idee wat nog ontbreekt? Deel het met ons –",
+        "Link": "naar het feedbackformulier"
+      }
     }
   },
   "Feedback": {

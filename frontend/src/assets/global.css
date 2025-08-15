@@ -12,10 +12,146 @@
   }
 }
 
-.input-field,
-.textarea-field,
-.select-field {
-  @apply w-full px-4 py-3 border rounded-lg shadow-md transition bg-white text-gray-900 border-gray-300 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:border-blue-300 dark:focus:ring-blue-300 dark:focus:border-blue-400;
+@layer components {
+  /* Glassmorphism Card – neutrales Card-Design */
+  .glass-card {
+    @apply p-5 rounded-2xl backdrop-blur-lg backdrop-saturate-150
+          bg-white/60 dark:bg-gray-900/60
+          border border-white/40 dark:border-white/40
+          text-gray-800 dark:text-white shadow-lg transition hover:shadow-xl;
+  }
+
+  /* Variante für klickbare Cards */
+  .glass-card--interactive {
+    @apply cursor-pointer select-none hover:scale-[1.01];
+  }
+
+  /* Card-Inhalte */
+  .card-title {
+    @apply text-base sm:text-lg font-semibold flex items-center gap-2;
+  }
+  .card-icon {
+    @apply w-6 h-6 text-white/80 shrink-0;
+  }
+  .card-desc {
+    @apply text-sm text-gray-700 dark:text-gray-300 mt-1 whitespace-pre-line;
+  }
+
+  /* Enter-Animation (sichtbar beim IntersectionObserver) */
+  .appear-container {
+    @apply transition-opacity transition-transform duration-700 transform-gpu;
+  }
+  .appear-hidden {
+    @apply opacity-0 translate-y-8;
+  }
+  .appear-visible {
+    @apply opacity-100 translate-y-0;
+  }
+
+  /* Listen-Card (kein globales Padding, damit Header/Body es steuern) */
+  .glass-list {
+    @apply glass-card p-0 overflow-hidden isolate;
+  }
+
+  /* Gemeinsamer Innen-Wrapper für Header + Body */
+  .card-inner {
+    @apply divide-y divide-gray-200 dark:divide-white/10;
+  }
+
+  /* Body des expandierten Bereichs – gleiches L/R-Padding wie Header */
+  .card-body {
+    @apply px-5 md:px-6 pt-3 pb-4 bg-transparent;
+  }
+
+  /* Zeile im Card-Header */
+  .card-row {
+    @apply flex justify-between items-center px-5 py-4 md:px-6 md:py-5 relative z-10;
+  }
+
+  /* Chevron / Toggle-Button: gut sichtbar & tappable */
+.chevron-btn {
+  @apply relative flex items-center justify-center
+         w-9 h-9 md:w-8 md:h-8 rounded-full
+         bg-white/40 hover:bg-white/50
+         text-gray-700
+         ring-1 ring-white/60
+         transition hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40
+         dark:bg-gray-700/60 dark:hover:bg-gray-700/80
+         dark:text-gray-200
+         dark:ring-gray-500/50
+         dark:focus-visible:ring-gray-400/60;
+}
+
+  /* Titel- & Meta-Text kompakter */
+  .list-title {
+    @apply font-semibold text-sm md:text-base text-gray-900 dark:text-white truncate;
+  }
+  .list-meta {
+    @apply text-[11px] md:text-xs text-gray-700 dark:text-gray-400 truncate;
+  }
+
+  /* ===========================
+     Glass-Inputs (inkl. States)
+     =========================== */
+  .input-field,
+  .textarea-field,
+  .select-field {
+    @apply w-full px-4 py-3 rounded-lg shadow-md transition
+           /* höherer Rand-Kontrast: */
+           border border-white/50 dark:border-white/30
+           /* Glass-Look */
+           bg-white/30 dark:bg-gray-900/30
+           backdrop-blur-md backdrop-saturate-150
+           /* Text/Placeholder */
+           text-gray-900 dark:text-white
+           placeholder-gray-500 dark:placeholder-gray-400
+           /* Interaktionen */
+           hover:border-blue-400 dark:hover:border-blue-300
+           focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
+           dark:focus:ring-blue-300 dark:focus:border-blue-400;
+  }
+
+  /* States */
+  .input-field:disabled,
+  .textarea-field:disabled,
+  .select-field:disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
+  .input-field[readonly],
+  .textarea-field[readonly],
+  .select-field[readonly] {
+    @apply opacity-80;
+  }
+
+  /* Fehlerzustand (z.B. VeeValidate) */
+  .input-error {
+    @apply border-red-400 focus:ring-red-400 focus:border-red-500;
+  }
+
+  /* Kompaktere Variante (z.B. in Toolbars) */
+  .input-compact {
+    @apply py-2 text-sm rounded-md;
+  }
+
+  /* Input-Gruppen (Label/Hint/Error) */
+  .input-group { @apply space-y-1; }
+  .input-label { @apply block text-sm font-medium text-gray-700 dark:text-gray-200; }
+  .input-hint  { @apply text-xs text-gray-500 dark:text-gray-400; }
+  .input-msg-error { @apply text-xs text-red-500; }
+}
+
+/* kleine Utilities, die Tailwind so nicht mit @apply abbildet */
+@layer utilities {
+  .will-change-backdrop { will-change: backdrop-filter; }
+  /* `isolate` gibt es bereits in Tailwind, nur zur Info:
+     .isolate { isolation: isolate; } */
+}
+
+/* Mobile‑Performance: weniger Blur auf sehr kleinen Screens */
+@media (max-width: 640px) {
+  .input-field, .textarea-field, .select-field {
+    @apply backdrop-blur-sm; /* zuvor md */
+  }
 }
 
 .maintitle {
@@ -47,11 +183,11 @@
 }
 
 .nav-bar {
-  @apply z-10 sticky top-0 bg-gray-400 border-b border-gray-400 p-4 shadow-sm z-50 backdrop-blur-md bg-opacity-50 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:bg-opacity-50
+  @apply z-10 sticky top-0 bg-gray-400 border-b border-gray-400 p-4 shadow-sm backdrop-blur-md bg-opacity-50 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:bg-opacity-50;
 }
 
 .footer-bar {
-  @apply z-10 text-center text-sm text-gray-500 py-1 border-t responsive-footer bg-gray-400 border-gray-400 shadow-sm z-50 backdrop-blur-md bg-opacity-50 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:bg-opacity-50
+  @apply z-10 text-center text-sm text-gray-500 py-1 border-t responsive-footer bg-gray-400 border-gray-400 shadow-sm backdrop-blur-md bg-opacity-50 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:bg-opacity-50;
 }
 
 .responsive-footer {
@@ -68,34 +204,55 @@
   @apply text-white bg-blue-600 shadow-md hover:bg-blue-700 hover:shadow-lg hover:-translate-y-[1px] active:translate-y-0 active:shadow dark:bg-blue-400 dark:text-gray-900 dark:hover:bg-blue-300 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-offset-1 transform;
 }
 
+/* ===========================
+   Scorecard: Glass-Style
+   =========================== */
 .scorecard-table {
-  @apply w-full min-w-max rounded-xl shadow-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden;
-}
-
-/* Workaround für sticky table cells auf mobilen Browsern */
-.scorecard-table th,
-.scorecard-table td {
-  @apply bg-white dark:bg-gray-900;
+  @apply w-full min-w-max rounded-2xl overflow-hidden
+         bg-white/40 dark:bg-gray-900/40
+         backdrop-blur-md backdrop-saturate-150
+         border border-white/40 dark:border-white/20
+         shadow-lg;
 }
 
 .scorecard-header-cell {
-  @apply bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 text-sm font-semibold border-b border-gray-300 dark:border-gray-600 shadow-sm;
+  @apply px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white
+         sticky top-0 z-10
+         bg-white/50 dark:bg-gray-900/50 backdrop-blur-md
+         border-b border-white/40 dark:border-white/20
+         shadow-sm;
 }
 
+/* linke, sticky 'Hole'-Spalte bekommt ebenfalls Glasfläche */
+.scorecard-player-cell,
+.scorecard-metric-cell,
 .scorecard-cell {
-  @apply px-3 py-2 text-sm text-gray-800 dark:text-gray-100 border-t border-gray-200 dark:border-gray-700 text-center;
+  @apply px-3 py-2 text-sm text-gray-800 dark:text-gray-100
+         border-t border-white/30 dark:border-white/10;
 }
 
-.scorecard-player-cell {
-  @apply text-left px-4 py-2 font-medium border-r border-gray-300 dark:border-gray-600 z-20 bg-white dark:bg-gray-900;
+/* Wenn Zellen sticky (links) verwendet werden, gib ihnen die gleiche Glasfläche */
+.scorecard-cell.sticky,
+.scorecard-player-cell.sticky,
+.scorecard-metric-cell.sticky {
+  @apply bg-white/40 dark:bg-gray-900/40 backdrop-blur-md;
 }
 
-.scorecard-metric-cell {
-  @apply text-center px-3 py-2 font-semibold border-l border-gray-300 dark:border-gray-600 z-20 bg-white dark:bg-gray-900;
-}
-
+/* Hover dezent glasig statt Vollfarbe */
 .scorecard-hover-row:hover {
-  @apply bg-blue-50 dark:bg-gray-800;
+  @apply bg-white/30 dark:bg-gray-800/30;
+}
+
+/* Optional: dünne vertikale Divider zwischen Spieler-Spalten */
+.scorecard-table td + td,
+.scorecard-table th + th {
+  @apply border-l border-white/30 dark:border-white/10;
+}
+
+/* Sticky-Zellen brauchen eine eigene (leicht dichtere) Glasfläche */
+.scorecard-table th,
+.scorecard-table td {
+  @apply bg-transparent;
 }
 
 /* Animation für verschobene Listenelemente */

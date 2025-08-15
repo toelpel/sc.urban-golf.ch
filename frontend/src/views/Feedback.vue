@@ -2,32 +2,50 @@
   <DefaultTemplate>
     <h1 class="maintitle">{{ $t('Feedback.Title') }}</h1>
 
+    <!-- Danke-Message -->
     <div v-if="submitted" class="text-green-600 dark:text-green-400">
       {{ $t('Feedback.ThankYou') }}
     </div>
 
-    <form v-else @submit.prevent="submitFeedback" class="space-y-4">
-      <label class="label">{{ $t('Feedback.RatingTitle') }}</label>
-      <div class="flex space-x-2">
-        <button v-for="n in 5" :key="n" type="button" @click="rating = n" class="text-2xl"
-          :class="rating >= n ? 'text-yellow-400' : 'text-gray-300'">
-          ★
+    <!-- Glass-Card Formular -->
+    <form v-else @submit.prevent="submitFeedback" class="glass-card p-6 space-y-6 max-w-2xl mx-auto">
+      <!-- Rating -->
+      <div class="input-group">
+        <label class="input-label">{{ $t('Feedback.RatingTitle') }}</label>
+        <div class="flex gap-4 sm:gap-2">
+          <button v-for="n in 5" :key="n" type="button" @click="rating = n"
+            class="w-10 h-10 flex items-center justify-center text-2xl transition-transform hover:scale-110 focus:outline-none"
+            :class="rating >= n ? 'text-yellow-400' : 'text-gray-400'" :aria-label="`${n} ${$t('Feedback.Stars')}`">
+            ★
+          </button>
+        </div>
+      </div>
+
+      <!-- Message -->
+      <div class="input-group">
+        <label class="input-label" for="message">{{ $t('Feedback.Text') }}</label>
+        <textarea id="message" v-model="message" class="textarea-field" required
+          :placeholder="$t('Feedback.Text')"></textarea>
+      </div>
+
+      <!-- Name -->
+      <div class="input-group">
+        <label class="input-label" for="name">{{ $t('Feedback.Name') }}</label>
+        <input id="name" v-model="name" class="input-field" :placeholder="$t('Feedback.Name')" />
+      </div>
+
+      <!-- Email -->
+      <div class="input-group">
+        <label class="input-label" for="email">{{ $t('Feedback.Email') }}</label>
+        <input id="email" type="email" v-model="email" class="input-field"
+          :placeholder="$t('Feedback.Email')" />
+      </div>
+
+      <!-- Submit -->
+      <div class="pt-2">
+        <button type="submit" class="button-primary w-full">
+          {{ $t('General.Send') }}
         </button>
-      </div>
-      <div>
-        <label class="label" for="message">{{ $t('Feedback.Text') }}</label>
-        <textarea id="message" v-model="message" class="textarea-field" required></textarea>
-      </div>
-      <div>
-        <label class="label" for="name">{{ $t('Feedback.Name') }}</label>
-        <input id="name" v-model="name" class="input-field" />
-      </div>
-      <div>
-        <label class="label" for="email">{{ $t('Feedback.Email') }}</label>
-        <input id="email" type="email" v-model="email" class="input-field" />
-      </div>
-      <div class="mt-6">
-        <button type="submit" class="button-primary w-full">{{ $t('General.Send') }}</button>
       </div>
     </form>
   </DefaultTemplate>

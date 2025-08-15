@@ -16,9 +16,78 @@
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Crée une nouvelle partie ou consulte les parties existantes.",
-    "Beta": {
-      "Title": "⚠️ Cette application est encore en phase bêta.",
-      "Text": "Nous apprécions ton"
+    "OpenSource": {
+      "Title": "Open source - participez !",
+      "Text": "Commencez par une ⭐️, signalez des issues ou envoyez des pull requests. Nous avons hâte de voir vos contributions 🤩"
+    }
+  },
+  "About": {
+    "Title": "À propos de nous",
+    "Paragraph1": "Nous sommes un club d’Urban Golf basé à Winterthour, en Suisse – passionnés par ce sport et amoureux de la technologie. Nous voulons contribuer activement à son développement.",
+    "Paragraph2": "Avec cette application, nous souhaitons offrir un outil moderne et simple pour la communauté : une carte de score mobile pour le street golf. Note tes scores facilement – entre amis ou en tournoi.",
+    "Paragraph3": "Ce n’est que le début : des fonctionnalités comme les statistiques de joueurs, la gestion de tournois ou des outils pour les clubs arriveront bientôt.",
+    "Paragraph4": "Nous tenons à l’open source ❤️ – c’est pourquoi notre code est public. Toutes les idées, remarques ou contributions sont les bienvenues. Construisons ça ensemble !",
+    "RoadmapLink": "Voir notre feuille de route →",
+    "ChangeLog": {
+      "Title": "Journal des modifications"
+    },
+    "Roadmap": {
+      "Title": "Feuille de route",
+      "Features": {
+        "TestProd": {
+          "Label": "Environnement Test/Prod propre",
+          "Desc": "Déploiements et configurations séparés"
+        },
+        "Documentation": {
+          "Label": "Documentation & Readme",
+          "Desc": "Installation, guide de contribution, stack technologique"
+        },
+        "InitialRelease": {
+          "Label": "Version Initiale",
+          "Desc": "MVP ScoreCard publié"
+        },
+        "OpenSource": {
+          "Label": "Open Source",
+          "Desc": "Le code sera disponible publiquement sur GitHub.\nCollaboration vivement souhaitée 🤩\n → https://github.com/toelpel/sc.urban-golf.ch"
+        },
+        "UserManagement": {
+          "Label": "Gestion des utilisateurs",
+          "Desc": "Inscription et connexion, mise en œuvre de 'Mes parties'"
+        },
+        "CourseManagement": {
+          "Label": "Gestion de parcours",
+          "Desc": "Définir des parcours composés de différents trous – idéal pour des entraînements réguliers et l’analyse des scores à long terme."
+        },
+        "Stats": {
+          "Label": "Statistiques des joueurs",
+          "Desc": "Analyses de scores de base, classements et visualisations"
+        },
+        "DesignImprovements": {
+          "Label": "Améliorations du design et de la mise en page",
+          "Desc": "Améliorations générales du style et système de design minimaliste pour une apparence moderne et cohérente."
+        },
+        "ClubManagement": {
+          "Label": "Gestion de club",
+          "Desc": "Création d’un club, ajout de joueurs, gestion des droits"
+        },
+        "Desktop": {
+          "Label": "Optimisation pour desktop",
+          "Desc": "Améliorations pour les grands écrans, vue publique optimisée"
+        },
+        "TournamentManagement": {
+          "Label": "Gestion de tournoi",
+          "Desc": "Enregistrer un tournoi, s'inscrire, classements de tournoi"
+        },
+        "TourManagement": {
+          "Label": "Gestion de tournée",
+          "Desc": "Enregistrer une tournée, ajouter des scores de tournée, s'inscrire à la tournée"
+        }
+      },
+      "CallToAction": {
+        "Title": "✨ Votre fonctionnalité pourrait être ici !",
+        "Text": "Vous avez une idée de fonctionnalité ? Faites-nous en part –",
+        "Link": "vers le formulaire de feedback"
+      }
     }
   },
   "Feedback": {

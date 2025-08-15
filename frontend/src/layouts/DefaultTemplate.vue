@@ -6,7 +6,7 @@
         </div>
 
         <!-- Hauptinhalt zentriert (95%) -->
-        <main class="flex-1 overflow-y-auto w-[95%] max-w-6xl mx-auto px-4 py-3">
+        <main class="flex-1 overflow-y-auto w-[98%] max-w-6xl mx-auto px-4 py-3">
             <slot />
         </main>
 
