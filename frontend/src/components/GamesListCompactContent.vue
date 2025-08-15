@@ -170,7 +170,7 @@ const formatDate = (ts) =>
 
 function getPlayerListShort(gameId) {
     const list = (playerMap.value[gameId] || []).join(', ');
-    return list.length > 40 ? list.slice(0, 40) + '…' : list;
+    return list.length > 38 ? list.slice(0, 38) + '…' : list;
 }
 
 function toggleDetails(id) {

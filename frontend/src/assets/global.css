@@ -69,14 +69,18 @@
   }
 
   /* Chevron / Toggle-Button: gut sichtbar & tappable */
-  .chevron-btn {
-    @apply relative flex items-center justify-center
-          w-9 h-9 md:w-8 md:h-8 rounded-full
-          bg-white/40 hover:bg-white/50
-          text-gray-700
-          ring-1 ring-white/60
-          transition hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
-  }
+.chevron-btn {
+  @apply relative flex items-center justify-center
+         w-9 h-9 md:w-8 md:h-8 rounded-full
+         bg-white/40 hover:bg-white/50
+         text-gray-700
+         ring-1 ring-white/60
+         transition hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40
+         dark:bg-gray-700/60 dark:hover:bg-gray-700/80
+         dark:text-gray-200
+         dark:ring-gray-500/50
+         dark:focus-visible:ring-gray-400/60;
+}
 
   /* Titel- & Meta-Text kompakter */
   .list-title {

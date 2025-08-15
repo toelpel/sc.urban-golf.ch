@@ -19,9 +19,9 @@
             aria-label="Search games" />
 
         <!-- Clear -->
-        <button v-if="searchTerm" @click="searchTerm = ''" class="absolute right-2 top-1/2 -translate-y-1/2 px-2 h-8 rounded-full
-             bg-white/40 hover:bg-white/50 ring-1 ring-white/60
-             text-gray-700 dark:text-gray-200 transition" aria-label="Clear search" type="button">
+        <button v-if="searchTerm" @click="searchTerm = ''"
+            class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition"
+            aria-label="Clear search" type="button">
             ✕
         </button>
     </div>
