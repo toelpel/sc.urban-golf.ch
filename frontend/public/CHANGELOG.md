@@ -3,7 +3,11 @@
 ---
 
 ## [2.0.1] – 2025-08-15
-### 🎉 New features
+### 🎉 Milestones
+- The project is now open source and we're happy for your contribution 🎉
+-- https://github.com/toelpel/sc.urban-golf.ch
+
+### ✨ New features
 - Infinite scolling in Games-List
 - About, Roadmap and Changelog implemented
 - Dependencies updated

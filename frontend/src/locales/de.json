@@ -16,9 +16,9 @@
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Erstelle ein neues Spiel oder sieh dir bestehende Spiele an.",
-    "Beta": {
-      "Title": "⚠️ Diese App befindet sich noch im Beta-Stadium.",
-      "Text": "Wir freuen uns über dein"
+    "OpenSource": {
+      "Title": "Open Source - mach mit!",
+      "Text": "Starte mit ⭐️, melde Issues oder sende Pull Requests. Wir freuen uns auf deine Mitarbeit 🤩"
     }
   },
   "About": {
@@ -48,7 +48,7 @@
         },
         "OpenSource": {
           "Label": "Open Source",
-          "Desc": "Code wird öffentlich auf GitHub verfügbar.\nKollaboration sehr erwünscht 🤩"
+          "Desc": "Code wird öffentlich auf GitHub verfügbar.\nKollaboration sehr erwünscht 🤩s"
         },
         "UserManagement": {
           "Label": "User-Verwaltung",

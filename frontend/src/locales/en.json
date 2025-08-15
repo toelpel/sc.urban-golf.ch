@@ -17,9 +17,9 @@
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Create a new game or view existing games.",
-    "Beta": {
-      "Title": "⚠️ This app is still in beta.",
-      "Text": "We appreciate your"
+      "OpenSource": {
+        "Title": "Open source - get involved!",
+        "Text": "Start with a ⭐️, report issues, or send pull requests. We look forward to your contributions 🤩"
     }
   },
   "About": {
@@ -49,7 +49,7 @@
         },
         "OpenSource": {
           "Label": "Open Source",
-          "Desc": "Code will be publicly available on GitHub.\nCollaboration highly welcome 🤩"
+          "Desc": "Code will be publicly available on GitHub.\nCollaboration highly welcome 🤩\n → https://github.com/toelpel/sc.urban-golf.ch"
         },
         "UserManagement": {
           "Label": "User Management",

@@ -91,7 +91,7 @@ const features = [
     { key: 'TestProd', icon: BeakerIcon, done: true, visible: true },
     { key: 'Documentation', icon: BookOpenIcon, done: true, visible: true },
     { key: 'InitialRelease', icon: RocketLaunchIcon, done: true, visible: true },
-    { key: 'OpenSource', icon: GlobeAltIcon, done: false, visible: true },
+    { key: 'OpenSource', icon: GlobeAltIcon, done: true, visible: true },
     { key: 'UserManagement', icon: UserIcon, done: false, visible: true },
     { key: 'CourseManagement', icon: ClipboardDocumentListIcon, done: false, visible: true },
     { key: 'Stats', icon: ChartBarIcon, done: false, visible: true },

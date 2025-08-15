@@ -16,9 +16,9 @@
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Crée une nouvelle partie ou consulte les parties existantes.",
-    "Beta": {
-      "Title": "⚠️ Cette application est encore en phase bêta.",
-      "Text": "Nous apprécions ton"
+    "OpenSource": {
+      "Title": "Open source - participez !",
+      "Text": "Commencez par une ⭐️, signalez des issues ou envoyez des pull requests. Nous avons hâte de voir vos contributions 🤩"
     }
   },
   "About": {
@@ -48,7 +48,7 @@
         },
         "OpenSource": {
           "Label": "Open Source",
-          "Desc": "Le code sera disponible publiquement sur GitHub.\nCollaboration vivement souhaitée 🤩"
+          "Desc": "Le code sera disponible publiquement sur GitHub.\nCollaboration vivement souhaitée 🤩\n → https://github.com/toelpel/sc.urban-golf.ch"
         },
         "UserManagement": {
           "Label": "Gestion des utilisateurs",
