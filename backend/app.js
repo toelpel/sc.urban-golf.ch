@@ -5,6 +5,7 @@ import cors from '@fastify/cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import crypto from 'node:crypto';
 
 import scoreRoutes from './routes/scores.js';
 import gameRoutes from './routes/games.js';
@@ -16,7 +17,8 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const fastify = Fastify({ logger: true });
+// trustProxy: wichtig, wenn hinter einem Proxy (Render/Nginx/Heroku etc.)
+const fastify = Fastify({ logger: true, trustProxy: true });
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
@@ -31,7 +33,8 @@ await fastify.register(cors, {
     }
   },
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type'],
+  // Authorization zulassen, da wir ihn fürs Rate-Limit verwenden
+  allowedHeaders: ['Content-Type', 'Authorization'],
   preflightContinue: false,
   optionsSuccessStatus: 200
 });
@@ -50,9 +53,39 @@ await fastify.register(fastifyHelmet, {
   }
 });
 
+// Globales Rate-Limit: 100 Requests pro 5 Minuten
 await fastify.register(fastifyRateLimit, {
   max: 100,
-  timeWindow: '1 minute'
+  timeWindow: '5 minutes',
+
+  // Schlüsselbildung: bevorzugt Authorization-Header, sonst IP
+  keyGenerator: (req) => {
+    const auth = req.headers['authorization'];
+    if (auth && typeof auth === 'string' && auth.trim() !== '') {
+      // Hash für Datenschutz/gleichmäßige Länge
+      const hash = crypto.createHash('sha256').update(auth).digest('hex');
+      return `auth:${hash}`;
+    }
+    return `ip:${req.ip}`;
+  },
+
+  // Hilfreiche Response-Header aktivieren
+  addHeaders: {
+    'x-ratelimit-limit': true,
+    'x-ratelimit-remaining': true,
+    'x-ratelimit-reset': true,
+    'retry-after': true,
+  },
+
+  // Saubere 429-Antwort
+  errorResponseBuilder: (req, context) => ({
+    statusCode: 429,
+    error: 'Too Many Requests',
+    message: `Rate limit exceeded. Try again in ${Math.ceil(context.after / 1000)} seconds.`,
+  }),
+
+  // Falls der Store ausfällt: Requests nicht komplett blockieren
+  skipOnError: true,
 });
 
 fastify.register(scoreRoutes, { prefix: '/api/scores' });
