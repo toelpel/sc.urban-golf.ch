@@ -53,10 +53,10 @@ await fastify.register(fastifyHelmet, {
   }
 });
 
-// Globales Rate-Limit: 100 Requests pro 5 Minuten
+// Globales Rate-Limit: 120 Requests pro Minute
 await fastify.register(fastifyRateLimit, {
-  max: 100,
-  timeWindow: '5 minutes',
+  max: 120,
+  timeWindow: '1 minute',
 
   // Schlüsselbildung: bevorzugt Authorization-Header, sonst IP
   keyGenerator: (req) => {
