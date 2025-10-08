@@ -1,4 +1,6 @@
 name: Deploy Test Branch
+permissions:
+  contents: read
 
 on:
   workflow_dispatch:
