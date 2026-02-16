@@ -90,6 +90,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            VITE_API_BASEURL=/api
+            VITE_API_BASEURL=https://api.sc.urban-golf.ch/api
           cache-from: type=gha
           cache-to: type=gha,mode=max
