@@ -1,19 +1,60 @@
-version: '3'
-services:
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
-    volumes:
-      - ./data:/app/data
-    ports:
-      - \"3000:3000\"
-    restart: unless-stopped
+version: '3.9'
 
+# ========================================
+# Simple Production Deployment
+# ========================================
+# Standalone deployment without reverse proxy
+# Access via: http://your-server:8080
+#
+# Start with: docker-compose up -d
+# For development: docker-compose -f docker-compose.dev.yml up -d
+# For Traefik/advanced: see docker-compose.prod.example.yml
+# ========================================
+
+services:
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    ports:
-      - \"8080:80\"
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASEURL: /api
     restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-urban_golf}
+      ALLOWED_ORIGINS: http://localhost:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-urban_golf}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

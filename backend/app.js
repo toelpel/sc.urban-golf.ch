@@ -1,21 +1,22 @@
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// IMPORTANT: Load .env BEFORE any other imports that might use env vars
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+
 import Fastify from 'fastify';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyRateLimit from '@fastify/rate-limit';
 import cors from '@fastify/cors';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import crypto from 'node:crypto';
 
 import scoreRoutes from './routes/scores.js';
 import gameRoutes from './routes/games.js';
 import playerRoutes from './routes/players.js';
 import feedbackRoutes from './routes/feedback.js';
-
-dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // trustProxy: wichtig, wenn hinter einem Proxy (Render/Nginx/Heroku etc.)
 const fastify = Fastify({ logger: true, trustProxy: true });
@@ -48,7 +49,7 @@ await fastify.register(fastifyHelmet, {
       styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       imgSrc: ["'self'", 'data:'],
-      connectSrc: ["'self'", 'https://*.supabase.co', ...allowedOrigins]
+      connectSrc: ["'self'", ...allowedOrigins]
     }
   }
 });

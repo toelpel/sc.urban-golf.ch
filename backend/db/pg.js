@@ -1,12 +1,26 @@
 import pkg from 'pg';
 const { Pool } = pkg;
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false // wichtig für Supabase
+let pool = null;
+
+// Lazy initialization - create pool only when first needed
+function getPool() {
+  if (!pool) {
+    const poolConfig = {
+      connectionString: process.env.DATABASE_URL,
+    };
+
+    // Only enable SSL for production external databases (e.g., managed services)
+    if (process.env.NODE_ENV === 'production' && process.env.DATABASE_SSL === 'true') {
+      poolConfig.ssl = {
+        rejectUnauthorized: false
+      };
+    }
+
+    pool = new Pool(poolConfig);
   }
-});
+  return pool;
+}
 
 // Funktion zum Abrufen eines DB-Clients
-export const getClient = () => pool.connect();
+export const getClient = () => getPool().connect();

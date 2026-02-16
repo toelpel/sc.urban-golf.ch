@@ -1,6 +1,6 @@
-# 🏌️‍♀️ Urban-Golf.ch ScoreCard App
+# 🏌️‍♀️ Urban Golf ScoreCard App
 
-A sleek and responsive web app to track scores during Urban Golf tournaments. Built with Vue 3, Fastify, and PostgreSQL (via Supabase), it’s designed for intuitive use on mobile and desktop alike – and even supports dark mode and localization!
+A sleek and responsive web app to track scores during Urban Golf tournaments. Built with Vue 3, Fastify, and PostgreSQL, fully containerized with Docker for easy self-hosting. Designed for intuitive use on mobile and desktop alike – with dark mode and multi-language support!
 
 ---
 
@@ -16,11 +16,13 @@ A sleek and responsive web app to track scores during Urban Golf tournaments. Bu
 
 ### 🔧 Backend
 - **Fastify** – High-performance HTTP server for Node.js
-- **@fastify/cors** – Cross-Origin Resource Sharing (CORS) support for Fastify
+- **@fastify/cors** – Cross-Origin Resource Sharing (CORS) support
+- **@fastify/helmet** – Security headers middleware
+- **@fastify/rate-limit** – Rate limiting for API protection
 - **dotenv** – Environment variable management from `.env` files
 - **pg** – Native PostgreSQL client for Node.js
 - **Modular Route Structure** – Organized via separate route files for `games`, `scores`, `players`, and `feedback`
-- **PostgreSQL** – Managed via **Supabase**
+- **PostgreSQL 16** – Self-hosted in Docker container
 
 ### 🔄 Tooling
 - **PostCSS** – Extended CSS processing pipeline
@@ -28,8 +30,44 @@ A sleek and responsive web app to track scores during Urban Golf tournaments. Bu
 - **GitHub Actions** – For CI workflows in `.github/workflows`
 
 ### 🚀 Deployment
-- **Render.com** – Hosting for the Fastify backend and optionally the frontend
-- **Supabase** – Database + potential API backend (currently used for PostgreSQL hosting)
+- **Docker** – Fully containerized application with multi-stage builds
+- **Docker Compose** – Orchestration for local development and production
+- **Nginx** – Lightweight web server for frontend static files
+- **PostgreSQL 16 Alpine** – Containerized database with automatic initialization
+- **Traefik-ready** – Production deployment with reverse proxy labels included
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Docker & Docker Compose
+- Node.js 20+ (for local development without Docker)
+
+### Run with Docker (Recommended)
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/sc.urban-golf.ch.git
+   cd sc.urban-golf.ch
+   ```
+
+2. **Start development environment**
+   ```bash
+   docker-compose -f docker-compose.dev.yml up -d
+   ```
+
+3. **Access the application**
+   - Frontend: http://localhost:8080
+   - Backend API: http://localhost:3000
+   - pgAdmin: http://localhost:5050 (admin@urbangolf.local / admin)
+
+**For production deployment:**
+```bash
+docker-compose up -d
+```
+
+For detailed deployment instructions and advanced setups (Traefik, etc.), see [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ---
 
