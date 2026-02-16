@@ -1,0 +1,267 @@
+--
+-- Urban Golf Database Schema
+-- PostgreSQL database dump (schema only)
+--
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- Enable pg_trgm extension for fuzzy search
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+--
+-- Name: feedback; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.feedback (
+    id integer NOT NULL,
+    rating integer NOT NULL,
+    message text NOT NULL,
+    name character varying(100),
+    email character varying(100),
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT feedback_rating_check CHECK (((rating >= 1) AND (rating <= 5)))
+);
+
+--
+-- Name: feedback_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.feedback_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.feedback_id_seq OWNED BY public.feedback.id;
+
+--
+-- Name: game_players; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.game_players (
+    game_id text NOT NULL,
+    player_id text NOT NULL,
+    id bigint NOT NULL
+);
+
+--
+-- Name: game_players_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.game_players_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.game_players_id_seq OWNED BY public.game_players.id;
+
+--
+-- Name: games; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.games (
+    id text NOT NULL,
+    name text NOT NULL,
+    created_at timestamp without time zone DEFAULT now()
+);
+
+--
+-- Name: games_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.games_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.games_id_seq OWNED BY public.games.id;
+
+--
+-- Name: players; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.players (
+    id text NOT NULL,
+    name text NOT NULL
+);
+
+--
+-- Name: players_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.players_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.players_id_seq OWNED BY public.players.id;
+
+--
+-- Name: scores; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.scores (
+    game_id text,
+    player_id text,
+    hole integer NOT NULL,
+    strokes integer NOT NULL,
+    id bigint NOT NULL
+);
+
+--
+-- Name: scores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.scores_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.scores_id_seq OWNED BY public.scores.id;
+
+--
+-- Name: feedback id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.feedback ALTER COLUMN id SET DEFAULT nextval('public.feedback_id_seq'::regclass);
+
+--
+-- Name: game_players id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.game_players ALTER COLUMN id SET DEFAULT nextval('public.game_players_id_seq'::regclass);
+
+--
+-- Name: games id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.games ALTER COLUMN id SET DEFAULT nextval('public.games_id_seq'::regclass);
+
+--
+-- Name: players id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.players ALTER COLUMN id SET DEFAULT nextval('public.players_id_seq'::regclass);
+
+--
+-- Name: scores id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scores ALTER COLUMN id SET DEFAULT nextval('public.scores_id_seq'::regclass);
+
+--
+-- Name: feedback feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.feedback
+    ADD CONSTRAINT feedback_pkey PRIMARY KEY (id);
+
+--
+-- Name: game_players game_players_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.game_players
+    ADD CONSTRAINT game_players_pkey PRIMARY KEY (id);
+
+--
+-- Name: games games_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.games
+    ADD CONSTRAINT games_pkey PRIMARY KEY (id);
+
+--
+-- Name: players players_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.players
+    ADD CONSTRAINT players_pkey PRIMARY KEY (id);
+
+--
+-- Name: scores scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scores
+    ADD CONSTRAINT scores_pkey PRIMARY KEY (id);
+
+--
+-- Name: idx_games_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_games_name ON public.games USING btree (name);
+
+--
+-- Name: idx_players_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_players_name ON public.players USING btree (name);
+
+--
+-- Name: gin_games_name_trgm; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX gin_games_name_trgm ON public.games USING gin (name gin_trgm_ops);
+
+--
+-- Name: gin_players_name_trgm; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX gin_players_name_trgm ON public.players USING gin (name gin_trgm_ops);
+
+--
+-- Name: game_players fk_game_players_game; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.game_players
+    ADD CONSTRAINT fk_game_players_game FOREIGN KEY (game_id) REFERENCES public.games(id) ON DELETE CASCADE;
+
+--
+-- Name: game_players fk_game_players_player; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.game_players
+    ADD CONSTRAINT fk_game_players_player FOREIGN KEY (player_id) REFERENCES public.players(id) ON DELETE CASCADE;
+
+--
+-- Name: scores fk_scores_game; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scores
+    ADD CONSTRAINT fk_scores_game FOREIGN KEY (game_id) REFERENCES public.games(id) ON DELETE CASCADE;
+
+--
+-- Name: scores fk_scores_player; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scores
+    ADD CONSTRAINT fk_scores_player FOREIGN KEY (player_id) REFERENCES public.players(id) ON DELETE CASCADE;
+
+--
+-- PostgreSQL database dump complete
+--

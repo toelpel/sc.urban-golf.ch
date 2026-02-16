@@ -1,52 +1,95 @@
-name: Deploy Production
-permissions:
-  contents: read
+name: Build and Push Docker Images
 
 on:
+  # Trigger on push to main (PR merge)
+  push:
+    branches: [main]
+  # Allow manual trigger
   workflow_dispatch:
-  release:
-    types: [published]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository_owner }}/urbangolf
 
 jobs:
-  deploy:
+  build-backend:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
         with:
-          node-version: '20'
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies & build frontend
-        run: |
-          cd frontend
-          npm install
-          npm run build:prod
-
-      - name: Prepare test .htaccess
-        run: |
-          cp frontend/public/.htaccess.production frontend/dist/.htaccess
-
-      - name: Upload via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
         with:
-          server: ${{ secrets.FTP_HOST_PROD }}
-          username: ${{ secrets.FTP_USER_PROD }}
-          password: ${{ secrets.FTP_PASS_PROD }}
-          local-dir: frontend/dist/
-          server-dir: /
-          exclude: |
-            .git
-            .git/**
-            .github
-            .github/**
-            .htaccess.test
-            .htaccess.production
-            .gitignore
-            README.md
-            LICENSE
-            *.zip
-            *.bak
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-backend
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix={{branch}}-
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-frontend
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix={{branch}}-
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VITE_API_BASEURL=/api
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

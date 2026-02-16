@@ -205,6 +205,9 @@ export default async function (fastify, opts) {
 
       const { rows } = await client.query(gamesQuery, values);
       reply.send({ games: rows });
+    } catch (err) {
+      fastify.log.error(err);
+      reply.code(500).send({ error: 'Database error', details: err.message });
     } finally {
       client.release();
     }

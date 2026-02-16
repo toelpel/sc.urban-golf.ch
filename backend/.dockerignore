@@ -1,0 +1,18 @@
+# Node
+node_modules
+npm-debug.log
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Database
+db/db_dump_test
+
+# IDE
+.vscode
+.idea
+
+# Logs
+*.log

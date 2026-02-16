@@ -1,5 +1,60 @@
+# Dependencies
 node_modules/
+.pnp
+.pnp.js
+
+# Environment files
+.env
 .env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Logs
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Testing
 coverage/
+.nyc_output
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Database files (local development)
+*.sqlite
+*.sqlite3
+*.db
+
+# Database dumps (keep only in init folder)
+db/db_dump_test/*.sql
+!db/init/dump.sql
+
+# OS files
 .DS_Store
+Thumbs.db
+*~
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.iml
+
+# Runtime
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Optional files
+.npm
+.eslintcache
