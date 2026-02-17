@@ -32,21 +32,27 @@ export default async function (fastify, opts) {
          VALUES ($1, $2, $3, $4)`,
         [rating, message, name || null, email || null]
       );
-
-      // Benachrichtigung senden
-      await transporter.sendMail({
-        from: '"Urban-Golf.ch - ScoreCard" <info@urban-golf.ch>',
-        to: process.env.ADMIN_EMAIL,
-        subject: '🎉 Neues Feedback eingegangen',
-        text: `Bewertung: ${rating}/5\nVon: ${name || 'Anonym'} <${email || 'keine Email'}>\n\n${message}`,
-      });
-
-      reply.send({ success: true });
     } catch (err) {
       request.log.error(err);
-      reply.code(500).send({ error: 'Fehler beim Speichern oder Mailversand' });
+      return reply.code(500).send({ error: 'Fehler beim Speichern' });
     } finally {
       client.release();
     }
+
+    // Benachrichtigung senden (optional, darf nicht fehlschlagen)
+    if (process.env.BREVO_SMTP_USER && process.env.ADMIN_EMAIL) {
+      try {
+        await transporter.sendMail({
+          from: '"Urban-Golf.ch - ScoreCard" <info@urban-golf.ch>',
+          to: process.env.ADMIN_EMAIL,
+          subject: '🎉 Neues Feedback eingegangen',
+          text: `Bewertung: ${rating}/5\nVon: ${name || 'Anonym'} <${email || 'keine Email'}>\n\n${message}`,
+        });
+      } catch (err) {
+        request.log.warn(err, 'Feedback-Benachrichtigung konnte nicht gesendet werden');
+      }
+    }
+
+    reply.send({ success: true });
   });
 }

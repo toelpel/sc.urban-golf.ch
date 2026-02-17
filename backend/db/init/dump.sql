@@ -19,6 +19,7 @@ SET row_security = off;
 --
 
 -- Enable pg_trgm extension for fuzzy search
+SET search_path = public;
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 --
@@ -209,6 +210,20 @@ ALTER TABLE ONLY public.players
 
 ALTER TABLE ONLY public.scores
     ADD CONSTRAINT scores_pkey PRIMARY KEY (id);
+
+--
+-- Name: scores scores_game_player_hole_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scores
+    ADD CONSTRAINT scores_game_player_hole_key UNIQUE (game_id, player_id, hole);
+
+--
+-- Name: game_players game_players_game_id_player_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.game_players
+    ADD CONSTRAINT game_players_game_id_player_id_key UNIQUE (game_id, player_id);
 
 --
 -- Name: idx_games_name; Type: INDEX; Schema: public; Owner: -

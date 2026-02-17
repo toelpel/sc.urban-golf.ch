@@ -58,9 +58,7 @@ Vite loads **`.env*` files** in the project root of the frontend. Variables pref
 
 **Recommended variables** (examples – adjust accordingly):
 ```
-VITE_API_BASE_URL=https://api.sc.urban-golf.ch
-VITE_SUPABASE_URL=https://xyzcompany.supabase.co
-VITE_SUPABASE_ANON_KEY=...anon-key...
+VITE_API_BASEURL=/api
 VITE_APP_NAME=Urban Golf ScoreCard
 ```
 Typical files:
