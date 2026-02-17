@@ -18,8 +18,14 @@ export class GamesListPage {
   }
 
   async goto() {
+    const responsePromise = this.page.waitForResponse(
+      resp => resp.url().includes('/api/games') && resp.status() === 200,
+      { timeout: 15000 }
+    )
     await this.page.goto('/games')
     await this.heading.waitFor()
+    await responsePromise
+    await this.gameItems.first().waitFor({ timeout: 5000 })
   }
 
   async search(term: string) {

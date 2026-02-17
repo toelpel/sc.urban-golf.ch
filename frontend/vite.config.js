@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'path';
 import { VitePWA } from 'vite-plugin-pwa';
 
@@ -23,6 +24,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     vue(),
+    tailwindcss(),
     VitePWA({
       devOptions: {
         enabled: mode !== 'development',
