@@ -7,6 +7,13 @@
                 <router-link to="/" class="font-bold text-xl text-green-700 dark:text-green-300">
                     ScoreCard
                 </router-link>
+                <!-- Offline-Indikator: nur sichtbar wenn offline -->
+                <span
+                    v-if="!isOnline"
+                    class="w-2 h-2 rounded-full bg-red-500 shrink-0 animate-pulse"
+                    :title="$t('Network.Offline')"
+                    aria-label="Offline"
+                ></span>
             </div>
             <NavControls />
         </div>
@@ -39,8 +46,11 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useOnline } from '@vueuse/core'
 import NavControls from './NavControls.vue'
 import { ArrowLeftIcon, HomeIcon } from '@heroicons/vue/24/solid'
+
+const isOnline = useOnline()
 
 const router = useRouter()
 const route = useRoute()

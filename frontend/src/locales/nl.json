@@ -124,5 +124,24 @@
       "HideHoleOverview": "Verborgen gaten overzicht",
       "ShowHoleOverview": "Overzicht gaten tonen"
     }
+  },
+  "Network": {
+    "Offline": "Je bent offline. Scores worden lokaal opgeslagen.",
+    "BackOnline": "Weer online. Scores worden gesynchroniseerd..."
+  },
+  "PWA": {
+    "UpdateAvailable": "Nieuwe versie beschikbaar.",
+    "Reload": "Herladen",
+    "InstallBanner": {
+      "Title": "App installeren",
+      "Description": "Installeer de ScoreCard voor snellere toegang – ook offline.",
+      "Install": "Installeren",
+      "NotNow": "Niet nu",
+      "GotIt": "Begrepen",
+      "DontShowAgain": "Niet meer tonen",
+      "IOSStep1": "Tik op het Delen-icoon (onderaan Safari)",
+      "IOSStep2": "Kies 'Zet op beginscherm'",
+      "IOSStep3": "Tik op 'Voeg toe'"
+    }
   }
 }

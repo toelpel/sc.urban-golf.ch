@@ -98,14 +98,15 @@
 <script setup>
 import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
-import { useGamesDetailData } from '@/composables/useGamesDetailData.js';
-import { saveScore as apiSaveScore } from '@/services/api';
+import { useGamesDetailData } from '@/composables/useGamesDetailData';
+import { useOfflineSync } from '@/composables/useOfflineSync';
 
 const route = useRoute();
 const gameId = computed(() => route.params.gameId)
 const hole = computed(() => parseInt(route.params.holeId));
 
 const { players, scores, holes, gameName, load } = useGamesDetailData(gameId);
+const { saveScore: saveScoreOffline } = useOfflineSync();
 
 // Shorten gamename
 const shortGameName = computed(() => {
@@ -161,7 +162,9 @@ function changeStrokes(playerId, delta) {
 }
 
 async function saveScore(playerId) {
-  await apiSaveScore({
+  // Optimistisches UI: scores.value ist bereits aktualisiert.
+  // saveScoreOffline speichert direkt (online) oder in die Queue (offline).
+  await saveScoreOffline({
     game_id: gameId.value,
     player_id: playerId,
     hole: hole.value,

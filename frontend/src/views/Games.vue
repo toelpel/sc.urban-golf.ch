@@ -45,9 +45,9 @@ import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 import { computed, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { useGamesDetailData } from '@/composables/useGamesDetailData.js';
-import { useSortedPlayers } from '@/composables/useSortedPlayers.js';
-import { useViewMode } from '@/composables/useViewMode.js';
+import { useGamesDetailData } from '@/composables/useGamesDetailData';
+import { useSortedPlayers } from '@/composables/useSortedPlayers';
+import { useViewMode } from '@/composables/useViewMode';
 
 // Route & Validierung
 const route = useRoute();

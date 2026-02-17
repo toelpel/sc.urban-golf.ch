@@ -79,8 +79,8 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { useDebounceFn } from '@vueuse/core'
-import { useGamesSummaryData } from '@/composables/useGamesSummaryData.js';
-import { useInfiniteLoader } from '@/composables/useInfiniteLoader.js'
+import { useGamesSummaryData } from '@/composables/useGamesSummaryData';
+import { useInfiniteLoader } from '@/composables/useInfiniteLoader'
 import { useScrollToTopButton } from '@/composables/useScrollToTopButton.js'
 import { useRouter } from 'vue-router';
 import { ArrowUpIcon } from '@heroicons/vue/24/outline'

@@ -124,5 +124,24 @@
       "HideHoleOverview": "Cache la vue d'ensemble des trous",
       "ShowHoleOverview": "Affiche l'aperçu des trous"
     }
+  },
+  "Network": {
+    "Offline": "Tu es hors ligne. Les scores seront sauvegardés localement.",
+    "BackOnline": "De retour en ligne. Synchronisation des scores..."
+  },
+  "PWA": {
+    "UpdateAvailable": "Nouvelle version disponible.",
+    "Reload": "Recharger",
+    "InstallBanner": {
+      "Title": "Installer l'application",
+      "Description": "Installe la ScoreCard pour un accès plus rapide – même hors ligne.",
+      "Install": "Installer",
+      "NotNow": "Plus tard",
+      "GotIt": "Compris",
+      "DontShowAgain": "Ne plus afficher",
+      "IOSStep1": "Appuie sur l'icône Partager (en bas de Safari)",
+      "IOSStep2": "Choisis 'Sur l'écran d'accueil'",
+      "IOSStep3": "Appuie sur 'Ajouter'"
+    }
   }
 }

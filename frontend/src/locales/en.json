@@ -125,5 +125,24 @@
       "HideHoleOverview": "Hide Hole Overview",
       "ShowHoleOverview": "Show Hole Overview"
     }
+  },
+  "Network": {
+    "Offline": "You're offline. Scores will be saved locally.",
+    "BackOnline": "Back online. Syncing scores..."
+  },
+  "PWA": {
+    "UpdateAvailable": "New version available.",
+    "Reload": "Reload",
+    "InstallBanner": {
+      "Title": "Install App",
+      "Description": "Install ScoreCard for faster access – even offline.",
+      "Install": "Install",
+      "NotNow": "Not now",
+      "GotIt": "Got it",
+      "DontShowAgain": "Don't show again",
+      "IOSStep1": "Tap the Share icon (bottom of Safari)",
+      "IOSStep2": "Choose 'Add to Home Screen'",
+      "IOSStep3": "Tap 'Add'"
+    }
   }
 }

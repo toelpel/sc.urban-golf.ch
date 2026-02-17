@@ -1,10 +1,14 @@
 import { createApp } from 'vue';
 import { watch } from 'vue';
+import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
 import './assets/global.css';
 import axios from 'axios';
 import { createI18n } from 'vue-i18n';
+import { registerSW } from 'virtual:pwa-register';
+import { usePWAUpdate } from './composables/usePWAUpdate';
+import { useToast } from './composables/useToast';
 
 // Sprachdateien importieren
 import de from './locales/de.json';
@@ -16,10 +20,40 @@ import nl from './locales/nl.json';
 axios.defaults.baseURL = import.meta.env.VITE_API_BASEURL;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
+// Axios Response Interceptor: Retry + globales Error-Handling
+axios.interceptors.response.use(
+  response => response,
+  async (error) => {
+    const config = error.config;
+    if (!config) return Promise.reject(error);
+
+    // 4xx: kein Retry, Toast zeigen (ausser 401)
+    if (error.response?.status >= 400 && error.response?.status < 500) {
+      if (error.response.status !== 401) {
+        const { error: showError } = useToast();
+        showError(`Fehler ${error.response.status}: ${error.response.data?.error || 'Anfrage fehlgeschlagen'}`);
+      }
+      return Promise.reject(error);
+    }
+
+    // Netzwerkfehler / 5xx: bis zu 2 Retries mit Exponential Backoff
+    config._retryCount = (config._retryCount || 0) + 1;
+    if (config._retryCount > 2) {
+      const { error: showError } = useToast();
+      showError('Netzwerkfehler. Bitte Verbindung prüfen.');
+      return Promise.reject(error);
+    }
+    await new Promise(r => setTimeout(r, 500 * Math.pow(2, config._retryCount)));
+    return axios(config);
+  }
+);
+
 // i18n initialisieren
 const i18n = createI18n({
-  legacy: false, // Composition API
-  locale: navigator.language.startsWith('de') ? 'de' : 'en',
+  legacy: false,
+  locale: navigator.language.startsWith('de') ? 'de' :
+          navigator.language.startsWith('fr') ? 'fr' :
+          navigator.language.startsWith('nl') ? 'nl' : 'en',
   fallbackLocale: 'en',
   messages: { de, en, fr, nl },
 });
@@ -27,6 +61,7 @@ const i18n = createI18n({
 createApp(App)
   .use(router)
   .use(i18n)
+  .use(createPinia())
   .mount('#app');
 
 // Sync i18n locale to HTML lang attribute
@@ -34,40 +69,16 @@ watch(
   () => i18n.global.locale.value,
   (lang) => document.documentElement.setAttribute('lang', lang),
   { immediate: true }
-)
+);
 
-import { registerSW } from 'virtual:pwa-register';
+// PWA Service Worker registrieren
+const { onNeedRefresh } = usePWAUpdate();
 
 const updateSW = registerSW({
   onNeedRefresh() {
-    showUpdateToast();
+    onNeedRefresh(updateSW);
   },
   onOfflineReady() {
-    // App is ready for offline usage
-  }
+    // App ist bereit für Offline-Nutzung
+  },
 });
-
-function showUpdateToast() {
-  const toast = document.createElement('div');
-  toast.className = `
-    fixed bottom-4 left-1/2 transform -translate-x-1/2
-    bg-gray-800 text-white px-4 py-3 rounded-2xl shadow-lg z-50
-    flex items-center space-x-4 animate-fade-in
-  `;
-  toast.innerHTML = `
-    <span class="text-sm">🔄 Neue Version verfügbar.</span>
-    <button class="ml-auto text-sm underline hover:text-gray-300">Neu laden</button>
-  `;
-
-  const button = toast.querySelector('button');
-  button.addEventListener('click', () => {
-    updateSW(true); // aktiviert neuen Service Worker & lädt neu
-  });
-
-  document.body.appendChild(toast);
-
-  // Optional: nach 20 Sekunden automatisch entfernen
-  setTimeout(() => {
-    toast.remove();
-  }, 20000);
-}

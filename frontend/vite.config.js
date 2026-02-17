@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'path';
 import { VitePWA } from 'vite-plugin-pwa';
+import compression from 'vite-plugin-compression2';
 
 export default defineConfig(({ mode }) => ({
   test: {
@@ -22,19 +23,38 @@ export default defineConfig(({ mode }) => ({
       usePolling: true,
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-vue': ['vue', 'vue-router', 'vue-i18n'],
+          'vendor-ui': ['@heroicons/vue'],
+          'vendor-utils': ['axios', '@vueuse/core', 'pinia'],
+        },
+      },
+    },
+  },
   plugins: [
     vue(),
     tailwindcss(),
     VitePWA({
       devOptions: {
         enabled: mode !== 'development',
+        type: 'module',
       },
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw-custom.ts',
+      injectManifest: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff,woff2}'],
+        globIgnores: ['sw.js', 'workbox-*.js'],
+      },
       includeAssets: [
         'favicon.ico',
         'robots.txt',
         'img/web-app-manifest-192x192.png',
-        'img/web-app-manifest-512x512.png'
+        'img/web-app-manifest-512x512.png',
       ],
       manifest: {
         name: 'Urban-Golf.ch ScoreCard',
@@ -49,59 +69,28 @@ export default defineConfig(({ mode }) => ({
           {
             src: '/img/web-app-manifest-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/img/web-app-manifest-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
           },
           {
             src: '/img/web-app-manifest-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
-      },
-      workbox: {
-        globDirectory: 'dist',
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
-        globIgnores: ['sw.js', 'workbox-*.js'],
-        skipWaiting: true,
-        clientsClaim: true,
-        cleanupOutdatedCaches: true,
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/sc(-test)?\.urban-golf\.ch\/.*$/,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-              networkTimeoutSeconds: 5,
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24, // 1 Tag
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
           },
           {
-            urlPattern: /\.(?:png|jpg|jpeg|svg|webp|ico)$/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'image-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 7, // 1 Woche
-              },
-            },
-          }
+            src: '/img/web-app-manifest-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
+          },
         ],
-        navigateFallback: '/index.html',
-      }
-    })
+      },
+    }),
+    // Pre-komprimierte .gz und .br Dateien erzeugen (für nginx gzip_static / brotli_static)
+    compression({
+      algorithms: ['brotliCompress', 'gzip'],
+      exclude: [/\.(png|jpe?g|gif|svg|webp|ico|woff|woff2)$/],
+      threshold: 1024,
+    }),
   ],
   resolve: {
     alias: {
@@ -109,5 +98,5 @@ export default defineConfig(({ mode }) => ({
     },
   },
   base: '/',
-  publicDir: resolve(__dirname, 'public')
+  publicDir: resolve(__dirname, 'public'),
 }));
