@@ -24,6 +24,8 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+@reference "tailwindcss";
+
 .prose h1 {
     @apply text-xl mt-6 mb-2 text-blue-600 dark:text-blue-300;
 }
