@@ -23,14 +23,21 @@ export class GamesListPage {
   }
 
   async search(term: string) {
+    const responsePromise = this.page.waitForResponse(
+      resp => resp.url().includes('/api/games') && resp.status() === 200,
+      { timeout: 10000 }
+    )
     await this.searchInput.fill(term)
-    // Wait for debounced search (300ms in GamesListCompactContent.vue)
-    await this.page.waitForTimeout(500)
+    await responsePromise
   }
 
   async clearSearch() {
+    const responsePromise = this.page.waitForResponse(
+      resp => resp.url().includes('/api/games') && resp.status() === 200,
+      { timeout: 10000 }
+    )
     await this.clearSearchButton.click()
-    await this.page.waitForTimeout(500)
+    await responsePromise
   }
 
   async getGameCount(): Promise<number> {

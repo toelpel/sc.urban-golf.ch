@@ -31,8 +31,6 @@ test.describe('Games List', () => {
     const initialCount = await gamesListPage.getGameCount()
 
     await gamesListPage.search('Alpha')
-    await gamesListPage.page.waitForTimeout(500)
-
     await gamesListPage.clearSearch()
     await expect(gamesListPage.gameItems.first()).toBeVisible({ timeout: 10000 })
     const restoredCount = await gamesListPage.getGameCount()
