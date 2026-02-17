@@ -19,13 +19,13 @@
         </router-link>
 
         <div class="flex items-center gap-2 ml-2">
-            <button @click="setLanguage('de')" :class="langButtonClass('de')">🇩🇪</button>
-            <button @click="setLanguage('en')" :class="langButtonClass('en')">🇬🇧</button>
-            <button @click="setLanguage('fr')" :class="langButtonClass('fr')">🇫🇷</button>
-            <button @click="setLanguage('nl')" :class="langButtonClass('nl')">🇳🇱</button>
+            <button @click="setLanguage('de')" :class="langButtonClass('de')" aria-label="Deutsch">🇩🇪</button>
+            <button @click="setLanguage('en')" :class="langButtonClass('en')" aria-label="English">🇬🇧</button>
+            <button @click="setLanguage('fr')" :class="langButtonClass('fr')" aria-label="Français">🇫🇷</button>
+            <button @click="setLanguage('nl')" :class="langButtonClass('nl')" aria-label="Nederlands">🇳🇱</button>
         </div>
 
-        <button @click="toggleDark" class="text-2xl ml-3 hover:scale-110 transition">
+        <button @click="toggleDark" class="text-2xl ml-3 hover:scale-110 transition" :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
             {{ isDark ? '☀️' : '🌙' }}
         </button>
     </div>
@@ -34,7 +34,7 @@
     <div class="md:hidden flex items-center gap-0.5 relative">
         <!-- Language Menu -->
         <div ref="langMenuWrapper" class="relative">
-            <button @click="isLangOpen = !isLangOpen" class="icon-button">🌐</button>
+            <button @click="isLangOpen = !isLangOpen" class="icon-button" aria-label="Change language">🌐</button>
             <transition name="fade-slide">
                 <div v-if="isLangOpen"
                     class="absolute right-0 mt-2 w-36 rounded-xl bg-white shadow-lg ring-1 ring-black/10 text-sm dark:bg-gray-800 dark:text-white">
@@ -49,7 +49,7 @@
 
         <!-- Burger Menu -->
         <div ref="menuWrapper" class="relative">
-            <button @click="isOpen = !isOpen" class="icon-button">
+            <button @click="isOpen = !isOpen" class="icon-button" aria-label="Open menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>

@@ -108,7 +108,8 @@
       "NoGamesFound": "No games found",
       "HolesPlayed": "Holes Played",
       "SearchText": "Game- or Playername",
-      "LoadMore": "Load more games"
+      "LoadMore": "Load more games",
+      "Loading": "Loading games…"
     },
     "NewGame": {
       "TitleNew": "Create New Game",

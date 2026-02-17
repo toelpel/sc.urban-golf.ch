@@ -26,8 +26,7 @@
 
     <Suspense>
         <template #default>
-            <GamesListCompactContent :search-term="searchTerm" :current-page="currentPage" :per-page="perPage"
-                @update:currentPage="(val) => currentPage = val" />
+            <GamesListCompactContent :search-term="searchTerm" :per-page="perPage" />
         </template>
         <template #fallback>
             <div class="text-center text-gray-400 py-10">
@@ -48,7 +47,6 @@ function calculatePerPage() {
     return Math.max(5, Math.floor(availableHeight / itemHeight));
 }
 
-const currentPage = ref(1);
 const searchTerm = ref('');
 const perPage = ref(calculatePerPage());
 

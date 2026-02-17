@@ -1,6 +1,8 @@
 import { ref } from 'vue';
 import { useGamesDetailData } from './useGamesDetailData.js';
 
+// Module-level cache is intentional — avoids redundant API calls for already-fetched game metadata.
+// This cache persists for the lifetime of the app session.
 const metaCache = new Map();
 
 export async function useGameMetaData(gameId) {

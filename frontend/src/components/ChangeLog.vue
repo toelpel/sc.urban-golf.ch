@@ -17,7 +17,7 @@ onMounted(async () => {
         const response = await fetch('/CHANGELOG.md')
         if (!response.ok) throw new Error('Datei konnte nicht geladen werden')
         markdown.value = await response.text()
-    } catch (err) {
+    } catch {
         markdown.value = '⚠️ CHANGELOG konnte nicht geladen werden.'
     }
 })

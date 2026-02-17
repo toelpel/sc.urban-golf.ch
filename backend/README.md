@@ -26,9 +26,7 @@ npm run dev
 ## Tech Stack
 
 - **Node.js** with **Fastify** as the web framework
-- **PostgreSQL** hosted on **Supabase**
-- **Supabase JS SDK** for database access
-- **NanoID** for unique ID generation
+- **PostgreSQL** (direct connection via `pg` library)
 - **ESM** modules for modern JavaScript syntax
 
 ---
@@ -38,15 +36,11 @@ npm run dev
 ```
 /backend
 ├─ package.json
-├─ src/
-│  ├─ server.js          # Main server bootstrap
-│  ├─ routes/            # API routes
-│  ├─ controllers/       # Business logic per route
-│  ├─ services/          # DB/service integration
-│  ├─ utils/             # Helper functions
-│  ├─ config/            # Environment config loader
-│  └─ db/                # Database connection setup
-└─ tests/                # Unit/E2E tests
+├─ app.js               # Main application setup
+├─ routes/              # API routes
+├─ db/                  # Database connection setup
+├─ utils/               # Helper functions
+└─ tests/               # Unit tests
 ```
 
 ---
@@ -57,8 +51,12 @@ Environment variables are loaded via `.env` files. Critical variables include:
 
 ```
 PORT=3000
-SUPABASE_URL=https://xyzcompany.supabase.co
-SUPABASE_SERVICE_KEY=...service-key...
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/urban_golf
+DATABASE_SSL=false
+ALLOWED_ORIGINS=http://localhost:5173,http://localhost:8080
+BREVO_SMTP_USER=your-brevo-login@email.com
+BREVO_SMTP_PASS=your-brevo-smtp-key
+ADMIN_EMAIL=admin@urban-golf.ch
 NODE_ENV=development
 ```
 
@@ -72,15 +70,11 @@ Typical files:
 
 ## NPM Scripts
 
-| Script              | Purpose                                            |
-| ------------------- | -------------------------------------------------- |
-| `npm run dev`       | Start backend in development mode with hot reload. |
-| `npm run start`     | Start backend in production mode.                  |
-| `npm run lint`      | Run ESLint linter.                                 |
-| `npm run format`    | Run Prettier formatter.                            |
-| `npm run test`      | Run all tests.                                     |
-| `npm run test:unit` | Run unit tests only.                               |
-| `npm run test:e2e`  | Run end-to-end tests.                              |
+| Script          | Purpose              |
+| --------------- | -------------------- |
+| `npm run dev`   | Start backend        |
+| `npm run start` | Start in production  |
+| `npm run test`  | Run tests            |
 
 ---
 
@@ -88,30 +82,14 @@ Typical files:
 
 1. **Branching**: Create a feature branch from `main`/`test`.
 2. **Local development**: Use `npm run dev` with a `.env.test` file configured.
-3. **Routing**: Routes are defined in `/routes` and mounted in `server.js`.
-4. **Controllers**: Implement API logic in `/controllers`.
-5. **Services**: Access DB and third-party services in `/services`.
-6. **Validation**: Validate requests with Joi or similar.
-7. **Commits/PRs**: Run lint & tests locally before submitting.
+3. **Routing**: Routes are defined in `/routes` and mounted in `app.js`.
+4. **Commits/PRs**: Run tests locally before submitting.
 
 ---
 
 ## Testing
 
-### 1) Unit Tests
-
-- Test individual services, utils, and controllers.
-- Run: `npm run test:unit`
-
-### 2) E2E Tests
-
-- Simulate real API requests against a test DB.
-- Run: `npm run test:e2e`
-
-### 3) Test Builds & Staging
-
-- Use `.env.test` with staging DB credentials.
-- Deploy to staging environment, verify API endpoints.
+Unit tests with Vitest. Run: `npm run test`
 
 ---
 
@@ -119,26 +97,22 @@ Typical files:
 
 - **ESLint** for linting
 - **Prettier** for formatting
-- **Jest** or **Vitest** for testing
-- **Supertest** for API endpoint tests
+- **Vitest** for testing
 
 ---
 
 ## Useful Links
 
 - Fastify: [https://fastify.dev/](https://fastify.dev/)
-- Supabase JS: [https://supabase.com/docs/reference/javascript](https://supabase.com/docs/reference/javascript)
+- pg: [https://node-postgres.com/](https://node-postgres.com/)
 - PostgreSQL: [https://www.postgresql.org/docs/](https://www.postgresql.org/docs/)
-- NanoID: [https://github.com/ai/nanoid](https://github.com/ai/nanoid)
-- Joi: [https://joi.dev/api/](https://joi.dev/api/)
 
 ---
 
 ## Troubleshooting
 
-- **DB Connection Issues**: Check Supabase credentials in `.env`.
+- **DB Connection Issues**: Check `DATABASE_URL` in `.env`.
 - **Port in Use**: Change `PORT` in `.env`.
-- **Hot Reload Not Working**: Ensure `nodemon` is installed and used for `npm run dev`.
 
 ---
 

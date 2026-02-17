@@ -29,10 +29,12 @@ import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
 import { ref, computed, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { nanoid } from 'nanoid'
-import axios from 'axios'
+import { useToast } from '@/composables/useToast'
+import { fetchGame, fetchGamePlayers, createOrUpdatePlayers, createOrUpdateGame } from '@/services/api'
 
 const router = useRouter()
 const route = useRoute()
+const { error: showError } = useToast()
 const gameId = computed(() => route.params.gameId)
 
 const gameName = ref('')
@@ -40,16 +42,14 @@ const players = ref([{ id: nanoid(), name: '' }])
 const isEditing = computed(() => !!gameId.value)
 const isSaving = ref(false)
 
-// Hauptlogik zum Laden eines bestehenden Spiels
 async function loadGame(id) {
-  const { data: game } = await axios.get(`/games/${id}`)
+  const game = await fetchGame(id)
   gameName.value = game?.name || ''
 
-  const { data: existing } = await axios.get(`/games/${id}/players`)
+  const existing = await fetchGamePlayers(id)
   players.value = existing.map(p => ({ id: p.id, name: p.name }))
 }
 
-// Initiales Laden beim Mount
 watchEffect(async () => {
   if (gameId.value) {
     await loadGame(gameId.value)
@@ -71,30 +71,25 @@ async function saveGame() {
     .filter(p => p.name)
 
   if (!gameName.value || validPlayers.length === 0) {
-    alert('Please enter game name and at least one player.')
+    showError('Please enter game name and at least one player.')
     isSaving.value = false
     return
   }
 
   try {
-    const playerIds = []
+    // Parallel: alle Spieler gleichzeitig erstellen
+    await createOrUpdatePlayers(validPlayers.map(p => ({ id: p.id, name: p.name })))
+    const playerIds = validPlayers.map(p => p.id)
 
-    for (const player of validPlayers) {
-      player.name = player.name.trim()
-      await axios.post('/players', { id: player.id, name: player.name })
-      playerIds.push(player.id)
-    }
-
-    // Upsert: Immer POST, ID wird je nach Modus gesetzt
     const idToUse = isEditing.value ? gameId.value : nanoid()
-    const { data: game } = await axios.post('/games', {
+    const game = await createOrUpdateGame({
       id: idToUse,
       name: gameName.value,
       players: playerIds,
     })
 
     if (!game?.id) {
-      alert('Error when saving the game.')
+      showError('Error when saving the game.')
       return
     }
 
@@ -105,7 +100,7 @@ async function saveGame() {
     }
   } catch (err) {
     console.error(err)
-    alert('Error when saving: ' + err.message)
+    showError('Error when saving: ' + err.message)
   } finally {
     isSaving.value = false
   }

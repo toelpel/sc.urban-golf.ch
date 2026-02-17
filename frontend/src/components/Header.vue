@@ -13,7 +13,7 @@
         <!-- Zeile 2: Zurück + Breadcrumb -->
         <div v-if="showBack" class="flex items-center px-4 pb-2 space-x-2 text-sm text-gray-600 dark:text-gray-300">
             <!-- Zurück-Button -->
-            <button @click="goBack" class="flex items-center hover:text-gray-900 dark:hover:text-white">
+            <button @click="goBack" class="flex items-center hover:text-gray-900 dark:hover:text-white" aria-label="Go back">
                 <ArrowLeftIcon class="w-4 h-4 mr-1" />
             </button>
 

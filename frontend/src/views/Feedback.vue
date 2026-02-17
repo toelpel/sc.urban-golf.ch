@@ -8,7 +8,7 @@
     </div>
 
     <!-- Glass-Card Formular -->
-    <form v-else @submit.prevent="submitFeedback" class="glass-card p-6 space-y-6 max-w-2xl mx-auto">
+    <form v-else @submit.prevent="handleSubmit" class="glass-card p-6 space-y-6 max-w-2xl mx-auto">
       <!-- Rating -->
       <div class="input-group">
         <label class="input-label">{{ $t('Feedback.RatingTitle') }}</label>
@@ -54,7 +54,10 @@
 <script setup>
 import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
 import { ref } from 'vue'
-import axios from 'axios'
+import { useToast } from '@/composables/useToast'
+import { submitFeedback } from '@/services/api'
+
+const { error: showError } = useToast()
 
 const rating = ref(0)
 const message = ref('')
@@ -62,29 +65,29 @@ const name = ref('')
 const email = ref('')
 const submitted = ref(false)
 
-const submitFeedback = async () => {
+const handleSubmit = async () => {
   if (rating.value < 1 || rating.value > 5) {
-    alert('Please give a rating from 1 to 5 stars.');
-    return;
+    showError('Please give a rating from 1 to 5 stars.')
+    return
   }
 
   if (!message.value.trim()) {
-    alert('Please enter feedback.');
-    return;
+    showError('Please enter feedback.')
+    return
   }
 
   try {
-    await axios.post('/feedback', {
+    await submitFeedback({
       rating: rating.value,
       message: message.value,
       name: name.value,
       email: email.value
-    });
+    })
 
-    submitted.value = true;
+    submitted.value = true
   } catch (err) {
-    console.error('Error when sending:', err);
-    alert('Sorry, your feedback could not be sent.');
+    console.error('Error when sending:', err)
+    showError('Sorry, your feedback could not be sent.')
   }
-};
+}
 </script>

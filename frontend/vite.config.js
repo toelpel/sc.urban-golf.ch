@@ -3,7 +3,12 @@ import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 import { VitePWA } from 'vite-plugin-pwa';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  test: {
+    globals: true,
+    environment: 'happy-dom',
+    include: ['src/**/*.{test,spec}.{js,ts}'],
+  },
   server: {
     port: 5173,
     proxy: {
@@ -11,11 +16,17 @@ export default defineConfig({
         target: 'http://localhost:3000',
         changeOrigin: true,
       }
-    }
+    },
+    watch: {
+      usePolling: true,
+    },
   },
   plugins: [
     vue(),
     VitePWA({
+      devOptions: {
+        enabled: mode !== 'development',
+      },
       registerType: 'autoUpdate',
       includeAssets: [
         'favicon.ico',
@@ -97,4 +108,4 @@ export default defineConfig({
   },
   base: '/',
   publicDir: resolve(__dirname, 'public')
-});
+}));

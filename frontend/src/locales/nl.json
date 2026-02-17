@@ -107,7 +107,8 @@
       "NoGamesFound": "Geen spellen gevonden",
       "HolesPlayed": "Gespeelde holes",
       "SearchText": "Spel- of spelersnaam",
-      "LoadMore": "Meer spellen laden"
+      "LoadMore": "Meer spellen laden",
+      "Loading": "Spellen worden geladen…"
     },
     "NewGame": {
       "TitleNew": "Nieuw spel aanmaken",
