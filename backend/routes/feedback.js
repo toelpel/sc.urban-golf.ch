@@ -1,5 +1,6 @@
 import { getClient } from '../db/pg.js';
 import nodemailer from 'nodemailer';
+import { validateFeedback } from '../utils/validate.js';
 
 const transporter = nodemailer.createTransport({
   host: 'smtp-relay.brevo.com',
@@ -11,16 +12,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export default async function (fastify, opts) {
+export default async function (fastify, _opts) {
   fastify.post('/', async (request, reply) => {
     const { rating, message, name, email } = request.body;
 
-    if (
-      !rating || !message ||
-      typeof rating !== 'number' || rating < 1 || rating > 5 ||
-      typeof message !== 'string' || message.trim() === ''
-    ) {
-      return reply.code(400).send({ error: 'Ungültige Eingaben' });
+    const validationErrors = validateFeedback(request.body || {});
+    if (validationErrors) {
+      return reply.code(400).send({ error: 'Validation failed', details: validationErrors });
     }
 
     const client = await getClient();

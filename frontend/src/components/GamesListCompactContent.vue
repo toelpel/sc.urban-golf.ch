@@ -65,7 +65,7 @@
         </li>
     </transition-group>
     <!-- Beobachtungspunkt für Infinite Scroll -->
-    <div ref="target" class="h-8" />
+    <div ref="target" class="h-8"></div>
 
     <!-- Scroll To Top Button -->
     <transition name="fade">
@@ -77,8 +77,8 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
-import { useWindowScroll, useDebounceFn } from '@vueuse/core'
+import { ref, watch, onMounted, onUnmounted } from 'vue';
+import { useDebounceFn } from '@vueuse/core'
 import { useGamesSummaryData } from '@/composables/useGamesSummaryData.js';
 import { useInfiniteLoader } from '@/composables/useInfiniteLoader.js'
 import { useScrollToTopButton } from '@/composables/useScrollToTopButton.js'
@@ -109,14 +109,12 @@ const {
     games,
     playerMap,
     gameMeta,
-    totalGames,
     loadGames,
     reset,
-    page,
     hasMore
 } = useGamesSummaryData();
 
-const { loadMore, isInitialLoad, isLoading } = useInfiniteLoader({
+const { loadMore } = useInfiniteLoader({
     loadFn: ({ reset = false } = {}) => loadMoreGames({ resetFirst: reset }),
     target,
     hasMore,

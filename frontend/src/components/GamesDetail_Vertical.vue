@@ -10,7 +10,7 @@
                             {{ $t('General.Hole') }}
                         </th>
 
-                        <th v-for="(player, idx) in sortedPlayers" :key="player.id" class="scorecard-header-cell text-center max-w-[10rem] truncate
+                        <th v-for="player in sortedPlayers" :key="player.id" class="scorecard-header-cell text-center max-w-[10rem] truncate
                      first:border-l-0 border-l border-white/30 dark:border-white/10
                      last:rounded-tr-2xl" :title="player.name">
                             {{ player.name }}
@@ -71,7 +71,6 @@
 
 <script setup>
 const {
-    players,
     holes,
     scores,
     gameId,

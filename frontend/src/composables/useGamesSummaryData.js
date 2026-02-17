@@ -1,23 +1,22 @@
 import { ref } from 'vue';
-import axios from 'axios';
-
-const games = ref([]);
-const playerMap = ref({});
-const gameMeta = ref({});
-const totalGames = ref(0);
-const page = ref(1);
-const hasMore = ref(true);
+import { fetchGamesSummary } from '@/services/api';
 
 export function useGamesSummaryData() {
+    const games = ref([]);
+    const playerMap = ref({});
+    const gameMeta = ref({});
+    const totalGames = ref(0);
+    const page = ref(1);
+    const hasMore = ref(true);
+    const error = ref(null);
+
     async function loadGames({ perPage = 10, search = '' }) {
-        const url = `/games/summary`;
+        error.value = null;
         try {
-            const { data } = await axios.get(url, {
-                params: {
-                    page: page.value,
-                    per_page: perPage,
-                    search,
-                },
+            const data = await fetchGamesSummary({
+                page: page.value,
+                per_page: perPage,
+                search,
             });
 
             if (!Array.isArray(data.games)) {
@@ -38,7 +37,8 @@ export function useGamesSummaryData() {
             hasMore.value = data.games.length === perPage;
 
         } catch (err) {
-            console.error('⚠️ Fehler beim Laden der Spielezusammenfassung (Axios):', err.message);
+            error.value = err.message || 'Failed to load games';
+            console.error('Error loading games summary:', err.message);
         }
     }
 
@@ -49,6 +49,7 @@ export function useGamesSummaryData() {
         totalGames.value = 0;
         page.value = 1;
         hasMore.value = true;
+        error.value = null;
     }
 
     return {
@@ -58,6 +59,7 @@ export function useGamesSummaryData() {
         totalGames,
         page,
         hasMore,
+        error,
         loadGames,
         reset
     };

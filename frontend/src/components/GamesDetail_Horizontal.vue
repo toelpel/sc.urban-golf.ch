@@ -59,8 +59,9 @@
 <script setup>
 import { computed } from 'vue'
 
+defineEmits(['sort'])
+
 const {
-    players,
     holes,
     scores,
     gameId,

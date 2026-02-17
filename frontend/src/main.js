@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import { watch } from 'vue';
 import App from './App.vue';
 import router from './router';
 import './assets/global.css';
@@ -28,6 +29,13 @@ createApp(App)
   .use(i18n)
   .mount('#app');
 
+// Sync i18n locale to HTML lang attribute
+watch(
+  () => i18n.global.locale.value,
+  (lang) => document.documentElement.setAttribute('lang', lang),
+  { immediate: true }
+)
+
 import { registerSW } from 'virtual:pwa-register';
 
 const updateSW = registerSW({
@@ -35,7 +43,7 @@ const updateSW = registerSW({
     showUpdateToast();
   },
   onOfflineReady() {
-    console.log('App ready for offline usage.');
+    // App is ready for offline usage
   }
 });
 

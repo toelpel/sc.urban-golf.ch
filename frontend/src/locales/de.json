@@ -107,7 +107,8 @@
       "NoGamesFound": "Keine Spiele gefunden",
       "HolesPlayed": "Gespielte Löcher",
       "SearchText": "Spiel- oder Spielername",
-      "LoadMore": "Weitere Spiele laden"
+      "LoadMore": "Weitere Spiele laden",
+      "Loading": "Spiele werden geladen…"
     },
     "NewGame": {
       "TitleNew": "Neues Spiel erstellen",

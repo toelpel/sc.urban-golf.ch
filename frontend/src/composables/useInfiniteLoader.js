@@ -1,4 +1,4 @@
-import { ref, watch, nextTick } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
 
 export function useInfiniteLoader({ loadFn, target, hasMore }) {
@@ -21,7 +21,7 @@ export function useInfiniteLoader({ loadFn, target, hasMore }) {
         await nextTick();
         setTimeout(() => {
             const el = target.value;
-            if (el && el.getBoundingClientRect().top < window.innerHeight) {
+            if (el && hasMore.value && el.getBoundingClientRect().top < window.innerHeight) {
                 loadMore();
             }
         }, 200);

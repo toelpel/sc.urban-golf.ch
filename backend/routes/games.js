@@ -1,17 +1,15 @@
 import { getClient } from '../db/pg.js';
+import { validateGame, isValidId } from '../utils/validate.js';
 
-const isValidId = (id) => /^[a-zA-Z0-9_-]{10,30}$/.test(id);
-
-export default async function (fastify, opts) {
+export default async function (fastify, _opts) {
   // Spiel erstellen oder aktualisieren
   fastify.post('/', async (req, reply) => {
+    const validationErrors = validateGame(req.body || {});
+    if (validationErrors) {
+      return reply.code(400).send({ error: 'Validation failed', details: validationErrors });
+    }
+
     const { id, name, players } = req.body;
-
-    if (!name || !Array.isArray(players) || players.length === 0)
-      return reply.code(400).send({ error: 'Name and players required' });
-
-    if (!isValidId(id))
-      return reply.code(400).send({ error: 'Invalid or missing game ID' });
 
     const client = await getClient();
 

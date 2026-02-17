@@ -23,7 +23,7 @@ npm run dev
 
 ## Tech Stack
 - **Vue 3** (Composition API)
-- **Vite 7** as dev server/builder
+- **Vite 6** as dev server/builder
 - **Vue Router** for client-side routing
 - **TailwindCSS** for styling (including dark mode utilities)
 - **Heroicons** for UI icons
@@ -76,10 +76,7 @@ Typical files:
 | `npm run build`      | Production build in `dist/`.                             |
 | `npm run preview`    | Preview production build locally.                        |
 | `npm run build:test` | Build against **test/staging** environment (`.env.test`).|
-| `npm run test:unit`  | Run unit tests (e.g., **Vitest**).                        |
-| `npm run test:e2e`   | Run E2E tests (e.g., **Playwright** or **Cypress**).      |
-| `npm run lint`       | Run ESLint code linter.                                  |
-| `npm run format`     | Run Prettier formatter.                                  |
+| `npm run test`       | Run unit tests (Vitest).                                 |
 
 Example for `build:test` (in `package.json`):
 ```json
@@ -98,31 +95,14 @@ Alternatively: `vite build --mode test` – Vite will load `.env.test`.
 2. **Local development**: `npm run dev`, router uses readable routes (e.g., `/games`, `/games/:gameId`, `/scorecard/:gameId/:holeId`).
 3. **Styling**: Use Tailwind utility-first; shared styles in `global.css` (e.g., `.input-field`, `.button-primary`, `.scorecard-*`).
 4. **Dark mode**: Use `dark:` variants; respect system preference (CSS media query). Optional custom toggle.
-5. **State (optional)**: Use Pinia store to cache scores across views to avoid redundant API calls.
-6. **i18n**: Use `$t('...')` for translations. Maintain consistent keys in language JSON files.
-7. **Commits/PRs**: Run lint & tests locally; include screenshots/GIFs for UI changes.
+5. **i18n**: Use `$t('...')` for translations. Maintain consistent keys in language JSON files.
+6. **Commits/PRs**: Run lint & tests locally; include screenshots/GIFs for UI changes.
 
 ---
 
 ## Testing
-### 1) Unit Tests (Components/Utils)
-- Framework: **Vitest** (recommended)
-- Run: `npm run test:unit`
-- Tips:
-  - Test components with `mount`/`render` (e.g., `@vue/test-utils`).
-  - Isolate business logic into utils for easier testing without DOM.
 
-### 2) E2E Tests (User Flows)
-- Framework: **Playwright** or **Cypress**
-- Run: `npm run test:e2e`
-- Typical flows:
-  - Create a new game → hole view → enter scores → next hole.
-  - Filter/paginate game list.
-
-### 3) Test Builds & Staging
-- **`npm run build:test`** builds frontend against **test backend** using `.env.test`.
-- Deploy `dist/` output to your staging environment.
-- Verify API routes with test data.
+Unit tests with Vitest. Run: `npm run test`
 
 ---
 
@@ -144,13 +124,10 @@ Alternatively: `vite build --mode test` – Vite will load `.env.test`.
 - Vue 3: https://vuejs.org/
 - Vite: https://vitejs.dev/
 - Vue Router: https://router.vuejs.org/
-- Pinia: https://pinia.vuejs.org/
 - TailwindCSS: https://tailwindcss.com/docs
 - Heroicons: https://heroicons.com/
 - Vitest: https://vitest.dev/
-- Playwright: https://playwright.dev/ / Cypress: https://www.cypress.io/
 - Vite PWA Plugin: https://vite-pwa-org.netlify.app/
-- Supabase JS: https://supabase.com/docs/reference/javascript
 
 ---
 

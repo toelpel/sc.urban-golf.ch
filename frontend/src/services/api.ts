@@ -1,0 +1,122 @@
+import axios from 'axios'
+import { API_ROUTES } from '@/constants'
+
+// ---- Type definitions ----
+
+export interface Player {
+  id: string
+  name: string
+}
+
+export interface PlayerWithStats extends Player {
+  avg: number | null
+  total: number | null
+}
+
+export interface Game {
+  id: string
+  name: string
+  created_at?: string
+}
+
+export interface GameSummary extends Game {
+  players: PlayerWithStats[] | null
+  holes: number[] | null
+}
+
+export interface Score {
+  id?: number
+  game_id: string
+  player_id: string
+  hole: number
+  strokes: number
+  player_name?: string
+}
+
+export interface GamesListResponse {
+  games: Game[]
+  total: number
+}
+
+export interface GamesSummaryResponse {
+  games: GameSummary[]
+}
+
+export interface FeedbackPayload {
+  rating: number
+  message: string
+  name?: string
+  email?: string
+}
+
+// ---- Games ----
+
+export async function fetchGamesSummary(params: {
+  page: number
+  per_page: number
+  search?: string
+}): Promise<GamesSummaryResponse> {
+  const { data } = await axios.get<GamesSummaryResponse>(API_ROUTES.GAMES_SUMMARY, { params })
+  return data
+}
+
+export async function fetchGame(gameId: string): Promise<Game> {
+  const { data } = await axios.get<Game>(`${API_ROUTES.GAMES}/${gameId}`)
+  return data
+}
+
+export async function fetchGamePlayers(gameId: string): Promise<Player[]> {
+  const { data } = await axios.get<Player[]>(`${API_ROUTES.GAMES}/${gameId}/players`)
+  return data
+}
+
+export async function createOrUpdateGame(payload: {
+  id: string
+  name: string
+  players: string[]
+}): Promise<Game & { status: string }> {
+  const { data } = await axios.post(API_ROUTES.GAMES, payload)
+  return data
+}
+
+// ---- Players ----
+
+export async function createOrUpdatePlayer(payload: {
+  id: string
+  name: string
+}): Promise<Player & { status: string }> {
+  const { data } = await axios.post(API_ROUTES.PLAYERS, payload)
+  return data
+}
+
+export async function createOrUpdatePlayers(
+  players: { id: string; name: string }[]
+): Promise<(Player & { status: string })[]> {
+  return Promise.all(players.map((p) => createOrUpdatePlayer(p)))
+}
+
+// ---- Scores ----
+
+export async function fetchScores(gameId: string): Promise<Score[]> {
+  const { data } = await axios.get<Score[]>(API_ROUTES.SCORES, {
+    params: { game_id: gameId },
+  })
+  return data
+}
+
+export async function saveScore(payload: {
+  game_id: string
+  player_id: string
+  hole: number
+  strokes: number
+}): Promise<Score> {
+  const { data } = await axios.post<Score>(API_ROUTES.SCORES, payload)
+  return data
+}
+
+// ---- Feedback ----
+
+export async function submitFeedback(payload: FeedbackPayload): Promise<{ success: boolean }> {
+  const { data } = await axios.post<{ success: boolean }>(API_ROUTES.FEEDBACK, payload)
+  return data
+}

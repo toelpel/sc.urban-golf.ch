@@ -99,7 +99,7 @@
 import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useGamesDetailData } from '@/composables/useGamesDetailData.js';
-import axios from 'axios';
+import { saveScore as apiSaveScore } from '@/services/api';
 
 const route = useRoute();
 const gameId = computed(() => route.params.gameId)
@@ -161,7 +161,7 @@ function changeStrokes(playerId, delta) {
 }
 
 async function saveScore(playerId) {
-  await axios.post('/scores', {
+  await apiSaveScore({
     game_id: gameId.value,
     player_id: playerId,
     hole: hole.value,

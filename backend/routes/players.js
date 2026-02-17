@@ -1,23 +1,15 @@
 import { getClient } from '../db/pg.js';
+import { validatePlayer } from '../utils/validate.js';
 
-/**
- * NanoID-Validierung (ca. 21 Zeichen, alphanumerisch + - _)
- */
-const isValidId = (id) => /^[a-zA-Z0-9_-]{10,30}$/.test(id);
-
-export default async function (fastify, opts) {
+export default async function (fastify, _opts) {
   // Spieler erstellen oder aktualisieren (POST + UPSERT)
   fastify.post('/', async (req, reply) => {
+    const validationErrors = validatePlayer(req.body || {});
+    if (validationErrors) {
+      return reply.code(400).send({ error: 'Validation failed', details: validationErrors });
+    }
+
     const { id, name } = req.body;
-
-    if (!name) {
-      return reply.code(400).send({ error: 'Player name required' });
-    }
-
-    const playerId = id;
-    if (!playerId || !isValidId(playerId)) {
-      return reply.code(400).send({ error: 'Valid player ID required' });
-    }
 
     const client = await getClient();
     try {
@@ -25,9 +17,9 @@ export default async function (fastify, opts) {
         `INSERT INTO players (id, name)
          VALUES ($1, $2)
          ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name`,
-        [playerId, name]
+        [id, name]
       );
-      reply.code(200).send({ id: playerId, name, status: 'upserted' });
+      reply.code(200).send({ id, name, status: 'upserted' });
     } catch (err) {
       fastify.log.error(err);
       reply.code(500).send({ error: 'Database error' });

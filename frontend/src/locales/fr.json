@@ -107,7 +107,8 @@
       "NoGamesFound": "Aucune partie trouvée",
       "HolesPlayed": "Trous joués",
       "SearchText": "Nom du jeu ou du joueur",
-      "LoadMore": "Charger d'autres jeux"
+      "LoadMore": "Charger d'autres jeux",
+      "Loading": "Chargement des parties…"
     },
     "NewGame": {
       "TitleNew": "Créer une nouvelle partie",
