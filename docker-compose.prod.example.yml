@@ -25,8 +25,8 @@ services:
 
     # Option 2: Build locally (comment out 'image' above)
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
       args:
         VITE_API_BASEURL: /api  # Or https://yourdomain.com/api for external API
 
@@ -42,8 +42,8 @@ services:
 
     # Option 2: Build locally (comment out 'image' above)
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
 
     restart: unless-stopped
     ports:
