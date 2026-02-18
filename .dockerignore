@@ -5,7 +5,6 @@
 
 # Docker
 docker-compose*.yml
-Dockerfile*
 .dockerignore
 
 # Node
@@ -40,3 +39,17 @@ logs
 
 # GitHub
 .github
+
+# AI Tools
+.claude
+
+# Build outputs
+**/dist
+
+# Database test dumps
+backend/db/db_dump_test
+
+# Test artifacts
+frontend/e2e/test-results
+frontend/playwright-report
+frontend/blob-report

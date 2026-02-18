@@ -3,8 +3,9 @@ node_modules/
 .pnp
 .pnp.js
 
-# Note: package-lock.json should be committed for reproducible builds
-# Only ignore it if you're using yarn or pnpm exclusively
+# Workspace-specific lock files (use root package-lock.json only)
+backend/package-lock.json
+frontend/package-lock.json
 
 # Testing
 coverage/

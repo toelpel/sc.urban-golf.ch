@@ -2,8 +2,14 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
+# Copy root package files and both workspace package.json files
+# (npm needs the full workspace graph to resolve dependencies)
+COPY package.json package-lock.json ./
+COPY backend/package.json ./backend/
+COPY frontend/package.json ./frontend/
+
+# Install frontend dependencies (including devDependencies for build)
+RUN npm ci --workspace=frontend
 
 FROM node:20-alpine AS builder
 WORKDIR /app
@@ -12,17 +18,17 @@ WORKDIR /app
 ARG VITE_API_BASEURL
 ENV VITE_API_BASEURL=$VITE_API_BASEURL
 
-# Bring in deps
+# Copy node_modules from workspace install
 COPY --from=deps /app/node_modules ./node_modules
 
-# Copy sources
-COPY . .
+# Copy frontend source code (flat layout: frontend/ contents → /app/)
+COPY frontend/ .
 
 # Build frontend
 RUN npm run build
 
 FROM nginx:alpine AS runner
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 RUN addgroup -g 1001 -S nginx-app && \
