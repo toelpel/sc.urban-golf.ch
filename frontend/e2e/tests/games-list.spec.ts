@@ -33,8 +33,10 @@ test.describe('Games List', () => {
     await gamesListPage.search('Alpha')
     await gamesListPage.clearSearch()
     await expect(gamesListPage.gameItems.first()).toBeVisible({ timeout: 10000 })
-    const restoredCount = await gamesListPage.getGameCount()
-    expect(restoredCount).toBeGreaterThanOrEqual(initialCount)
+    await expect.poll(
+      () => gamesListPage.getGameCount(),
+      { timeout: 10000, message: 'waiting for full game list to restore after clearing search' }
+    ).toBeGreaterThanOrEqual(initialCount)
   })
 
   test('clicking a game navigates to scorecard', async ({ gamesListPage, page }) => {
