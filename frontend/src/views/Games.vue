@@ -42,7 +42,7 @@ import GamesDetailVertical from '@/components/GamesDetail_Vertical.vue';
 import GamesHoleView from '@/components/GamesHoleView.vue';
 
 import { ArrowPathIcon } from '@heroicons/vue/24/solid';
-import { computed, watchEffect } from 'vue';
+import { computed, provide, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useGamesDetailData } from '@/composables/useGamesDetailData';
@@ -65,6 +65,9 @@ const {
   gameName,
   load: loadGamesDetailData
 } = useGamesDetailData(gameId);
+
+// Daten für Child-Komponenten (z.B. GamesHoleView) bereitstellen
+provide('gamesDetailData', { players, scores, holes, gameName, load: loadGamesDetailData });
 
 // Shorten gamename
 const shortGameName = computed(() => {
