@@ -14,17 +14,18 @@ export function useGamesDetailData(gameId: Ref<string>) {
   async function load() {
     error.value = null
     try {
-      const game = await fetchGame(gameId.value)
-      gameName.value = game.name || `Game #${gameId.value}`
+      const [game, playerList, scoreData] = await Promise.all([
+        fetchGame(gameId.value),
+        fetchGamePlayers(gameId.value),
+        fetchScores(gameId.value),
+      ])
 
-      const playerList = await fetchGamePlayers(gameId.value)
+      gameName.value = game.name || `Game #${gameId.value}`
       players.value = playerList
 
       for (const player of players.value) {
         scores.value[player.id] = {}
       }
-
-      const scoreData = await fetchScores(gameId.value)
 
       for (const entry of scoreData) {
         const { player_id, hole, strokes } = entry

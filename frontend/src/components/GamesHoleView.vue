@@ -41,8 +41,13 @@
     </router-link>
   </div>
 
+  <!-- Loading -->
+  <div v-if="players.length === 0" class="shrink-0 text-gray-500 text-center dark:text-gray-300">
+    {{ $t('Scorecard.Loading') }}
+  </div>
+
   <!-- Spieler-Liste als Glass-Card mit Divider -->
-  <div class="glass-list mt-2">
+  <div v-else class="glass-list mt-2">
     <div class="card-inner">
       <div v-for="player in players" :key="player.id" class="flex items-center justify-between px-4 py-3 gap-3">
         <!-- Name -->
@@ -96,16 +101,15 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, watch, onBeforeUnmount, inject } from 'vue';
 import { useRoute } from 'vue-router';
-import { useGamesDetailData } from '@/composables/useGamesDetailData';
 import { useOfflineSync } from '@/composables/useOfflineSync';
 
 const route = useRoute();
 const gameId = computed(() => route.params.gameId)
 const hole = computed(() => parseInt(route.params.holeId));
 
-const { players, scores, holes, gameName, load } = useGamesDetailData(gameId);
+const { players, scores, holes, gameName } = inject('gamesDetailData');
 const { saveScore: saveScoreOffline } = useOfflineSync();
 
 // Shorten gamename
@@ -119,11 +123,10 @@ const showHoleOverview = ref(true);
 const isOptionsOpen = ref(false);
 const optionsWrapper = ref(null);
 
-onMounted(async () => {
+onMounted(() => {
   const saved = localStorage.getItem('showHoleOverview');
   showHoleOverview.value = saved !== 'false';
 
-  await load();
   ensureScoreFieldsExist();
 
   document.addEventListener('click', handleClickOutsideOptions);
@@ -137,7 +140,7 @@ watch(showHoleOverview, (val) => {
   localStorage.setItem('showHoleOverview', val);
 });
 
-watch(() => hole.value, () => {
+watch([() => hole.value, () => players.value.length], () => {
   ensureScoreFieldsExist();
 });
 
