@@ -175,6 +175,9 @@ function ensureScoreFieldsExist() {
       scores.value[player.id][hole.value] = ''
     }
   }
+  if (!holes.value.includes(hole.value)) {
+    holes.value = [...holes.value, hole.value].sort((a, b) => a - b)
+  }
 }
 </script>
 
