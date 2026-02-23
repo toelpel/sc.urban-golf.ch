@@ -48,22 +48,12 @@ export class HoleViewPage {
   }
 
   async goToNextHole() {
-    const responsePromise = this.page.waitForResponse(
-      resp => resp.url().includes('/api/games') && resp.status() === 200,
-      { timeout: 15000 }
-    )
     await this.page.locator('a.button-primary', { hasText: 'Next' }).click()
-    await responsePromise
     await this.page.locator('select.select-field').first().waitFor({ timeout: 10000 })
   }
 
   async goToPreviousHole() {
-    const responsePromise = this.page.waitForResponse(
-      resp => resp.url().includes('/api/games') && resp.status() === 200,
-      { timeout: 15000 }
-    )
     await this.page.locator('a.button-primary', { hasText: 'Back' }).click()
-    await responsePromise
     await this.page.locator('select.select-field').first().waitFor({ timeout: 10000 })
   }
 
