@@ -12,12 +12,15 @@ export class HoleViewPage {
   }
 
   async goto(gameId: string, hole: number) {
+    const responsePromise = this.page.waitForResponse(
+      resp => resp.url().includes('/api/games') && resp.status() === 200,
+      { timeout: 15000 }
+    )
     await this.page.goto(`/games/${gameId}/${hole}`)
     await this.heading.waitFor()
-    // Wait for scores to load — the select will have a numeric value once data arrives
-    await this.page.locator('select.select-field').first().waitFor()
-    // Small wait for Vue reactivity to settle after async data load
-    await this.page.waitForTimeout(300)
+    await responsePromise
+    // Wait for scores to render after API response
+    await this.page.locator('select.select-field').first().waitFor({ timeout: 10000 })
   }
 
   private getPlayerRow(playerName: string) {
@@ -45,11 +48,23 @@ export class HoleViewPage {
   }
 
   async goToNextHole() {
+    const responsePromise = this.page.waitForResponse(
+      resp => resp.url().includes('/api/games') && resp.status() === 200,
+      { timeout: 15000 }
+    )
     await this.page.locator('a.button-primary', { hasText: 'Next' }).click()
+    await responsePromise
+    await this.page.locator('select.select-field').first().waitFor({ timeout: 10000 })
   }
 
   async goToPreviousHole() {
+    const responsePromise = this.page.waitForResponse(
+      resp => resp.url().includes('/api/games') && resp.status() === 200,
+      { timeout: 15000 }
+    )
     await this.page.locator('a.button-primary', { hasText: 'Back' }).click()
+    await responsePromise
+    await this.page.locator('select.select-field').first().waitFor({ timeout: 10000 })
   }
 
   async goToScorecard() {

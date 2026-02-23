@@ -129,6 +129,10 @@
     "Offline": "Du bist offline. Scores werden lokal gespeichert.",
     "BackOnline": "Wieder online. Scores werden synchronisiert."
   },
+  "Errors": {
+    "RequestFailed": "Anfrage fehlgeschlagen",
+    "NetworkError": "Netzwerkfehler. Bitte Verbindung prüfen."
+  },
   "PWA": {
     "UpdateAvailable": "Neue Version verfügbar.",
     "Reload": "Neu laden",

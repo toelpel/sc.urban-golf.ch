@@ -35,7 +35,7 @@ coverage/
 
 # Database dumps (keep only in init folder)
 db/db_dump_test/*.sql
-!db/init/dump.sql
+!db/init/schema.sql
 
 # OS files
 .DS_Store

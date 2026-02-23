@@ -1,18 +1,17 @@
 <template>
   <BackgroundImage />
-  <router-view :key="$route.fullPath" />
+  <router-view />
   <ToastContainer />
   <PWAUpdateDialog />
   <PWAInstallBanner />
 </template>
 
-<script setup>
-import BackgroundImage from './components/BackgroundImage.vue'
-import ToastContainer from './components/ToastContainer.vue'
-import PWAUpdateDialog from './components/PWAUpdateDialog.vue'
-import PWAInstallBanner from './components/PWAInstallBanner.vue'
-import { useNetworkStatus } from './composables/useNetworkStatus'
+<script setup lang="ts">
+import BackgroundImage from '@/components/ui/BackgroundImage.vue'
+import ToastContainer from '@/components/ui/ToastContainer.vue'
+import PWAUpdateDialog from '@/components/pwa/PWAUpdateDialog.vue'
+import PWAInstallBanner from '@/components/pwa/PWAInstallBanner.vue'
+import { useNetworkStatus } from '@/composables/useNetworkStatus'
 
-// Netzwerk-Status-Monitoring für die gesamte App-Lifetime initialisieren
 useNetworkStatus()
 </script>

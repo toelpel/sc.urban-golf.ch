@@ -1,11 +1,10 @@
 <template>
-    <div v-if="games.length === 0 && !loading && showNoGamesTimeout"
+    <div v-if="games.length === 0 && !isLoading && showNoGamesTimeout"
         class="text-center text-gray-500 dark:text-gray-400">
         {{ $t('Games.ListGames.NoGamesFound') }}
     </div>
 
-    <!-- Skeleton Loader separat -->
-    <ul v-if="games.length === 0 && loading" class="space-y-2">
+    <ul v-if="games.length === 0 && isLoading" class="space-y-2">
         <li v-for="n in props.perPage" :key="'skeleton-' + n"
             class="animate-pulse glass-card rounded-2xl px-4 py-3 isolate will-change-backdrop">
             <div class="flex justify-between items-center">
@@ -18,26 +17,22 @@
         </li>
     </ul>
 
-    <!-- Spiele-Liste -->
     <transition-group v-else name="game-list" tag="ul" class="space-y-2">
         <li v-for="game in games" :key="game.id"
             class="relative group glass-list glass-card--interactive rounded-2xl cursor-pointer"
             @click="navigateToGame(game.id)">
             <div class="card-inner">
-                <!-- Header -->
                 <div class="card-row relative flex items-center gap-3">
-                    <!-- Textbereich -->
                     <div class="flex-1 min-w-0 flex flex-col z-10">
                         <div class="list-title truncate" :title="game.name">
                             {{ game.name }}
                         </div>
                         <div class="list-meta truncate" :title="playerMap[game.id]?.join(', ')">
-                            {{ formatDate(game.created_at) }}
+                            {{ formatDateCH(game.created_at ?? '') }}
                             <span v-if="playerMap[game.id]"> – {{ getPlayerListShort(game.id) }}</span>
                         </div>
                     </div>
 
-                    <!-- Chevron immer volle Größe, nicht schrumpfen -->
                     <button @click.stop="toggleDetails(game.id)" class="chevron-btn z-10 shrink-0"
                         :aria-expanded="expandedGameId === game.id" :aria-controls="`game-details-${game.id}`"
                         :aria-label="expandedGameId === game.id ? 'Collapse' : 'Expand'" title="Details">
@@ -46,7 +41,6 @@
                     </button>
                 </div>
 
-                <!-- Body -->
                 <transition name="fade">
                     <div v-if="expandedGameId === game.id" :id="`game-details-${game.id}`"
                         class="card-body text-xs text-gray-700 dark:text-gray-300">
@@ -56,7 +50,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1">
                             <div v-for="player in gameMeta[game.id]?.players || []" :key="player.id" class="truncate"
                                 :title="player.name">
-                                {{ player.name }} – Ø {{ player.avg.toFixed(2) }} – Σ {{ player.total }}
+                                {{ player.name }} – Ø {{ player.avg?.toFixed(2) ?? '–' }} – Σ {{ player.total }}
                             </div>
                         </div>
                     </div>
@@ -64,46 +58,34 @@
             </div>
         </li>
     </transition-group>
-    <!-- Beobachtungspunkt für Infinite Scroll -->
     <div ref="target" class="h-8"></div>
 
-    <!-- Scroll To Top Button -->
-    <transition name="fade">
-        <button v-if="showScrollToTop" @click="scrollToTop"
-            class="fixed bottom-6 right-6 z-50 p-3 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white rounded-full shadow-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition">
-            <ArrowUpIcon class="h-5 w-5" />
-        </button>
-    </transition>
+    <ScrollToTopButton />
 </template>
 
-<script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue';
+<script setup lang="ts">
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import { useGamesSummaryData } from '@/composables/useGamesSummaryData';
+import { useGamesSummaryData } from '@/composables/useGamesSummaryData'
 import { useInfiniteLoader } from '@/composables/useInfiniteLoader'
-import { useScrollToTopButton } from '@/composables/useScrollToTopButton.js'
-import { useRouter } from 'vue-router';
-import { ArrowUpIcon } from '@heroicons/vue/24/outline'
+import { useRouter } from 'vue-router'
 import { ChevronRightIcon } from '@heroicons/vue/24/solid'
+import ScrollToTopButton from '@/components/ui/ScrollToTopButton.vue'
+import { formatDateCH } from '@/utils/format'
 
-const router = useRouter();
-function navigateToGame(id) {
-    router.push(`/games/${id}`);
+const router = useRouter()
+function navigateToGame(id: string) {
+    router.push(`/games/${id}`)
 }
 
-const props = defineProps({
-    searchTerm: String,
-    perPage: {
-        type: Number,
-        default: 10,
-    },
-});
+const props = defineProps<{
+    searchTerm?: string
+    perPage?: number
+}>()
 
-const expandedGameId = ref(null);
-const showNoGamesTimeout = ref(false);
-const target = ref(null)
-const loading = ref(false)
-const { showScrollToTop, scrollToTop } = useScrollToTopButton()
+const expandedGameId = ref<string | null>(null)
+const showNoGamesTimeout = ref(false)
+const target = ref<HTMLElement | null>(null)
 
 const {
     games,
@@ -112,68 +94,61 @@ const {
     loadGames,
     reset,
     hasMore
-} = useGamesSummaryData();
+} = useGamesSummaryData()
 
-const { loadMore } = useInfiniteLoader({
-    loadFn: ({ reset = false } = {}) => loadMoreGames({ resetFirst: reset }),
+const { loadMore, isLoading } = useInfiniteLoader({
+    loadFn: ({ reset: resetFirst = false } = {}) => loadMoreGames({ resetFirst }),
     target,
     hasMore,
-    isLoading: loading,
 })
 
 onMounted(() => {
-    loadMore({ reset: true })
-});
+    loadMore({ resetFirst: true })
+})
+
+let noGamesTimer: ReturnType<typeof setTimeout> | null = null
 
 onUnmounted(() => {
-    clearTimeout(noGamesTimer);
-    debouncedSearch.cancel?.();
-});
-
-let noGamesTimer = null;
+    if (noGamesTimer) clearTimeout(noGamesTimer)
+    // useDebounceFn cleans up automatically when component unmounts
+})
 
 const debouncedSearch = useDebounceFn(async () => {
-    showNoGamesTimeout.value = false;
-    await loadMoreGames({ resetFirst: true });
+    showNoGamesTimeout.value = false
+    await loadMoreGames({ resetFirst: true })
 
     noGamesTimer = setTimeout(() => {
-        showNoGamesTimeout.value = true;
-    }, 10000);
-}, 300);
+        showNoGamesTimeout.value = true
+    }, 10000)
+}, 300)
 
 watch(
     () => props.searchTerm,
     () => {
-        clearTimeout(noGamesTimer);
-        debouncedSearch();
+        if (noGamesTimer) clearTimeout(noGamesTimer)
+        debouncedSearch()
     },
     { immediate: false }
-);
+)
 
 async function loadMoreGames({ resetFirst = false } = {}) {
     if (resetFirst) {
-        reset();
+        reset()
     }
 
     await loadGames({
-        perPage: props.perPage,
+        perPage: props.perPage ?? 10,
         search: props.searchTerm || '',
-    });
+    })
 }
 
-const formatDate = (ts) =>
-    new Date(ts).toLocaleString('de-CH', {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-    });
-
-function getPlayerListShort(gameId) {
-    const list = (playerMap.value[gameId] || []).join(', ');
-    return list.length > 38 ? list.slice(0, 38) + '…' : list;
+function getPlayerListShort(gameId: string): string {
+    const list = (playerMap.value[gameId] || []).join(', ')
+    return list.length > 38 ? list.slice(0, 38) + '…' : list
 }
 
-function toggleDetails(id) {
-    expandedGameId.value = expandedGameId.value === id ? null : id;
+function toggleDetails(id: string) {
+    expandedGameId.value = expandedGameId.value === id ? null : id
 }
 </script>
 

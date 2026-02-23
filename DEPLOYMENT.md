@@ -32,8 +32,8 @@ This application uses a containerized architecture with:
 
 ### Database Initialization
 
-The database is automatically initialized with the dump file on first start:
-- Location: `backend/db/init/dump.sql`
+The database is automatically initialized with the schema file on first start:
+- Location: `backend/db/init/schema.sql`
 - The init script runs only when the database is empty
 
 ### Development Workflow
@@ -166,13 +166,13 @@ docker-compose up -d
 From a running container:
 ```bash
 docker exec urbangolf-postgres-dev pg_dump -U postgres -d urban_golf \
-  --no-owner --no-acl --clean --if-exists > backend/db/init/dump.sql
+  --no-owner --no-acl --clean --if-exists > backend/db/init/schema.sql
 ```
 
-### Restore from dump manually
+### Restore from schema manually
 
 ```bash
-docker exec -i urbangolf-postgres-dev psql -U postgres -d urban_golf < backend/db/init/dump.sql
+docker exec -i urbangolf-postgres-dev psql -U postgres -d urban_golf < backend/db/init/schema.sql
 ```
 
 ### Access database via CLI

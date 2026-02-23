@@ -1,9 +1,7 @@
 <template>
     <h1 class="maintitle">{{ $t('Games.ListGames.AllGames') }}</h1>
 
-    <!-- Search: Glass-Input mit Icon & Clear -->
     <div class="relative mb-4">
-        <!-- Icon -->
         <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2
            text-gray-500 dark:text-gray-400 z-10" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
@@ -13,12 +11,10 @@
             </svg>
         </span>
 
-        <!-- Glass Input -->
         <input type="search" v-model="searchTerm" :placeholder="` ${$t('Games.ListGames.SearchText')}`"
             class="input-field input-compact w-full pl-10 pr-10 relative z-0" inputmode="search" autocomplete="off"
             aria-label="Search games" />
 
-        <!-- Clear -->
         <button v-if="searchTerm" @click="searchTerm = ''" class="absolute right-2 top-1/2 -translate-y-1/2 p-1
            text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100
            transition z-10" aria-label="Clear search" type="button">✕</button>
@@ -30,29 +26,35 @@
         </template>
         <template #fallback>
             <div class="text-center text-gray-400 py-10">
-                ⏳ {{ $t('Games.ListGames.Loading') }}
+                {{ $t('Games.ListGames.Loading') }}
             </div>
         </template>
     </Suspense>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import GamesListCompactContent from './GamesListCompactContent.vue';
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
+import GamesListCompactContent from '@/components/games/GamesListCompactContent.vue'
 
-function calculatePerPage() {
-    const skeleton = document.querySelector('.game-preview-skeleton');
-    const itemHeight = skeleton?.offsetHeight || 70;
-    const availableHeight = window.innerHeight - 320;
-    return Math.max(5, Math.floor(availableHeight / itemHeight));
+function calculatePerPage(): number {
+    const skeleton = document.querySelector('.game-preview-skeleton')
+    const itemHeight = (skeleton as HTMLElement)?.offsetHeight || 70
+    const availableHeight = window.innerHeight - 320
+    return Math.max(5, Math.floor(availableHeight / itemHeight))
 }
 
-const searchTerm = ref('');
-const perPage = ref(calculatePerPage());
+const searchTerm = ref('')
+const perPage = ref(calculatePerPage())
+
+function handleResize() {
+    perPage.value = calculatePerPage()
+}
 
 onMounted(() => {
-    window.addEventListener('resize', () => {
-        perPage.value = calculatePerPage();
-    });
-});
+    window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+})
 </script>

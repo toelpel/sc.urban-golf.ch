@@ -21,6 +21,15 @@ import feedbackRoutes from './routes/feedback.js';
 // trustProxy: wichtig, wenn hinter einem Proxy (Render/Nginx/Heroku etc.)
 const fastify = Fastify({ logger: true, trustProxy: true });
 
+// Global error handler — log full error, return generic response
+fastify.setErrorHandler((error, request, reply) => {
+  request.log.error(error);
+  const statusCode = error.statusCode || 500;
+  reply.code(statusCode).send({
+    error: statusCode >= 500 ? 'Internal server error' : error.message,
+  });
+});
+
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
   : [];

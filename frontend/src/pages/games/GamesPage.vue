@@ -1,15 +1,14 @@
 <template>
-  <DefaultTemplate>
+  <DefaultLayout>
     <template v-if="!hasValidGameId">
       <GamesListCompact />
     </template>
     <template v-else>
       <GamesHoleView v-if="isHoleView" />
       <template v-else>
-        <!-- Scorecard Ansicht -->
         <div class="shrink-0 flex justify-between items-center">
           <h1 class="maintitle mb-4 truncate max-w-[70vw]" :title="gameName">
-            {{ shortGameName }}
+            {{ displayName }}
           </h1>
           <button @click="toggleView" class="flex items-center justify-center w-8 h-8 -mt-2 rounded-md bg-gray-200 text-sm text-gray-800 shadow hover:bg-gray-300
          dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 transition">
@@ -31,80 +30,71 @@
         </div>
       </template>
     </template>
-  </DefaultTemplate>
+  </DefaultLayout>
 </template>
 
-<script setup>
-import DefaultTemplate from '@/layouts/DefaultTemplate.vue';
-import GamesListCompact from '@/components/GamesListCompact.vue';
-import GamesDetailHorizontal from '@/components/GamesDetail_Horizontal.vue';
-import GamesDetailVertical from '@/components/GamesDetail_Vertical.vue';
-import GamesHoleView from '@/components/GamesHoleView.vue';
+<script setup lang="ts">
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
+import GamesListCompact from '@/components/games/GamesListCompact.vue'
+import GamesDetailHorizontal from '@/components/games/GamesDetailHorizontal.vue'
+import GamesDetailVertical from '@/components/games/GamesDetailVertical.vue'
+import GamesHoleView from '@/components/games/GamesHoleView.vue'
 
-import { ArrowPathIcon } from '@heroicons/vue/24/solid';
-import { computed, provide, watchEffect } from 'vue';
-import { useRoute } from 'vue-router';
+import { ArrowPathIcon } from '@heroicons/vue/24/solid'
+import { computed, provide, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
 
-import { useGamesDetailData } from '@/composables/useGamesDetailData';
-import { useSortedPlayers } from '@/composables/useSortedPlayers';
-import { useViewMode } from '@/composables/useViewMode';
+import { useGamesDetailData } from '@/composables/useGamesDetailData'
+import { useSortedPlayers } from '@/composables/useSortedPlayers'
+import { useViewMode } from '@/composables/useViewMode'
+import { gamesDetailKey } from '@/types'
+import { shortGameName } from '@/utils/format'
 
-// Route & Validierung
-const route = useRoute();
-const gameId = computed(() => route.params.gameId);
+const route = useRoute()
+const gameId = computed(() => route.params.gameId as string)
 const hasValidGameId = computed(() =>
   typeof gameId.value === 'string' && /^[a-zA-Z0-9_-]{10,30}$/.test(gameId.value)
-);
-const isHoleView = computed(() => 'holeId' in route.params);
+)
+const isHoleView = computed(() => 'holeId' in route.params)
 
-// Daten laden
 const {
   players,
   scores,
   holes,
   gameName,
   load: loadGamesDetailData
-} = useGamesDetailData(gameId);
+} = useGamesDetailData(gameId)
 
-// Daten für Child-Komponenten (z.B. GamesHoleView) bereitstellen
-provide('gamesDetailData', { players, scores, holes, gameName, load: loadGamesDetailData });
+provide(gamesDetailKey, { players, scores, holes, gameName, load: loadGamesDetailData })
 
-// Shorten gamename
-const shortGameName = computed(() => {
-  return gameName.value.length > 24
-    ? gameName.value.slice(0, 21) + '…'
-    : gameName.value;
-});
+const displayName = computed(() => shortGameName(gameName.value))
 
-// Sortierlogik
 const {
   sortColumn,
   sortDirection,
   sortedPlayers,
   totalScore,
   averageScore
-} = useSortedPlayers(players, scores);
+} = useSortedPlayers(players, scores)
 
-// Ansicht wechseln
 const {
   viewMode,
   toggleView,
   loadPreference: loadViewPreference
-} = useViewMode(players, holes);
+} = useViewMode(players, holes)
 
-function sortBy(column) {
+function sortBy(column: 'name' | 'total' | 'average') {
   if (sortColumn.value === column) {
-    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
   } else {
-    sortColumn.value = column;
-    sortDirection.value = 'asc';
+    sortColumn.value = column
+    sortDirection.value = 'asc'
   }
 }
 
-// Trigger: Daten laden bei gültiger gameId
 watchEffect(async () => {
-  if (!hasValidGameId.value) return;
-  await loadGamesDetailData();
-  loadViewPreference();
-});
+  if (!hasValidGameId.value) return
+  await loadGamesDetailData()
+  loadViewPreference()
+})
 </script>

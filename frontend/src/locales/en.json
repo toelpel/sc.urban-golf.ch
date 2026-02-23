@@ -130,6 +130,10 @@
     "Offline": "You're offline. Scores will be saved locally.",
     "BackOnline": "Back online. Syncing scores..."
   },
+  "Errors": {
+    "RequestFailed": "Request failed",
+    "NetworkError": "Network error. Please check your connection."
+  },
   "PWA": {
     "UpdateAvailable": "New version available.",
     "Reload": "Reload",

@@ -9,7 +9,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "migrate": "node-pg-migrate --migration-file-language sql -m db/migrations",
+    "migrate:up": "node-pg-migrate up --migration-file-language sql -m db/migrations",
+    "migrate:down": "node-pg-migrate down --migration-file-language sql -m db/migrations",
+    "migrate:create": "node-pg-migrate create --migration-file-language sql -m db/migrations"
   },
   "dependencies": {
     "@fastify/compress": "^8.3.1",
@@ -18,6 +22,7 @@
     "@fastify/rate-limit": "^10.3.0",
     "dotenv": "^17.0.0",
     "fastify": "^5.7.3",
+    "node-pg-migrate": "^8.0.4",
     "nodemailer": "^8.0.0",
     "pg": "^8.16.0"
   },

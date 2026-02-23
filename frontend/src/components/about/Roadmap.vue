@@ -13,7 +13,7 @@
 
             <div>
                 <div v-for="feature in displayedFeatures" :key="feature.key"
-                    v-intersect="(isVisible) => (visibleByKey[feature.key] = isVisible)"
+                    :ref="(el) => observeElement(el as HTMLElement | null, feature.key)"
                     class="mb-8 relative pl-10 appear-container"
                     :class="visibleByKey[feature.key] ? 'appear-visible' : 'appear-hidden'">
                     <div class="absolute left-[-15px] top-2 w-8 h-8 rounded-full border-2 flex items-center justify-center text-base font-bold"
@@ -55,19 +55,13 @@
     </div>
 
     <!-- Scroll to Top Button -->
-    <transition name="fade">
-        <button v-if="showScrollToTop" @click="scrollToTop"
-            class="fixed bottom-6 right-6 z-50 p-3 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white rounded-full shadow-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition">
-            <ArrowUpIcon class="h-5 w-5" />
-        </button>
-    </transition>
+    <ScrollToTopButton />
 </template>
 
-<script setup>
-import { ref, reactive, computed, onMounted, nextTick } from 'vue'
-import { useScrollToTopButton } from '@/composables/useScrollToTopButton'
+<script setup lang="ts">
+import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick, type Component } from 'vue'
+import ScrollToTopButton from '@/components/ui/ScrollToTopButton.vue'
 import {
-    ArrowUpIcon,
     BeakerIcon,
     BookOpenIcon,
     RocketLaunchIcon,
@@ -82,12 +76,14 @@ import {
     MapIcon
 } from '@heroicons/vue/24/solid'
 
-/**
- * Hinweis:
- * - visible: false blendet ein Feature aus.
- * - Wenn visible nicht gesetzt ist, wird es als true behandelt.
- */
-const features = [
+interface Feature {
+    key: string
+    icon: Component
+    done: boolean
+    visible: boolean
+}
+
+const features: Feature[] = [
     { key: 'TestProd', icon: BeakerIcon, done: true, visible: true },
     { key: 'Documentation', icon: BookOpenIcon, done: true, visible: true },
     { key: 'InitialRelease', icon: RocketLaunchIcon, done: true, visible: true },
@@ -106,20 +102,40 @@ const features = [
 const displayedFeatures = computed(() => features.filter(f => f.visible !== false))
 
 // State key-basiert, damit Indizes egal sind
-const expandedByKey = reactive({})
-const visibleByKey = reactive({})
+const expandedByKey = reactive<Record<string, boolean>>({})
+const visibleByKey = reactive<Record<string, boolean>>({})
 
 for (const f of features) {
     expandedByKey[f.key] = false
     visibleByKey[f.key] = false
 }
 
-function toggleExpanded(key) {
+function toggleExpanded(key: string) {
     expandedByKey[key] = !expandedByKey[key]
 }
 
 const animateLine = ref(false)
-const { showScrollToTop, scrollToTop } = useScrollToTopButton()
+
+// IntersectionObserver replaces the legacy v-intersect directive
+const observer = new IntersectionObserver(
+    (entries) => {
+        for (const entry of entries) {
+            const key = (entry.target as HTMLElement).dataset.featureKey
+            if (key) visibleByKey[key] = entry.isIntersecting
+        }
+    },
+    { threshold: 0.1 }
+)
+
+const observedElements = new Set<HTMLElement>()
+
+function observeElement(el: HTMLElement | null, key: string) {
+    if (el) {
+        el.dataset.featureKey = key
+        observer.observe(el)
+        observedElements.add(el)
+    }
+}
 
 onMounted(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -127,22 +143,9 @@ onMounted(() => {
         animateLine.value = true
     })
 })
-</script>
 
-<script>
-export default {
-    directives: {
-        intersect: {
-            mounted(el, binding) {
-                const observer = new IntersectionObserver(
-                    ([entry]) => {
-                        binding.value(entry.isIntersecting)
-                    },
-                    { threshold: 0.1 }
-                )
-                observer.observe(el)
-            }
-        }
-    }
-}
+onBeforeUnmount(() => {
+    observer.disconnect()
+    observedElements.clear()
+})
 </script>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isValidId, validateScore, validatePlayer, validateGame, validateFeedback } from '../validate.js'
+import { isValidId, isValidEmail, validateScore, validatePlayer, validateGame, validateFeedback } from '../validate.js'
 
 describe('isValidId', () => {
   it('accepts valid nanoid', () => {
@@ -18,6 +18,34 @@ describe('isValidId', () => {
   it('rejects non-string', () => {
     expect(isValidId(12345)).toBe(false)
     expect(isValidId(null)).toBe(false)
+  })
+})
+
+describe('isValidEmail', () => {
+  it('accepts valid emails', () => {
+    expect(isValidEmail('user@example.com')).toBe(true)
+    expect(isValidEmail('name+tag@domain.co')).toBe(true)
+    expect(isValidEmail('a@b.ch')).toBe(true)
+  })
+  it('rejects missing @', () => {
+    expect(isValidEmail('userexample.com')).toBe(false)
+  })
+  it('rejects missing domain', () => {
+    expect(isValidEmail('user@')).toBe(false)
+  })
+  it('rejects missing TLD', () => {
+    expect(isValidEmail('user@domain')).toBe(false)
+  })
+  it('rejects spaces', () => {
+    expect(isValidEmail('user @example.com')).toBe(false)
+    expect(isValidEmail('user@ example.com')).toBe(false)
+  })
+  it('rejects email > 100 chars', () => {
+    expect(isValidEmail('a'.repeat(90) + '@example.com')).toBe(false)
+  })
+  it('rejects non-string', () => {
+    expect(isValidEmail(123)).toBe(false)
+    expect(isValidEmail(null)).toBe(false)
   })
 })
 
@@ -96,6 +124,24 @@ describe('validateGame', () => {
 describe('validateFeedback', () => {
   it('returns null for valid feedback', () => {
     expect(validateFeedback({ rating: 5, message: 'Great!' })).toBeNull()
+  })
+  it('returns null with valid optional email', () => {
+    expect(validateFeedback({ rating: 4, message: 'Nice', email: 'user@example.com' })).toBeNull()
+  })
+  it('ignores empty email string', () => {
+    expect(validateFeedback({ rating: 4, message: 'Nice', email: '' })).toBeNull()
+  })
+  it('ignores null/undefined email', () => {
+    expect(validateFeedback({ rating: 4, message: 'Nice', email: null })).toBeNull()
+    expect(validateFeedback({ rating: 4, message: 'Nice', email: undefined })).toBeNull()
+  })
+  it('rejects invalid email format', () => {
+    const errors = validateFeedback({ rating: 3, message: 'ok', email: 'not-an-email' })
+    expect(errors).toContain('Invalid email format')
+  })
+  it('rejects email without TLD', () => {
+    const errors = validateFeedback({ rating: 3, message: 'ok', email: 'user@domain' })
+    expect(errors).toContain('Invalid email format')
   })
   it('rejects rating < 1', () => {
     const errors = validateFeedback({ rating: 0, message: 'ok' })

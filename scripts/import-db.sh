@@ -11,8 +11,8 @@ if ! docker ps | grep -q urbangolf-postgres-dev; then
 fi
 
 # Import dump
-echo "📥 Loading dump.sql into database..."
-docker exec -i urbangolf-postgres-dev psql -U postgres -d urban_golf < backend/db/init/dump.sql
+echo "📥 Loading schema.sql into database..."
+docker exec -i urbangolf-postgres-dev psql -U postgres -d urban_golf < backend/db/init/schema.sql
 
 echo "✅ Database import complete!"
 echo "   You can verify with: docker exec -it urbangolf-postgres-dev psql -U postgres -d urban_golf -c '\dt'"

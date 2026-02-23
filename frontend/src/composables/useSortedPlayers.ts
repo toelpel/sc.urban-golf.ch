@@ -36,8 +36,8 @@ export function useSortedPlayers(players: Ref<Player[]>, scores: Ref<ScoreMap>) 
         aVal = totalScore(a.id)
         bVal = totalScore(b.id)
       } else {
-        aVal = averageScore(a.id)
-        bVal = averageScore(b.id)
+        aVal = parseFloat(averageScore(a.id)) || 0
+        bVal = parseFloat(averageScore(b.id)) || 0
       }
 
       if (aVal < bVal) return sortDirection.value === 'asc' ? -1 : 1
