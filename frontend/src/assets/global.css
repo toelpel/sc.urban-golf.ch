@@ -3,6 +3,7 @@
 @import "tailwindcss";
 @config "../../tailwind.config.js";
 @plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   html,
