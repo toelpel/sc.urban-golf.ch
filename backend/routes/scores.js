@@ -2,7 +2,14 @@ import { getClient } from '../db/pg.js';
 import { validateScore, isValidId } from '../utils/validate.js';
 
 export default async function (fastify, _opts) {
-  fastify.get('/', async (req, reply) => {
+  fastify.get('/', {
+    config: {
+      rateLimit: {
+        max: 120,
+        timeWindow: '1 minute',
+      },
+    },
+  }, async (req, reply) => {
     const gameId = req.query.game_id;
     if (!gameId || !isValidId(gameId)) {
       return reply.code(400).send({ error: 'Missing or invalid game_id query parameter' });
@@ -23,7 +30,14 @@ export default async function (fastify, _opts) {
     }
   });
 
-  fastify.post('/', async (req, reply) => {
+  fastify.post('/', {
+    config: {
+      rateLimit: {
+        max: 60,
+        timeWindow: '1 minute',
+      },
+    },
+  }, async (req, reply) => {
     const validationErrors = validateScore(req.body || {});
     if (validationErrors) {
       return reply.code(400).send({ error: 'Validation failed', details: validationErrors });

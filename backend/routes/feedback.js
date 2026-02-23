@@ -13,7 +13,14 @@ const transporter = nodemailer.createTransport({
 });
 
 export default async function (fastify, _opts) {
-  fastify.post('/', async (request, reply) => {
+  fastify.post('/', {
+    config: {
+      rateLimit: {
+        max: 10,
+        timeWindow: '1 minute',
+      },
+    },
+  }, async (request, reply) => {
     // Validate BEFORE destructuring
     const validationErrors = validateFeedback(request.body || {});
     if (validationErrors) {

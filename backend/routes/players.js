@@ -3,7 +3,14 @@ import { validatePlayer } from '../utils/validate.js';
 
 export default async function (fastify, _opts) {
   // Spieler erstellen oder aktualisieren (POST + UPSERT)
-  fastify.post('/', async (req, reply) => {
+  fastify.post('/', {
+    config: {
+      rateLimit: {
+        max: 30,
+        timeWindow: '1 minute',
+      },
+    },
+  }, async (req, reply) => {
     const validationErrors = validatePlayer(req.body || {});
     if (validationErrors) {
       return reply.code(400).send({ error: 'Validation failed', details: validationErrors });
