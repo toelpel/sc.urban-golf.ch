@@ -19,8 +19,8 @@ export class HoleViewPage {
     await this.page.goto(`/games/${gameId}/${hole}`)
     await this.heading.waitFor()
     await responsePromise
-    // Wait for scores to render after API response
-    await this.page.locator('select.select-field').first().waitFor({ timeout: 10000 })
+    // Wait for scores to render after API response (attached, not visible — on mobile the select may be below the fold)
+    await this.page.locator('select.select-field').first().waitFor({ state: 'attached', timeout: 10000 })
   }
 
   private getPlayerRow(playerName: string) {
@@ -49,12 +49,12 @@ export class HoleViewPage {
 
   async goToNextHole() {
     await this.page.locator('a.button-primary', { hasText: 'Next' }).click()
-    await this.page.locator('select.select-field').first().waitFor({ timeout: 10000 })
+    await this.page.locator('select.select-field').first().waitFor({ state: 'attached', timeout: 10000 })
   }
 
   async goToPreviousHole() {
     await this.page.locator('a.button-primary', { hasText: 'Back' }).click()
-    await this.page.locator('select.select-field').first().waitFor({ timeout: 10000 })
+    await this.page.locator('select.select-field').first().waitFor({ state: 'attached', timeout: 10000 })
   }
 
   async goToScorecard() {
