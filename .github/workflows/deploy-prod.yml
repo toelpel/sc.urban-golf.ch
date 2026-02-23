@@ -1,12 +1,6 @@
-name: Build and Push Docker Images
+name: Deploy (Manual)
 
 on:
-  # Trigger after CI workflow completes successfully
-  workflow_run:
-    workflows: ["CI"]
-    types: [completed]
-    branches: [main]
-  # Allow manual trigger
   workflow_dispatch:
 
 env:
@@ -15,8 +9,6 @@ env:
 
 jobs:
   build-backend:
-    # Only run if CI passed (or manual trigger)
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,8 +49,6 @@ jobs:
           cache-to: type=gha,mode=max
 
   build-frontend:
-    # Only run if CI passed (or manual trigger)
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
