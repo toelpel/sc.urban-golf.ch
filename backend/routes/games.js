@@ -3,7 +3,14 @@ import { validateGame, isValidId } from '../utils/validate.js';
 
 export default async function (fastify, _opts) {
   // Spiel erstellen oder aktualisieren
-  fastify.post('/', async (req, reply) => {
+  fastify.post('/', {
+    config: {
+      rateLimit: {
+        max: 30,
+        timeWindow: '1 minute',
+      },
+    },
+  }, async (req, reply) => {
     const validationErrors = validateGame(req.body || {});
     if (validationErrors) {
       return reply.code(400).send({ error: 'Validation failed', details: validationErrors });
