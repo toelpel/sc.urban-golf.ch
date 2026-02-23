@@ -1,0 +1,94 @@
+import { createApp, watch } from 'vue'
+import { createPinia } from 'pinia'
+import App from './App.vue'
+import router from './router'
+import './assets/global.css'
+import axios from 'axios'
+import { createI18n } from 'vue-i18n'
+import { registerSW } from 'virtual:pwa-register'
+import { usePWAUpdate } from './composables/usePWAUpdate'
+import { useToast } from './composables/useToast'
+
+import de from './locales/de.json'
+import en from './locales/en.json'
+import fr from './locales/fr.json'
+import nl from './locales/nl.json'
+
+// Axios configuration
+axios.defaults.baseURL = import.meta.env.VITE_API_BASEURL
+axios.defaults.headers.common['Content-Type'] = 'application/json'
+
+// Detect locale: saved preference > browser language > fallback 'en'
+function detectLocale(): string {
+  const saved = localStorage.getItem('language')
+  if (saved && ['de', 'en', 'fr', 'nl'].includes(saved)) return saved
+
+  const lang = navigator.language
+  if (lang.startsWith('de')) return 'de'
+  if (lang.startsWith('fr')) return 'fr'
+  if (lang.startsWith('nl')) return 'nl'
+  return 'en'
+}
+
+const i18n = createI18n({
+  legacy: false,
+  locale: detectLocale(),
+  fallbackLocale: 'en',
+  messages: { de, en, fr, nl },
+})
+
+// Helper to get i18n translations in interceptor
+const t = (key: string) => (i18n.global as unknown as { t: (k: string) => string }).t(key)
+
+// Axios Response Interceptor: Retry + global error handling
+axios.interceptors.response.use(
+  response => response,
+  async (error) => {
+    const config = error.config
+    if (!config) return Promise.reject(error)
+
+    // 4xx: no retry, show toast (except 401)
+    if (error.response?.status >= 400 && error.response?.status < 500) {
+      if (error.response.status !== 401) {
+        const { error: showError } = useToast()
+        showError(`${t('Errors.RequestFailed')} (${error.response.status})`)
+      }
+      return Promise.reject(error)
+    }
+
+    // Network error / 5xx: up to 2 retries with exponential backoff
+    config._retryCount = (config._retryCount || 0) + 1
+    if (config._retryCount > 2) {
+      const { error: showError } = useToast()
+      showError(t('Errors.NetworkError'))
+      return Promise.reject(error)
+    }
+    await new Promise(r => setTimeout(r, 500 * Math.pow(2, config._retryCount)))
+    return axios(config)
+  }
+)
+
+createApp(App)
+  .use(router)
+  .use(i18n)
+  .use(createPinia())
+  .mount('#app')
+
+// Sync i18n locale to HTML lang attribute
+watch(
+  () => i18n.global.locale.value,
+  (lang) => document.documentElement.setAttribute('lang', lang),
+  { immediate: true }
+)
+
+// PWA Service Worker registration
+const { onNeedRefresh } = usePWAUpdate()
+
+const updateSW = registerSW({
+  onNeedRefresh() {
+    onNeedRefresh(updateSW)
+  },
+  onOfflineReady() {
+    // App is ready for offline use
+  },
+})

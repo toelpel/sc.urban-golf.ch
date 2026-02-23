@@ -18,8 +18,24 @@ function getPool() {
     }
 
     pool = new Pool(poolConfig);
+
+    // Log idle client errors instead of crashing the process
+    pool.on('error', (err) => {
+      console.error('Unexpected error on idle database client', err);
+    });
   }
   return pool;
+}
+
+// Graceful shutdown
+for (const signal of ['SIGTERM', 'SIGINT']) {
+  process.on(signal, async () => {
+    console.log(`Received ${signal}, closing database pool...`);
+    if (pool) {
+      await pool.end();
+    }
+    process.exit(0);
+  });
 }
 
 // Funktion zum Abrufen eines DB-Clients

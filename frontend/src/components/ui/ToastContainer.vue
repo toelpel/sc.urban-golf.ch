@@ -16,13 +16,14 @@
   </Teleport>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useToast } from '@/composables/useToast'
+import type { Toast } from '@/composables/useToast'
 
 const { toasts, dismiss } = useToast()
 
-function toastClass(type) {
-  const map = {
+function toastClass(type: Toast['type']) {
+  const map: Record<string, string> = {
     success: 'bg-green-600/90 text-white',
     error: 'bg-red-600/90 text-white',
     warning: 'bg-yellow-500/90 text-gray-900',

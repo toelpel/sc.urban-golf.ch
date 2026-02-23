@@ -11,6 +11,9 @@ export default async function (fastify, _opts) {
 
     const { id, name, players } = req.body;
 
+    // Filter valid player IDs
+    const validPlayers = players.filter(pid => isValidId(pid));
+
     const client = await getClient();
 
     try {
@@ -24,13 +27,19 @@ export default async function (fastify, _opts) {
         [id, name]
       );
 
-      for (const playerId of players) {
-        if (!isValidId(playerId)) continue;
+      // Batch INSERT for players (single query instead of loop)
+      if (validPlayers.length > 0) {
+        const values = [];
+        const placeholders = validPlayers.map((pid, i) => {
+          values.push(id, pid);
+          return `($${i * 2 + 1}, $${i * 2 + 2})`;
+        });
+
         await client.query(
           `INSERT INTO game_players (game_id, player_id)
-           VALUES ($1, $2)
+           VALUES ${placeholders.join(', ')}
            ON CONFLICT DO NOTHING`,
-          [id, playerId]
+          values
         );
       }
 
@@ -39,7 +48,7 @@ export default async function (fastify, _opts) {
     } catch (err) {
       await client.query('ROLLBACK');
       fastify.log.error({ id, players, error: err.message }, 'Failed to upsert game with players');
-      reply.code(500).send({ error: 'Database error', details: err.message });
+      reply.code(500).send({ error: 'Database error' });
     } finally {
       client.release();
     }
@@ -101,7 +110,7 @@ export default async function (fastify, _opts) {
       });
     } catch (err) {
       fastify.log.error(err);
-      reply.code(500).send({ error: 'Database error', details: err.message });
+      reply.code(500).send({ error: 'Database error' });
     } finally {
       client.release();
     }
@@ -142,7 +151,7 @@ export default async function (fastify, _opts) {
     }
   });
 
-  // Zusammenfassung
+  // Zusammenfassung with total count for pagination
   fastify.get('/summary', async (req, reply) => {
     const client = await getClient();
     const page = Math.max(1, parseInt(req.query.page) || 1);
@@ -152,17 +161,21 @@ export default async function (fastify, _opts) {
     const values = search ? [`%${search}%`, perPage, offset] : [perPage, offset];
 
     try {
+      const searchFilter = search ? `
+        WHERE g.name ILIKE $1
+          OR EXISTS (
+            SELECT 1 FROM game_players gp
+            JOIN players p ON gp.player_id = p.id
+            WHERE gp.game_id = g.id AND p.name ILIKE $1
+          )` : '';
+
+      const countValues = search ? [`%${search}%`] : [];
+
       const gamesQuery = `
         WITH filtered_games AS (
           SELECT g.*
           FROM games g
-          ${search ? `
-            WHERE g.name ILIKE $1
-              OR EXISTS (
-                SELECT 1 FROM game_players gp
-                JOIN players p ON gp.player_id = p.id
-                WHERE gp.game_id = g.id AND p.name ILIKE $1
-              )` : ''}
+          ${searchFilter}
           ORDER BY g.created_at DESC
           LIMIT $${search ? 2 : 1} OFFSET $${search ? 3 : 2}
         ),
@@ -201,11 +214,20 @@ export default async function (fastify, _opts) {
         FROM filtered_games g
       `;
 
-      const { rows } = await client.query(gamesQuery, values);
-      reply.send({ games: rows });
+      const countQuery = `SELECT COUNT(*) FROM games g ${searchFilter}`;
+
+      const [{ rows }, countResult] = await Promise.all([
+        client.query(gamesQuery, values),
+        client.query(countQuery, countValues)
+      ]);
+
+      reply.send({
+        games: rows,
+        total: parseInt(countResult.rows[0].count)
+      });
     } catch (err) {
       fastify.log.error(err);
-      reply.code(500).send({ error: 'Database error', details: err.message });
+      reply.code(500).send({ error: 'Database error' });
     } finally {
       client.release();
     }

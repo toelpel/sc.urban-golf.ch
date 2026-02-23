@@ -32,7 +32,7 @@ CREATE TABLE public.feedback (
     message text NOT NULL,
     name character varying(100),
     email character varying(100),
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamptz DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT feedback_rating_check CHECK (((rating >= 1) AND (rating <= 5)))
 );
 
@@ -81,22 +81,8 @@ ALTER SEQUENCE public.game_players_id_seq OWNED BY public.game_players.id;
 CREATE TABLE public.games (
     id text NOT NULL,
     name text NOT NULL,
-    created_at timestamp without time zone DEFAULT now()
+    created_at timestamptz DEFAULT now()
 );
-
---
--- Name: games_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.games_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE public.games_id_seq OWNED BY public.games.id;
 
 --
 -- Name: players; Type: TABLE; Schema: public; Owner: -
@@ -108,29 +94,17 @@ CREATE TABLE public.players (
 );
 
 --
--- Name: players_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.players_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE public.players_id_seq OWNED BY public.players.id;
-
---
 -- Name: scores; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.scores (
-    game_id text,
-    player_id text,
+    game_id text NOT NULL,
+    player_id text NOT NULL,
     hole integer NOT NULL,
     strokes integer NOT NULL,
-    id bigint NOT NULL
+    id bigint NOT NULL,
+    CONSTRAINT chk_hole CHECK ((hole >= 1 AND hole <= 18)),
+    CONSTRAINT chk_strokes CHECK ((strokes >= -3 AND strokes <= 20))
 );
 
 --
@@ -157,18 +131,6 @@ ALTER TABLE ONLY public.feedback ALTER COLUMN id SET DEFAULT nextval('public.fee
 --
 
 ALTER TABLE ONLY public.game_players ALTER COLUMN id SET DEFAULT nextval('public.game_players_id_seq'::regclass);
-
---
--- Name: games id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.games ALTER COLUMN id SET DEFAULT nextval('public.games_id_seq'::regclass);
-
---
--- Name: players id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.players ALTER COLUMN id SET DEFAULT nextval('public.players_id_seq'::regclass);
 
 --
 -- Name: scores id; Type: DEFAULT; Schema: public; Owner: -
@@ -236,6 +198,12 @@ CREATE INDEX idx_games_name ON public.games USING btree (name);
 --
 
 CREATE INDEX idx_players_name ON public.players USING btree (name);
+
+--
+-- Name: idx_scores_game_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_scores_game_id ON public.scores USING btree (game_id);
 
 --
 -- Name: gin_games_name_trgm; Type: INDEX; Schema: public; Owner: -

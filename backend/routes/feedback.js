@@ -14,12 +14,13 @@ const transporter = nodemailer.createTransport({
 
 export default async function (fastify, _opts) {
   fastify.post('/', async (request, reply) => {
-    const { rating, message, name, email } = request.body;
-
+    // Validate BEFORE destructuring
     const validationErrors = validateFeedback(request.body || {});
     if (validationErrors) {
       return reply.code(400).send({ error: 'Validation failed', details: validationErrors });
     }
+
+    const { rating, message, name, email } = request.body;
 
     const client = await getClient();
 
@@ -32,7 +33,7 @@ export default async function (fastify, _opts) {
       );
     } catch (err) {
       request.log.error(err);
-      return reply.code(500).send({ error: 'Fehler beim Speichern' });
+      return reply.code(500).send({ error: 'Failed to save feedback' });
     } finally {
       client.release();
     }

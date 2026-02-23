@@ -70,7 +70,7 @@ jobs:
           PGUSER: postgres
           PGPASSWORD: postgres
           PGDATABASE: urban_golf
-        run: psql -f backend/db/init/dump.sql
+        run: psql -f backend/db/init/schema.sql
 
       - name: Start backend
         env:

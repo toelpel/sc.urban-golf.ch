@@ -1,7 +1,5 @@
 <template>
-    <!-- Horizontaler Scroll-Container (nur dieser scrollt) -->
     <div class="relative w-full overflow-x-auto">
-        <!-- Optischer Wrapper, scrollt NICHT -->
         <div class="glass-card p-0 inline-block min-w-full">
             <table class="scorecard-table min-w-[42rem] w-full border-collapse">
                 <thead class="backdrop-blur-md bg-white/40 dark:bg-gray-900/40">
@@ -56,33 +54,28 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
+import type { Player } from '@/services/api'
+import type { ScoreMap } from '@/types'
 
-defineEmits(['sort'])
+defineEmits<{
+  sort: [column: 'name' | 'total' | 'average']
+}>()
 
-const {
-    holes,
-    scores,
-    gameId,
-    sortColumn,
-    sortDirection,
-    sortedPlayers,
-    averageScore,
-    totalScore
-} = defineProps({
-    players: Array,
-    holes: Array,
-    scores: Object,
-    gameId: [String, Number],
-    sortColumn: String,
-    sortDirection: String,
-    sortedPlayers: Array,
-    averageScore: Function,
-    totalScore: Function
-})
+const props = defineProps<{
+    players: Player[]
+    holes: number[]
+    scores: ScoreMap
+    gameId: string
+    sortColumn: string
+    sortDirection: string
+    sortedPlayers: Player[]
+    averageScore: (playerId: string) => string
+    totalScore: (playerId: string) => number
+}>()
 
 const sortDirectionSymbol = computed(() =>
-    sortDirection === 'asc' ? '↑' : '↓'
+    props.sortDirection === 'asc' ? '↑' : '↓'
 )
 </script>

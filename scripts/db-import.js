@@ -12,7 +12,7 @@ const rootDir = join(__dirname, '..');
 const CONTAINER_NAME = 'urbangolf-postgres-dev';
 const DB_USER = 'postgres';
 const DB_NAME = 'urban_golf';
-const DUMP_FILE = join(rootDir, 'backend', 'db', 'init', 'dump.sql');
+const DUMP_FILE = join(rootDir, 'backend', 'db', 'init', 'schema.sql');
 
 console.log('🔄 Importing database dump...\n');
 

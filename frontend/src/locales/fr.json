@@ -129,6 +129,10 @@
     "Offline": "Tu es hors ligne. Les scores seront sauvegardés localement.",
     "BackOnline": "De retour en ligne. Synchronisation des scores..."
   },
+  "Errors": {
+    "RequestFailed": "Requête échouée",
+    "NetworkError": "Erreur réseau. Veuillez vérifier votre connexion."
+  },
   "PWA": {
     "UpdateAvailable": "Nouvelle version disponible.",
     "Reload": "Recharger",

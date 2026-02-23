@@ -1,7 +1,12 @@
 const ID_PATTERN = /^[a-zA-Z0-9_-]{10,30}$/
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export function isValidId(id) {
   return typeof id === 'string' && ID_PATTERN.test(id)
+}
+
+export function isValidEmail(email) {
+  return typeof email === 'string' && email.length <= 100 && EMAIL_PATTERN.test(email)
 }
 
 export function validateScore({ game_id, player_id, hole, strokes } = {}) {
@@ -53,7 +58,7 @@ export function validateGame({ id, name, players } = {}) {
   return errors.length ? errors : null
 }
 
-export function validateFeedback({ rating, message, name, email: _email } = {}) {
+export function validateFeedback({ rating, message, name, email } = {}) {
   const errors = []
 
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
@@ -68,6 +73,12 @@ export function validateFeedback({ rating, message, name, email: _email } = {}) 
 
   if (name !== undefined && name !== null && typeof name === 'string' && name.length > 100) {
     errors.push('Name must be at most 100 characters')
+  }
+
+  if (email !== undefined && email !== null && email !== '') {
+    if (!isValidEmail(email)) {
+      errors.push('Invalid email format')
+    }
   }
 
   return errors.length ? errors : null

@@ -6,7 +6,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import VueMarkdown from 'vue3-markdown-it'
 

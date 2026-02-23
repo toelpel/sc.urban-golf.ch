@@ -10,7 +10,7 @@ echo.
 set CONTAINER_NAME=urbangolf-postgres-dev
 set DB_USER=postgres
 set DB_NAME=urban_golf
-set DUMP_FILE=backend\db\init\dump.sql
+set DUMP_FILE=backend\db\init\schema.sql
 
 REM Check if dump file exists
 if not exist "%DUMP_FILE%" (

@@ -129,6 +129,10 @@
     "Offline": "Je bent offline. Scores worden lokaal opgeslagen.",
     "BackOnline": "Weer online. Scores worden gesynchroniseerd..."
   },
+  "Errors": {
+    "RequestFailed": "Verzoek mislukt",
+    "NetworkError": "Netwerkfout. Controleer je verbinding."
+  },
   "PWA": {
     "UpdateAvailable": "Nieuwe versie beschikbaar.",
     "Reload": "Herladen",

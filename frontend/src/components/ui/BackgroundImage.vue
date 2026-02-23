@@ -5,6 +5,6 @@
   ></div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import background from '@/assets/bg.webp'
 </script>

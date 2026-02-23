@@ -1,5 +1,5 @@
 <template>
-  <DefaultTemplate>
+  <DefaultLayout>
     <h1 class="maintitle">
       {{ isEditing ? $t('Games.NewGame.TitleEdit') : $t('Games.NewGame.TitleNew') }}
     </h1>
@@ -21,11 +21,11 @@
         {{ isEditing ? $t('Games.NewGame.SaveChanges') : $t('Games.NewGame.StartGame') }}
       </button>
     </div>
-  </DefaultTemplate>
+  </DefaultLayout>
 </template>
 
-<script setup>
-import DefaultTemplate from '@/layouts/DefaultTemplate.vue'
+<script setup lang="ts">
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import { ref, computed, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { nanoid } from 'nanoid'
@@ -35,19 +35,24 @@ import { fetchGame, fetchGamePlayers, createOrUpdatePlayers, createOrUpdateGame 
 const router = useRouter()
 const route = useRoute()
 const { error: showError } = useToast()
-const gameId = computed(() => route.params.gameId)
+const gameId = computed(() => route.params.gameId as string | undefined)
 
 const gameName = ref('')
 const players = ref([{ id: nanoid(), name: '' }])
 const isEditing = computed(() => !!gameId.value)
 const isSaving = ref(false)
 
-async function loadGame(id) {
-  const game = await fetchGame(id)
-  gameName.value = game?.name || ''
+async function loadGame(id: string) {
+  try {
+    const game = await fetchGame(id)
+    gameName.value = game?.name || ''
 
-  const existing = await fetchGamePlayers(id)
-  players.value = existing.map(p => ({ id: p.id, name: p.name }))
+    const existing = await fetchGamePlayers(id)
+    players.value = existing.map(p => ({ id: p.id, name: p.name }))
+  } catch (err) {
+    console.error('Failed to load game:', err)
+    showError('Failed to load game data.')
+  }
 }
 
 watchEffect(async () => {
@@ -77,11 +82,10 @@ async function saveGame() {
   }
 
   try {
-    // Parallel: alle Spieler gleichzeitig erstellen
     await createOrUpdatePlayers(validPlayers.map(p => ({ id: p.id, name: p.name })))
     const playerIds = validPlayers.map(p => p.id)
 
-    const idToUse = isEditing.value ? gameId.value : nanoid()
+    const idToUse = isEditing.value ? gameId.value! : nanoid()
     const game = await createOrUpdateGame({
       id: idToUse,
       name: gameName.value,
@@ -100,7 +104,7 @@ async function saveGame() {
     }
   } catch (err) {
     console.error(err)
-    showError('Error when saving: ' + err.message)
+    showError('Error when saving: ' + (err instanceof Error ? err.message : 'Unknown error'))
   } finally {
     isSaving.value = false
   }
