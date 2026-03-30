@@ -30,12 +30,19 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    chunkSizeWarningLimit: 1100,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-vue': ['vue', 'vue-router', 'vue-i18n'],
-          'vendor-ui': ['@heroicons/vue'],
-          'vendor-utils': ['axios', '@vueuse/core', 'pinia'],
+        manualChunks(id) {
+          if (id.includes('node_modules/vue/') || id.includes('node_modules/vue-router/') || id.includes('node_modules/vue-i18n/')) {
+            return 'vendor-vue';
+          }
+          if (id.includes('node_modules/@heroicons/')) {
+            return 'vendor-ui';
+          }
+          if (id.includes('node_modules/axios/') || id.includes('node_modules/@vueuse/') || id.includes('node_modules/pinia/')) {
+            return 'vendor-utils';
+          }
         },
       },
     },
