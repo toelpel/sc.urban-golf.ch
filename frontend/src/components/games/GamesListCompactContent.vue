@@ -36,7 +36,7 @@
                     <button @click.stop="toggleDetails(game.id)" class="chevron-btn z-10 shrink-0"
                         :aria-expanded="expandedGameId === game.id" :aria-controls="`game-details-${game.id}`"
                         :aria-label="expandedGameId === game.id ? 'Collapse' : 'Expand'" title="Details">
-                        <ChevronRightIcon class="w-5 h-5 transition-transform duration-200"
+                        <ChevronRightIcon class="w-5 h-5 transition-transform duration-300 ease-out"
                             :class="expandedGameId === game.id ? 'rotate-90' : ''" />
                     </button>
                 </div>

@@ -263,6 +263,104 @@
   @apply px-2 py-1 text-xs;
 }
 
+/* Zebra-Striping: jede zweite Zeile dezent eingefärbt */
+.scorecard-table tbody tr:nth-child(even) {
+  @apply bg-white/20 dark:bg-gray-800/20;
+}
+
+/* Aktive Sortierspalte: dezenter Hintergrund */
+.scorecard-sort-active {
+  @apply bg-blue-50/40 dark:bg-blue-900/20;
+}
+
+.scorecard-sort-active-header {
+  @apply bg-blue-100/50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300;
+}
+
+/* Metric-Spalten (Ø / Total): leicht abgesetzt */
+.scorecard-metric-highlight {
+  @apply bg-gray-100/30 dark:bg-gray-700/20;
+}
+
+/* Ranking-View: Podium-Styles */
+.ranking-row-gold {
+  background: linear-gradient(90deg, rgba(253, 224, 71, 0.15) 0%, transparent 70%);
+}
+.ranking-row-silver {
+  background: linear-gradient(90deg, rgba(209, 213, 219, 0.15) 0%, transparent 70%);
+}
+.ranking-row-bronze {
+  background: linear-gradient(90deg, rgba(217, 119, 6, 0.1) 0%, transparent 70%);
+}
+
+:is(.dark) .ranking-row-gold {
+  background: linear-gradient(90deg, rgba(253, 224, 71, 0.08) 0%, transparent 70%);
+}
+:is(.dark) .ranking-row-silver {
+  background: linear-gradient(90deg, rgba(209, 213, 219, 0.08) 0%, transparent 70%);
+}
+:is(.dark) .ranking-row-bronze {
+  background: linear-gradient(90deg, rgba(217, 119, 6, 0.06) 0%, transparent 70%);
+}
+
+/* View-Wechsel Fade-Transition */
+.view-fade-enter-active,
+.view-fade-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.view-fade-enter-from {
+  opacity: 0;
+  transform: translateY(4px);
+}
+.view-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+/* Score-Heatmap: Farbcodierung relativ zum Loch-Durchschnitt
+   Spezifität .scorecard-table td.X nötig, da .scorecard-table td bg-transparent setzt */
+.scorecard-table td.scorecard-heatmap-great {
+  @apply bg-green-500/25 dark:bg-green-400/20;
+}
+.scorecard-table td.scorecard-heatmap-good {
+  @apply bg-green-400/15 dark:bg-green-400/10;
+}
+.scorecard-table td.scorecard-heatmap-poor {
+  @apply bg-red-400/15 dark:bg-red-400/10;
+}
+.scorecard-table td.scorecard-heatmap-bad {
+  @apply bg-red-500/25 dark:bg-red-400/20;
+}
+
+/* Score-Pulse Animation bei Wertänderung */
+@keyframes score-pulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.score-pulse {
+  animation: score-pulse 0.3s ease-out;
+}
+
+/* Scorecard Skeleton Loading */
+.scorecard-skeleton {
+  @apply rounded-2xl overflow-hidden;
+}
+.scorecard-skeleton-row {
+  @apply flex gap-px;
+}
+.scorecard-skeleton-cell {
+  @apply h-9 bg-white/20 dark:bg-white/10 flex-1;
+}
+.scorecard-skeleton-header {
+  @apply h-10 bg-white/30 dark:bg-white/15 flex-1;
+}
+
+/* Spieler-Farbe: linker Border-Akzent */
+.scorecard-player-color {
+  @apply border-l-3;
+}
+
 /* Animation für verschobene Listenelemente */
 .game-list-move {
   transition: transform 0.3s ease;
