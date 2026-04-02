@@ -56,7 +56,7 @@
         <div class="flex items-center gap-2 shrink-0">
           <button @click="changeStrokes(player.id, -1)"
             class="chevron-btn w-10 h-10 active:scale-90 transition-transform"
-            :aria-label="$t('General.Back')" type="button">
+            :aria-label="$t('General.FewerStrokes')" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="3">
               <path stroke-linecap="round" d="M6 12h12" />
@@ -73,7 +73,7 @@
 
           <button @click="changeStrokes(player.id, 1)"
             class="chevron-btn w-10 h-10 active:scale-90 transition-transform"
-            :aria-label="$t('General.Forward')" type="button">
+            :aria-label="$t('General.MoreStrokes')" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="3">
               <path stroke-linecap="round" d="M12 6v12M6 12h12" />

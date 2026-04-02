@@ -49,6 +49,7 @@
     "vite-plugin-compression2": "^2.4.0",
     "vite-plugin-pwa": "^1.0.0",
     "vitest": "^4.0.0",
+    "vue-eslint-parser": "^10.4.0",
     "vue-tsc": "^3.2.4"
   }
 }

@@ -11,7 +11,9 @@
     "Total": "Total",
     "Back": "Retour",
     "Forward": "Suivant",
-    "Send": "Envoyer"
+    "Send": "Envoyer",
+    "FewerStrokes": "Moins de coups",
+    "MoreStrokes": "Plus de coups"
   },
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",

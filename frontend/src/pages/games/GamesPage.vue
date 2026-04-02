@@ -94,7 +94,6 @@ const {
 
 const {
   viewMode,
-  toggleView,
   loadPreference: loadViewPreference
 } = useViewMode(players, holes)
 
