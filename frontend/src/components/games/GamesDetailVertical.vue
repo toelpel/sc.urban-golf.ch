@@ -9,10 +9,16 @@
                             {{ $t('General.Hole') }}
                         </th>
 
-                        <th v-for="player in sortedPlayers" :key="player.id" class="scorecard-header-cell text-center max-w-[10rem] truncate
-                     first:border-l-0 border-l border-white/30 dark:border-white/10
-                     last:rounded-tr-2xl" :title="player.name">
-                            {{ player.name }}
+                        <th v-for="player in sortedPlayers" :key="player.id"
+                            class="scorecard-header-cell text-center max-w-40 truncate
+                            first:border-l-0 border-l border-white/30 dark:border-white/10
+                            last:rounded-tr-2xl"
+                            :title="player.name">
+                            <span class="flex items-center justify-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full shrink-0"
+                                    :class="colorMap[player.id]?.dot ?? ''"></span>
+                                <span class="truncate">{{ player.name }}</span>
+                            </span>
                         </th>
                     </tr>
                 </thead>
@@ -28,33 +34,44 @@
                         </td>
 
                         <td v-for="player in sortedPlayers" :key="player.id"
-                            class="scorecard-cell max-w-[10rem] truncate">
+                            class="scorecard-cell max-w-40 truncate text-center"
+                            :class="getHeatmapClass(player.id, hole)">
                             {{ scores[player.id]?.[hole] ?? '–' }}
                         </td>
                     </tr>
 
-                    <tr class="font-semibold cursor-pointer hover:bg-white/30 dark:hover:bg-gray-800/30 transition"
+                    <!-- Ø row -->
+                    <tr class="cursor-pointer hover:bg-white/30 dark:hover:bg-gray-800/30 transition scorecard-metric-highlight"
+                        :class="{ 'scorecard-sort-active': sortColumn === 'average' }"
                         @click="$emit('sort', 'average')">
-                        <td class="scorecard-cell text-left">
+                        <td class="scorecard-cell text-left font-semibold"
+                            :class="{ 'scorecard-sort-active-header': sortColumn === 'average' }">
                             Ø
-                            <span v-if="sortColumn === 'average'">
-                                {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                            </span>
+                            <ChevronUpIcon v-if="sortColumn === 'average' && sortDirection === 'asc'"
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                            <ChevronDownIcon v-else-if="sortColumn === 'average'"
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
                         </td>
-                        <td v-for="player in sortedPlayers" :key="player.id" class="scorecard-cell">
+                        <td v-for="player in sortedPlayers" :key="player.id"
+                            class="scorecard-cell text-center font-medium">
                             {{ averageScore(player.id) }}
                         </td>
                     </tr>
 
-                    <tr class="font-semibold cursor-pointer hover:bg-white/40 dark:hover:bg-gray-800/40 transition"
+                    <!-- Total row -->
+                    <tr class="cursor-pointer hover:bg-white/40 dark:hover:bg-gray-800/40 transition scorecard-metric-highlight"
+                        :class="{ 'scorecard-sort-active': sortColumn === 'total' }"
                         @click="$emit('sort', 'total')">
-                        <td class="scorecard-cell text-left">
+                        <td class="scorecard-cell text-left font-semibold"
+                            :class="{ 'scorecard-sort-active-header': sortColumn === 'total' }">
                             {{ $t('General.Total') }}
-                            <span v-if="sortColumn === 'total'">
-                                {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                            </span>
+                            <ChevronUpIcon v-if="sortColumn === 'total' && sortDirection === 'asc'"
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                            <ChevronDownIcon v-else-if="sortColumn === 'total'"
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
                         </td>
-                        <td v-for="player in sortedPlayers" :key="player.id" class="scorecard-cell">
+                        <td v-for="player in sortedPlayers" :key="player.id"
+                            class="scorecard-cell text-center font-semibold">
                             {{ totalScore(player.id) }}
                         </td>
                     </tr>
@@ -65,10 +82,14 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/16/solid'
 import type { Player } from '@/services/api'
 import type { ScoreMap } from '@/types'
+import { usePlayerColors } from '@/composables/usePlayerColors'
+import { heatmapClass } from '@/utils/scoreHeatmap'
 
-defineProps<{
+const props = defineProps<{
     players: Player[]
     holes: number[]
     scores: ScoreMap
@@ -83,4 +104,12 @@ defineProps<{
 defineEmits<{
   sort: [column: 'name' | 'total' | 'average']
 }>()
+
+const { colorMap } = usePlayerColors(computed(() => props.players))
+
+const playerIds = computed(() => props.players.map(p => p.id))
+
+function getHeatmapClass(playerId: string, hole: number): string {
+  return heatmapClass(playerId, hole, props.scores, playerIds.value)
+}
 </script>

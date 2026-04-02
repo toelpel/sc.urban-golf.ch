@@ -6,31 +6,38 @@
     <template v-else>
       <GamesHoleView v-if="isHoleView" />
       <template v-else>
-        <div class="shrink-0 flex justify-between items-center">
-          <h1 class="maintitle mb-4 truncate max-w-[70vw]" :title="gameName">
+        <div class="shrink-0 flex flex-col items-center gap-2 mb-2">
+          <h1 class="maintitle mb-0 truncate max-w-[70vw]" :title="gameName">
             {{ displayName }}
           </h1>
-          <button @click="toggleView" :title="viewModeLabel" class="flex items-center justify-center w-8 h-8 -mt-2 rounded-md bg-gray-200 text-sm text-gray-800 shadow hover:bg-gray-300
-         dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 transition">
-            <TableCellsIcon v-if="viewMode === 'horizontal'" class="w-5 h-5" />
-            <ListBulletIcon v-else-if="viewMode === 'vertical'" class="w-5 h-5" />
-            <TrophyIcon v-else class="w-5 h-5" />
-          </button>
+          <div class="inline-flex rounded-lg p-0.5 bg-white/30 dark:bg-gray-800/40 backdrop-blur-sm border border-white/30 dark:border-white/10 shadow-sm">
+            <button v-for="mode in viewModes" :key="mode.key" @click="viewMode = mode.key"
+              class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200"
+              :class="viewMode === mode.key
+                ? 'bg-blue-500 text-white shadow-md dark:bg-blue-400 dark:text-gray-900'
+                : 'text-gray-600 dark:text-gray-300 hover:bg-white/40 dark:hover:bg-gray-700/40'">
+              <component :is="mode.icon" class="w-3.5 h-3.5" />
+              <span class="hidden sm:inline">{{ mode.label }}</span>
+            </button>
+          </div>
         </div>
 
-        <div v-if="players.length === 0" class="shrink-0 text-gray-500 text-center dark:text-gray-300">
-          {{ $t('Scorecard.Loading') }}
-        </div>
+        <GamesDetailSkeleton v-if="players.length === 0" :rows="4" :columns="6" />
 
         <div v-else>
-          <GamesDetailHorizontal v-if="viewMode === 'horizontal'" :players="sortedPlayers" :holes="holes"
-            :scores="scores" :game-id="gameId" :sort-column="sortColumn" :sort-direction="sortDirection"
-            :sorted-players="sortedPlayers" :average-score="averageScore" :total-score="totalScore" @sort="sortBy" />
-          <GamesDetailVertical v-else-if="viewMode === 'vertical'" :players="sortedPlayers" :holes="holes"
-            :scores="scores" :game-id="gameId" :sort-column="sortColumn" :sort-direction="sortDirection"
-            :sorted-players="sortedPlayers" :average-score="averageScore" :total-score="totalScore" @sort="sortBy" />
-          <GamesDetailRanking v-else :sort-column="sortColumn" :sort-direction="sortDirection"
-            :sorted-players="sortedPlayers" :average-score="averageScore" :total-score="totalScore" @sort="sortBy" />
+          <Transition name="view-fade" mode="out-in">
+            <GamesDetailHorizontal v-if="viewMode === 'horizontal'" key="horizontal" :players="sortedPlayers"
+              :holes="holes" :scores="scores" :game-id="gameId" :sort-column="sortColumn"
+              :sort-direction="sortDirection" :sorted-players="sortedPlayers" :average-score="averageScore"
+              :total-score="totalScore" @sort="sortBy" />
+            <GamesDetailVertical v-else-if="viewMode === 'vertical'" key="vertical" :players="sortedPlayers"
+              :holes="holes" :scores="scores" :game-id="gameId" :sort-column="sortColumn"
+              :sort-direction="sortDirection" :sorted-players="sortedPlayers" :average-score="averageScore"
+              :total-score="totalScore" @sort="sortBy" />
+            <GamesDetailRanking v-else key="ranking" :sort-column="sortColumn" :sort-direction="sortDirection"
+              :sorted-players="sortedPlayers" :average-score="averageScore" :total-score="totalScore"
+              @sort="sortBy" />
+          </Transition>
         </div>
       </template>
     </template>
@@ -43,9 +50,10 @@ import GamesListCompact from '@/components/games/GamesListCompact.vue'
 import GamesDetailHorizontal from '@/components/games/GamesDetailHorizontal.vue'
 import GamesDetailVertical from '@/components/games/GamesDetailVertical.vue'
 import GamesDetailRanking from '@/components/games/GamesDetailRanking.vue'
+import GamesDetailSkeleton from '@/components/games/GamesDetailSkeleton.vue'
 import GamesHoleView from '@/components/games/GamesHoleView.vue'
 
-import { ArrowPathIcon, TrophyIcon, TableCellsIcon, ListBulletIcon } from '@heroicons/vue/24/solid'
+import { TrophyIcon, TableCellsIcon, ListBulletIcon } from '@heroicons/vue/24/solid'
 import { computed, provide, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -90,14 +98,11 @@ const {
   loadPreference: loadViewPreference
 } = useViewMode(players, holes)
 
-const viewModeLabel = computed(() => {
-  const labels: Record<string, string> = {
-    horizontal: t('Scorecard.ViewHorizontal'),
-    vertical: t('Scorecard.ViewVertical'),
-    ranking: t('Scorecard.ViewRanking')
-  }
-  return labels[viewMode.value] ?? ''
-})
+const viewModes = computed(() => [
+  { key: 'horizontal' as const, label: t('Scorecard.ViewHorizontal'), icon: TableCellsIcon },
+  { key: 'vertical' as const, label: t('Scorecard.ViewVertical'), icon: ListBulletIcon },
+  { key: 'ranking' as const, label: t('Scorecard.ViewRanking'), icon: TrophyIcon },
+])
 
 function sortBy(column: 'name' | 'total' | 'average') {
   if (sortColumn.value === column) {

@@ -40,31 +40,40 @@
     {{ $t('Scorecard.Loading') }}
   </div>
 
-  <div v-else class="glass-list mt-2">
+  <div v-else ref="playerListEl" class="glass-list mt-2" @touchstart="onTouchStart" @touchend="onTouchEnd">
     <div class="card-inner">
-      <div v-for="player in players" :key="player.id" class="flex items-center justify-between px-4 py-3 gap-3">
-        <div class="min-w-0 flex-1 truncate text-left text-base font-semibold
-                 text-gray-900 dark:text-gray-100" :title="player.name">
-          {{ player.name }}
+      <div v-for="player in players" :key="player.id"
+        class="flex items-center justify-between px-4 py-3 gap-3 border-l-3 transition-colors"
+        :class="colorMap[player.id]?.border ?? ''">
+        <div class="min-w-0 flex-1 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full shrink-0" :class="colorMap[player.id]?.dot ?? ''"></span>
+          <span class="truncate text-left text-base font-semibold text-gray-900 dark:text-gray-100"
+            :title="player.name">
+            {{ player.name }}
+          </span>
         </div>
 
         <div class="flex items-center gap-2 shrink-0">
-          <button @click="changeStrokes(player.id, -1)" class="chevron-btn w-10 h-10" aria-label="Weniger Schläge"
-            type="button">
+          <button @click="changeStrokes(player.id, -1)"
+            class="chevron-btn w-10 h-10 active:scale-90 transition-transform"
+            :aria-label="$t('General.Back')" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="3">
               <path stroke-linecap="round" d="M6 12h12" />
             </svg>
           </button>
 
-          <select v-model="scores[player.id][hole]" @change="saveScore(player.id)" class="select-field w-16 text-center px-2 py-2
+          <select :ref="el => setScoreRef(player.id, el as HTMLElement | null)"
+            v-model="scores[player.id][hole]" @change="onSelectChange(player.id)"
+            class="select-field w-16 text-center px-2 py-2
                    bg-white/50 dark:bg-gray-900/50 backdrop-blur-md
-                   border-white/50 dark:border-white/30">
+                   border-white/50 dark:border-white/30 font-bold">
             <option v-for="n in strokeRange" :key="n" :value="n">{{ n }}</option>
           </select>
 
-          <button @click="changeStrokes(player.id, 1)" class="chevron-btn w-10 h-10" aria-label="Mehr Schläge"
-            type="button">
+          <button @click="changeStrokes(player.id, 1)"
+            class="chevron-btn w-10 h-10 active:scale-90 transition-transform"
+            :aria-label="$t('General.Forward')" type="button">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="3">
               <path stroke-linecap="round" d="M12 6v12M6 12h12" />
@@ -92,19 +101,22 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, onBeforeUnmount, inject } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useOfflineSync } from '@/composables/useOfflineSync'
+import { usePlayerColors } from '@/composables/usePlayerColors'
 import { gamesDetailKey } from '@/types'
 import { shortGameName } from '@/utils/format'
 import { VALIDATION } from '@/constants'
 
 const route = useRoute()
+const router = useRouter()
 const gameId = computed(() => route.params.gameId as string)
 const hole = computed(() => parseInt(route.params.holeId as string))
 
 const context = inject(gamesDetailKey)!
 const { players, scores, holes, gameName } = context
 const { saveScore: saveScoreOffline } = useOfflineSync()
+const { colorMap } = usePlayerColors(players)
 
 const displayName = computed(() => shortGameName(gameName.value))
 
@@ -117,6 +129,49 @@ const strokeRange = computed(() => {
 const showHoleOverview = ref(true)
 const isOptionsOpen = ref(false)
 const optionsWrapper = ref<HTMLElement | null>(null)
+const playerListEl = ref<HTMLElement | null>(null)
+
+// Score display refs for pulse animation
+const scoreRefs: Record<string, HTMLElement | null> = {}
+function setScoreRef(playerId: string, el: HTMLElement | null) {
+  scoreRefs[playerId] = el
+}
+
+function triggerPulse(playerId: string) {
+  const el = scoreRefs[playerId]
+  if (!el) return
+  el.classList.remove('score-pulse')
+  void el.offsetWidth // force reflow
+  el.classList.add('score-pulse')
+}
+
+function hapticFeedback() {
+  if (navigator.vibrate) navigator.vibrate(10)
+}
+
+// Swipe gesture for hole navigation
+let touchStartX = 0
+let touchStartY = 0
+
+function onTouchStart(e: TouchEvent) {
+  touchStartX = e.touches[0].clientX
+  touchStartY = e.touches[0].clientY
+}
+
+function onTouchEnd(e: TouchEvent) {
+  const dx = e.changedTouches[0].clientX - touchStartX
+  const dy = e.changedTouches[0].clientY - touchStartY
+  // Only trigger on horizontal swipes (> 80px, mostly horizontal)
+  if (Math.abs(dx) > 80 && Math.abs(dx) > Math.abs(dy) * 2) {
+    if (dx < 0) {
+      // Swipe left → next hole
+      router.push(`/games/${gameId.value}/${hole.value + 1}`)
+    } else if (dx > 0 && hole.value > 1) {
+      // Swipe right → previous hole
+      router.push(`/games/${gameId.value}/${hole.value - 1}`)
+    }
+  }
+}
 
 onMounted(() => {
   const saved = localStorage.getItem('showHoleOverview')
@@ -150,12 +205,20 @@ function handleClickOutsideOptions(event: MouseEvent) {
   }
 }
 
+function onSelectChange(playerId: string) {
+  triggerPulse(playerId)
+  hapticFeedback()
+  saveScore(playerId)
+}
+
 function changeStrokes(playerId: string, delta: number) {
   const current = Number(scores.value[playerId][hole.value]) || 0
   let updated = current + delta
   if (updated < VALIDATION.STROKES_MIN) updated = VALIDATION.STROKES_MIN
   if (updated > VALIDATION.STROKES_MAX) updated = VALIDATION.STROKES_MAX
   scores.value[playerId][hole.value] = updated
+  triggerPulse(playerId)
+  hapticFeedback()
   saveScore(playerId)
 }
 
