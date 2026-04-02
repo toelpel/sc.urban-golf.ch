@@ -34,12 +34,12 @@ export class HoleViewPage {
 
   async incrementStrokes(playerName: string) {
     const row = this.getPlayerRow(playerName)
-    await row.locator('button[aria-label="Mehr Schläge"]').click()
+    await row.locator('button[aria-label="More strokes"]').click()
   }
 
   async decrementStrokes(playerName: string) {
     const row = this.getPlayerRow(playerName)
-    await row.locator('button[aria-label="Weniger Schläge"]').click()
+    await row.locator('button[aria-label="Fewer strokes"]').click()
   }
 
   async setStrokesViaSelect(playerName: string, value: number) {
