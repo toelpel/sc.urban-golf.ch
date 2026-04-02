@@ -1,7 +1,8 @@
 <template>
     <div class="max-h-[calc(100dvh-11rem)] overflow-y-auto overflow-x-auto">
         <div class="glass-card p-0 overflow-hidden inline-block min-w-full">
-            <table class="scorecard-table w-full min-w-max border-collapse">
+            <table class="scorecard-table w-full min-w-max border-collapse"
+                :class="{ 'scorecard-compact': players.length >= 5 }">
                 <thead class="backdrop-blur-md bg-white/40 dark:bg-gray-900/40">
                     <tr>
                         <th class="scorecard-header-cell text-left first:rounded-tl-2xl">

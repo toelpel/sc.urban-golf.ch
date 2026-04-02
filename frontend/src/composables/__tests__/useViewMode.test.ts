@@ -17,11 +17,20 @@ describe('useViewMode', () => {
       expect(viewMode.value).toBe('vertical')
     })
 
-    it('switches from vertical to horizontal', () => {
+    it('switches from vertical to ranking', () => {
       const players = ref([{ id: 'p1', name: 'Player 1' }])
       const holes = ref([1, 2, 3])
       const { viewMode, toggleView } = useViewMode(players, holes)
       viewMode.value = 'vertical'
+      toggleView()
+      expect(viewMode.value).toBe('ranking')
+    })
+
+    it('switches from ranking to horizontal', () => {
+      const players = ref([{ id: 'p1', name: 'Player 1' }])
+      const holes = ref([1, 2, 3])
+      const { viewMode, toggleView } = useViewMode(players, holes)
+      viewMode.value = 'ranking'
       toggleView()
       expect(viewMode.value).toBe('horizontal')
     })
@@ -44,6 +53,15 @@ describe('useViewMode', () => {
       const { viewMode, loadPreference } = useViewMode(players, holes)
       loadPreference()
       expect(viewMode.value).toBe('vertical')
+    })
+
+    it('loads saved ranking preference from localStorage', () => {
+      localStorage.setItem('GamesDetailView', 'ranking')
+      const players = ref([{ id: 'p1', name: 'Player 1' }])
+      const holes = ref([1, 2, 3])
+      const { viewMode, loadPreference } = useViewMode(players, holes)
+      loadPreference()
+      expect(viewMode.value).toBe('ranking')
     })
 
     it('defaults to horizontal when many players and few holes', () => {
