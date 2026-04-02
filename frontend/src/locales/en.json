@@ -100,7 +100,10 @@
     "Email": "Email (optional)"
   },
   "Scorecard": {
-    "Loading": "Loading players and scores..."
+    "Loading": "Loading players and scores...",
+    "ViewHorizontal": "Horizontal view",
+    "ViewVertical": "Vertical view",
+    "ViewRanking": "Ranking"
   },
   "Games": {
     "ListGames": {

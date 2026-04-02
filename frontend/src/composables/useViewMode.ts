@@ -1,14 +1,14 @@
 import { ref, watch, type Ref } from 'vue'
 import type { Player } from '@/services/api'
 
-type ViewMode = 'horizontal' | 'vertical'
+type ViewMode = 'horizontal' | 'vertical' | 'ranking'
 
 export function useViewMode(players: Ref<Player[]>, holes: Ref<number[]>) {
   const viewMode = ref<ViewMode>('horizontal')
 
   function loadPreference() {
     const saved = localStorage.getItem('GamesDetailView')
-    if (saved === 'horizontal' || saved === 'vertical') {
+    if (saved === 'horizontal' || saved === 'vertical' || saved === 'ranking') {
       viewMode.value = saved
     } else {
       viewMode.value =
@@ -16,8 +16,11 @@ export function useViewMode(players: Ref<Player[]>, holes: Ref<number[]>) {
     }
   }
 
+  const viewModes: ViewMode[] = ['horizontal', 'vertical', 'ranking']
+
   function toggleView() {
-    viewMode.value = viewMode.value === 'horizontal' ? 'vertical' : 'horizontal'
+    const idx = viewModes.indexOf(viewMode.value)
+    viewMode.value = viewModes[(idx + 1) % viewModes.length]
   }
 
   watch(viewMode, (val) => {

@@ -4,6 +4,7 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
+    "build": "echo 'No build step required for backend'",
     "dev": "node app.js",
     "start": "node app.js",
     "test": "vitest run",

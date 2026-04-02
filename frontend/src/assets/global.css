@@ -252,6 +252,17 @@
   @apply bg-transparent;
 }
 
+/* Compact-Modus: kleinere Schrift & Padding bei vielen Spielern */
+.scorecard-compact .scorecard-header-cell {
+  @apply px-2 py-1 text-xs;
+}
+
+.scorecard-compact .scorecard-cell,
+.scorecard-compact .scorecard-player-cell,
+.scorecard-compact .scorecard-metric-cell {
+  @apply px-2 py-1 text-xs;
+}
+
 /* Animation für verschobene Listenelemente */
 .game-list-move {
   transition: transform 0.3s ease;
