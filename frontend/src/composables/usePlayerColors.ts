@@ -17,7 +17,8 @@ const PLAYER_COLORS = [
 export function usePlayerColors(players: Ref<Player[]>) {
   const colorMap = computed(() => {
     const map: Record<string, typeof PLAYER_COLORS[0]> = {}
-    players.value.forEach((player, i) => {
+    const stable = [...players.value].sort((a, b) => a.id.localeCompare(b.id))
+    stable.forEach((player, i) => {
       map[player.id] = PLAYER_COLORS[i % PLAYER_COLORS.length]
     })
     return map
