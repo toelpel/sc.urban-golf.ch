@@ -11,7 +11,6 @@ import Fastify from 'fastify';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyRateLimit from '@fastify/rate-limit';
 import cors from '@fastify/cors';
-import crypto from 'node:crypto';
 
 import scoreRoutes from './routes/scores.js';
 import gameRoutes from './routes/games.js';
@@ -43,8 +42,7 @@ await fastify.register(cors, {
     }
   },
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
-  // Authorization zulassen, da wir ihn fürs Rate-Limit verwenden
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type'],
   preflightContinue: false,
   optionsSuccessStatus: 200
 });
@@ -63,23 +61,15 @@ await fastify.register(fastifyHelmet, {
   }
 });
 
-// Globales Rate-Limit: 120 Requests pro Minute
+// Globales Rate-Limit: 120 Requests pro Minute, IP-basiert.
+// Kein Auth-Header-Keying, da die App keine echte Authentifizierung kennt
+// und ein gespoofter Header das Limit sonst trivial umgehen würde.
 await fastify.register(fastifyRateLimit, {
   max: 120,
   timeWindow: '1 minute',
 
-  // Schlüsselbildung: bevorzugt Authorization-Header, sonst IP
-  keyGenerator: (req) => {
-    const auth = req.headers['authorization'];
-    if (auth && typeof auth === 'string' && auth.trim() !== '') {
-      // Hash für Datenschutz/gleichmäßige Länge
-      const hash = crypto.createHash('sha256').update(auth).digest('hex');
-      return `auth:${hash}`;
-    }
-    return `ip:${req.ip}`;
-  },
+  keyGenerator: (req) => `ip:${req.ip}`,
 
-  // Hilfreiche Response-Header aktivieren
   addHeaders: {
     'x-ratelimit-limit': true,
     'x-ratelimit-remaining': true,
@@ -87,7 +77,6 @@ await fastify.register(fastifyRateLimit, {
     'retry-after': true,
   },
 
-  // Saubere 429-Antwort
   errorResponseBuilder: (req, context) => ({
     statusCode: 429,
     error: 'Too Many Requests',

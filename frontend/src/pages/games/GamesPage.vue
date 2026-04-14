@@ -4,7 +4,8 @@
       <GamesListCompact />
     </template>
     <template v-else>
-      <GamesHoleView v-if="isHoleView" />
+      <ErrorState v-if="error" :message="error" :on-retry="reload" />
+      <GamesHoleView v-else-if="isHoleView" />
       <template v-else>
         <div class="shrink-0 flex flex-col items-center gap-2 mb-2">
           <h1 class="maintitle mb-0 truncate max-w-[70vw]" :title="gameName">
@@ -13,11 +14,13 @@
           <div class="inline-flex rounded-lg p-0.5 bg-white/30 dark:bg-gray-800/40 backdrop-blur-sm border border-white/30 dark:border-white/10 shadow-sm">
             <button v-for="mode in viewModes" :key="mode.key" @click="viewMode = mode.key"
               class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200"
+              :aria-pressed="viewMode === mode.key"
               :class="viewMode === mode.key
                 ? 'bg-blue-500 text-white shadow-md dark:bg-blue-400 dark:text-gray-900'
                 : 'text-gray-600 dark:text-gray-300 hover:bg-white/40 dark:hover:bg-gray-700/40'">
-              <component :is="mode.icon" class="w-3.5 h-3.5" />
+              <component :is="mode.icon" class="w-3.5 h-3.5" aria-hidden="true" />
               <span class="hidden sm:inline">{{ mode.label }}</span>
+              <span class="sr-only sm:hidden">{{ mode.label }}</span>
             </button>
           </div>
         </div>
@@ -52,6 +55,7 @@ import GamesDetailVertical from '@/components/games/GamesDetailVertical.vue'
 import GamesDetailRanking from '@/components/games/GamesDetailRanking.vue'
 import GamesDetailSkeleton from '@/components/games/GamesDetailSkeleton.vue'
 import GamesHoleView from '@/components/games/GamesHoleView.vue'
+import ErrorState from '@/components/ui/ErrorState.vue'
 
 import { TrophyIcon, TableCellsIcon, ListBulletIcon } from '@heroicons/vue/24/solid'
 import { computed, provide, watchEffect } from 'vue'
@@ -77,10 +81,15 @@ const {
   scores,
   holes,
   gameName,
+  error,
   load: loadGamesDetailData
 } = useGamesDetailData(gameId)
 
-provide(gamesDetailKey, { players, scores, holes, gameName, load: loadGamesDetailData })
+provide(gamesDetailKey, { players, scores, holes, gameName, error, load: loadGamesDetailData })
+
+async function reload() {
+  await loadGamesDetailData()
+}
 
 const displayName = computed(() => shortGameName(gameName.value))
 

@@ -7,15 +7,18 @@
                     <tr>
                         <th class="scorecard-header-cell cursor-pointer first:rounded-tl-2xl"
                             :class="{ 'scorecard-sort-active-header': sortColumn === 'name' }"
-                            @click="$emit('sort', 'name')">
+                            :aria-sort="ariaSortFor('name')" scope="col"
+                            tabindex="0" @click="$emit('sort', 'name')"
+                            @keydown.enter.prevent="$emit('sort', 'name')"
+                            @keydown.space.prevent="$emit('sort', 'name')">
                             {{ $t('General.Player') }}
                             <ChevronUpIcon v-if="sortColumn === 'name' && sortDirection === 'asc'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
                             <ChevronDownIcon v-else-if="sortColumn === 'name'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
                         </th>
 
-                        <th v-for="hole in holes" :key="hole"
+                        <th v-for="hole in holes" :key="hole" scope="col"
                             class="scorecard-header-cell text-center border-l border-white/30 dark:border-white/10">
                             <router-link :to="'/games/' + gameId + '/' + hole"
                                 class="hover:underline text-blue-600 dark:text-blue-400">
@@ -25,21 +28,28 @@
 
                         <th class="scorecard-header-cell cursor-pointer w-14 border-l border-white/30 dark:border-white/10"
                             :class="{ 'scorecard-sort-active-header': sortColumn === 'average' }"
-                            @click="$emit('sort', 'average')">
+                            :aria-sort="ariaSortFor('average')" scope="col"
+                            :aria-label="$t('Scorecard.SortByAverage')"
+                            tabindex="0" @click="$emit('sort', 'average')"
+                            @keydown.enter.prevent="$emit('sort', 'average')"
+                            @keydown.space.prevent="$emit('sort', 'average')">
                             Ø
                             <ChevronUpIcon v-if="sortColumn === 'average' && sortDirection === 'asc'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
                             <ChevronDownIcon v-else-if="sortColumn === 'average'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
                         </th>
                         <th class="scorecard-header-cell cursor-pointer w-16 border-l border-white/30 dark:border-white/10 last:rounded-tr-2xl"
                             :class="{ 'scorecard-sort-active-header': sortColumn === 'total' }"
-                            @click="$emit('sort', 'total')">
+                            :aria-sort="ariaSortFor('total')" scope="col"
+                            tabindex="0" @click="$emit('sort', 'total')"
+                            @keydown.enter.prevent="$emit('sort', 'total')"
+                            @keydown.space.prevent="$emit('sort', 'total')">
                             {{ $t('General.Total') }}
                             <ChevronUpIcon v-if="sortColumn === 'total' && sortDirection === 'asc'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
                             <ChevronDownIcon v-else-if="sortColumn === 'total'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
                         </th>
                     </tr>
                 </thead>
@@ -110,5 +120,10 @@ const playerIds = computed(() => props.players.map(p => p.id))
 
 function getHeatmapClass(playerId: string, hole: number): string {
   return heatmapClass(playerId, hole, props.scores, playerIds.value)
+}
+
+function ariaSortFor(column: 'name' | 'total' | 'average'): 'ascending' | 'descending' | 'none' {
+  if (props.sortColumn !== column) return 'none'
+  return props.sortDirection === 'asc' ? 'ascending' : 'descending'
 }
 </script>

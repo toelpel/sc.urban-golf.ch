@@ -1,12 +1,13 @@
-const ID_PATTERN = /^[a-zA-Z0-9_-]{10,30}$/
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+import { VALIDATION, ID_PATTERN, EMAIL_PATTERN } from './constants.js'
 
 export function isValidId(id) {
   return typeof id === 'string' && ID_PATTERN.test(id)
 }
 
 export function isValidEmail(email) {
-  return typeof email === 'string' && email.length <= 100 && EMAIL_PATTERN.test(email)
+  return typeof email === 'string'
+    && email.length <= VALIDATION.EMAIL_MAX_LENGTH
+    && EMAIL_PATTERN.test(email)
 }
 
 export function validateScore({ game_id, player_id, hole, strokes } = {}) {
@@ -15,12 +16,12 @@ export function validateScore({ game_id, player_id, hole, strokes } = {}) {
   if (!isValidId(game_id)) errors.push('Invalid game_id')
   if (!isValidId(player_id)) errors.push('Invalid player_id')
 
-  if (!Number.isInteger(hole) || hole < 1 || hole > 18) {
-    errors.push('hole must be integer 1-18')
+  if (!Number.isInteger(hole) || hole < VALIDATION.HOLE_MIN || hole > VALIDATION.HOLE_MAX) {
+    errors.push(`hole must be integer ${VALIDATION.HOLE_MIN}-${VALIDATION.HOLE_MAX}`)
   }
 
-  if (!Number.isInteger(strokes) || strokes < -3 || strokes > 20) {
-    errors.push('strokes must be integer -3 to 20')
+  if (!Number.isInteger(strokes) || strokes < VALIDATION.STROKES_MIN || strokes > VALIDATION.STROKES_MAX) {
+    errors.push(`strokes must be integer ${VALIDATION.STROKES_MIN} to ${VALIDATION.STROKES_MAX}`)
   }
 
   return errors.length ? errors : null
@@ -33,8 +34,8 @@ export function validatePlayer({ id, name } = {}) {
 
   if (typeof name !== 'string' || name.trim() === '') {
     errors.push('Player name cannot be blank')
-  } else if (name.length > 100) {
-    errors.push('Player name must be at most 100 characters')
+  } else if (name.length > VALIDATION.NAME_MAX_LENGTH) {
+    errors.push(`Player name must be at most ${VALIDATION.NAME_MAX_LENGTH} characters`)
   }
 
   return errors.length ? errors : null
@@ -47,8 +48,8 @@ export function validateGame({ id, name, players } = {}) {
 
   if (typeof name !== 'string' || name.trim() === '') {
     errors.push('Game name required')
-  } else if (name.length > 100) {
-    errors.push('Game name must be at most 100 characters')
+  } else if (name.length > VALIDATION.GAME_NAME_MAX_LENGTH) {
+    errors.push(`Game name must be at most ${VALIDATION.GAME_NAME_MAX_LENGTH} characters`)
   }
 
   if (!Array.isArray(players) || players.length === 0) {
@@ -61,18 +62,18 @@ export function validateGame({ id, name, players } = {}) {
 export function validateFeedback({ rating, message, name, email } = {}) {
   const errors = []
 
-  if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
-    errors.push('Rating must be 1-5')
+  if (!Number.isInteger(rating) || rating < VALIDATION.RATING_MIN || rating > VALIDATION.RATING_MAX) {
+    errors.push(`Rating must be ${VALIDATION.RATING_MIN}-${VALIDATION.RATING_MAX}`)
   }
 
   if (typeof message !== 'string' || message.trim() === '') {
     errors.push('Message required')
-  } else if (message.length > 2000) {
-    errors.push('Message must be at most 2000 characters')
+  } else if (message.length > VALIDATION.MESSAGE_MAX_LENGTH) {
+    errors.push(`Message must be at most ${VALIDATION.MESSAGE_MAX_LENGTH} characters`)
   }
 
-  if (name !== undefined && name !== null && typeof name === 'string' && name.length > 100) {
-    errors.push('Name must be at most 100 characters')
+  if (name !== undefined && name !== null && typeof name === 'string' && name.length > VALIDATION.NAME_MAX_LENGTH) {
+    errors.push(`Name must be at most ${VALIDATION.NAME_MAX_LENGTH} characters`)
   }
 
   if (email !== undefined && email !== null && email !== '') {

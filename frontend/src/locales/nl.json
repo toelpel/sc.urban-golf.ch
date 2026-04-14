@@ -104,7 +104,9 @@
     "Loading": "Spelers en scores laden...",
     "ViewHorizontal": "Horizontale weergave",
     "ViewVertical": "Verticale weergave",
-    "ViewRanking": "Ranglijst"
+    "ViewRanking": "Ranglijst",
+    "SortByAverage": "Sorteer op gemiddelde",
+    "SortByTotal": "Sorteer op totaal"
   },
   "Games": {
     "ListGames": {
@@ -136,7 +138,9 @@
   },
   "Errors": {
     "RequestFailed": "Verzoek mislukt",
-    "NetworkError": "Netwerkfout. Controleer je verbinding."
+    "NetworkError": "Netwerkfout. Controleer je verbinding.",
+    "LoadingFailed": "Kon spel niet laden",
+    "Retry": "Opnieuw proberen"
   },
   "PWA": {
     "UpdateAvailable": "Nieuwe versie beschikbaar.",

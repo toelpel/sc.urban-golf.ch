@@ -8,6 +8,14 @@ function getPool() {
   if (!pool) {
     const poolConfig = {
       connectionString: process.env.DATABASE_URL,
+      // Release idle clients after 30s to avoid leaking long-lived connections
+      idleTimeoutMillis: 30_000,
+      // Fail fast if a new connection can't be acquired in 5s
+      connectionTimeoutMillis: 5_000,
+      // Per-statement timeout — protects against runaway queries
+      statement_timeout: 30_000,
+      // Cap pool size to prevent saturating the database
+      max: parseInt(process.env.DB_POOL_MAX, 10) || 10,
     };
 
     // Only enable SSL for production external databases (e.g., managed services)
