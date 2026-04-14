@@ -2,6 +2,11 @@
 -- This represents the schema as it existed before migrations were introduced.
 -- It is safe to run on an empty database; existing tables will not be altered.
 
+-- Stelle sicher, dass gin_trgm_ops aufgelöst werden kann, egal in welchem
+-- Schema pg_trgm installiert wurde (public, extensions, …). SET search_path
+-- akzeptiert auch nicht existierende Schemata ohne Fehler.
+SET LOCAL search_path TO public, extensions, pg_catalog;
+
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 -- Tables

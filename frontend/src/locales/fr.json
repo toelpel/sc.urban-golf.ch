@@ -104,7 +104,9 @@
     "Loading": "Chargement des joueurs et des scores...",
     "ViewHorizontal": "Vue horizontale",
     "ViewVertical": "Vue verticale",
-    "ViewRanking": "Classement"
+    "ViewRanking": "Classement",
+    "SortByAverage": "Trier par moyenne",
+    "SortByTotal": "Trier par total"
   },
   "Games": {
     "ListGames": {
@@ -136,7 +138,9 @@
   },
   "Errors": {
     "RequestFailed": "Requête échouée",
-    "NetworkError": "Erreur réseau. Veuillez vérifier votre connexion."
+    "NetworkError": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "LoadingFailed": "Impossible de charger la partie",
+    "Retry": "Réessayer"
   },
   "PWA": {
     "UpdateAvailable": "Nouvelle version disponible.",

@@ -8,6 +8,7 @@ export interface GamesDetailContext {
   scores: Ref<ScoreMap>
   holes: Ref<number[]>
   gameName: Ref<string>
+  error: Ref<string | null>
   load: () => Promise<void>
 }
 

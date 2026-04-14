@@ -43,14 +43,17 @@
                     <!-- Ø row -->
                     <tr class="cursor-pointer hover:bg-white/30 dark:hover:bg-gray-800/30 transition scorecard-metric-highlight"
                         :class="{ 'scorecard-sort-active': sortColumn === 'average' }"
-                        @click="$emit('sort', 'average')">
+                        :aria-label="$t('Scorecard.SortByAverage')"
+                        tabindex="0" @click="$emit('sort', 'average')"
+                        @keydown.enter.prevent="$emit('sort', 'average')"
+                        @keydown.space.prevent="$emit('sort', 'average')">
                         <td class="scorecard-cell text-left font-semibold"
                             :class="{ 'scorecard-sort-active-header': sortColumn === 'average' }">
                             Ø
                             <ChevronUpIcon v-if="sortColumn === 'average' && sortDirection === 'asc'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
                             <ChevronDownIcon v-else-if="sortColumn === 'average'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
                         </td>
                         <td v-for="player in sortedPlayers" :key="player.id"
                             class="scorecard-cell text-center font-medium">
@@ -61,14 +64,17 @@
                     <!-- Total row -->
                     <tr class="cursor-pointer hover:bg-white/40 dark:hover:bg-gray-800/40 transition scorecard-metric-highlight"
                         :class="{ 'scorecard-sort-active': sortColumn === 'total' }"
-                        @click="$emit('sort', 'total')">
+                        :aria-label="$t('Scorecard.SortByTotal')"
+                        tabindex="0" @click="$emit('sort', 'total')"
+                        @keydown.enter.prevent="$emit('sort', 'total')"
+                        @keydown.space.prevent="$emit('sort', 'total')">
                         <td class="scorecard-cell text-left font-semibold"
                             :class="{ 'scorecard-sort-active-header': sortColumn === 'total' }">
                             {{ $t('General.Total') }}
                             <ChevronUpIcon v-if="sortColumn === 'total' && sortDirection === 'asc'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
                             <ChevronDownIcon v-else-if="sortColumn === 'total'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" />
+                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
                         </td>
                         <td v-for="player in sortedPlayers" :key="player.id"
                             class="scorecard-cell text-center font-semibold">

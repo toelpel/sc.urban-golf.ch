@@ -104,7 +104,9 @@
     "Loading": "Lade Spieler und Scores ...",
     "ViewHorizontal": "Horizontale Ansicht",
     "ViewVertical": "Vertikale Ansicht",
-    "ViewRanking": "Rangliste"
+    "ViewRanking": "Rangliste",
+    "SortByAverage": "Nach Durchschnitt sortieren",
+    "SortByTotal": "Nach Total sortieren"
   },
   "Games": {
     "ListGames": {
@@ -136,7 +138,9 @@
   },
   "Errors": {
     "RequestFailed": "Anfrage fehlgeschlagen",
-    "NetworkError": "Netzwerkfehler. Bitte Verbindung prüfen."
+    "NetworkError": "Netzwerkfehler. Bitte Verbindung prüfen.",
+    "LoadingFailed": "Spiel konnte nicht geladen werden",
+    "Retry": "Erneut versuchen"
   },
   "PWA": {
     "UpdateAvailable": "Neue Version verfügbar.",

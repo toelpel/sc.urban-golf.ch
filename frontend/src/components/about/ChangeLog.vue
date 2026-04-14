@@ -1,24 +1,26 @@
 <template>
     <h1 class="maintitle">{{ $t('About.ChangeLog.Title') }}</h1>
     <div
-        class="prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert max-w-none bg-white dark:bg-gray-900 p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
-        <vue-markdown :source="markdown" />
-    </div>
+        class="prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert max-w-none bg-white dark:bg-gray-900 p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-700"
+        v-html="rendered"></div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import VueMarkdown from 'vue3-markdown-it'
+import { marked } from 'marked'
 
-const markdown = ref('')
+const rendered = ref('')
+
+marked.setOptions({ gfm: true, breaks: false })
 
 onMounted(async () => {
     try {
         const response = await fetch('/CHANGELOG.md')
         if (!response.ok) throw new Error('Datei konnte nicht geladen werden')
-        markdown.value = await response.text()
+        const text = await response.text()
+        rendered.value = await marked.parse(text)
     } catch {
-        markdown.value = '⚠️ CHANGELOG konnte nicht geladen werden.'
+        rendered.value = '<p>⚠️ CHANGELOG konnte nicht geladen werden.</p>'
     }
 })
 </script>
