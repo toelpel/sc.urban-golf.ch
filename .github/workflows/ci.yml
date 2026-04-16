@@ -247,9 +247,10 @@ jobs:
   # =====================================================================
   ci-green:
     name: CI Green
-    if: false
+    if: always()
     needs: [static-checks, unit-frontend, unit-backend, e2e-smoke, e2e-integration]
     runs-on: ubuntu-latest
+
     steps:
       - name: Check all upstream jobs
         run: |
@@ -258,7 +259,13 @@ jobs:
           test "${{ needs.unit-frontend.result }}"   = "success"
           test "${{ needs.unit-backend.result }}"    = "success"
           test "${{ needs.e2e-smoke.result }}"       = "success"
-          test "${{ needs.e2e-integration.result }}" = "success"
+
+          # integration darf success oder skipped sein
+          if [ "${{ needs.e2e-integration.result }}" != "success" ] && \
+            [ "${{ needs.e2e-integration.result }}" != "skipped" ]; then
+            echo "e2e-integration failed"
+            exit 1
+          fi
 
   # =====================================================================
   # Deploy — nur auf main-Push, wenn CI green ist
