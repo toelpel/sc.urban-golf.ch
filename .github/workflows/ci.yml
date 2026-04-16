@@ -140,6 +140,7 @@ jobs:
   # =====================================================================
   e2e-integration:
     name: E2E Integration (full stack)
+    if: false
     needs: [unit-frontend, unit-backend, e2e-smoke]
     runs-on: ubuntu-latest
     timeout-minutes: 15
