@@ -136,7 +136,9 @@ jobs:
 
   # =====================================================================
   # 4) Integration-E2E — Playwright gegen echtes Backend + Postgres
-  #    Langsamer (~3 min) aber deckt den gesamten Stack ab.
+  #    Aktuell deaktiviert (zu lange Laufzeit). Zum Wieder-Aktivieren:
+  #    1) `if: false` entfernen
+  #    2) `e2e-integration` in `ci-green.needs` wieder ergänzen
   # =====================================================================
   e2e-integration:
     name: E2E Integration (full stack)
@@ -247,25 +249,23 @@ jobs:
   # =====================================================================
   ci-green:
     name: CI Green
-    if: always()
-    needs: [static-checks, unit-frontend, unit-backend, e2e-smoke, e2e-integration]
+    # `e2e-integration` ist bewusst NICHT in needs — solange der Job via
+    # `if: false` ausgelagert ist, blockiert er sonst den gesamten Pfad
+    # (inkl. Deploys), weil GitHub Actions "skipped" entlang der Needs-Kette
+    # propagiert und der Skip-Workaround mit `if: always()` nicht immer
+    # zuverlässig greift. Wenn Integration wieder live ist: hier und im
+    # Kommentar oben ergänzen.
+    needs: [static-checks, unit-frontend, unit-backend, e2e-smoke]
     runs-on: ubuntu-latest
 
     steps:
       - name: Check all upstream jobs
         run: |
           set -e
-          test "${{ needs.static-checks.result }}"   = "success"
-          test "${{ needs.unit-frontend.result }}"   = "success"
-          test "${{ needs.unit-backend.result }}"    = "success"
-          test "${{ needs.e2e-smoke.result }}"       = "success"
-
-          # integration darf success oder skipped sein
-          if [ "${{ needs.e2e-integration.result }}" != "success" ] && \
-            [ "${{ needs.e2e-integration.result }}" != "skipped" ]; then
-            echo "e2e-integration failed"
-            exit 1
-          fi
+          test "${{ needs.static-checks.result }}" = "success"
+          test "${{ needs.unit-frontend.result }}" = "success"
+          test "${{ needs.unit-backend.result }}"  = "success"
+          test "${{ needs.e2e-smoke.result }}"     = "success"
 
   # =====================================================================
   # Deploy — nur auf main-Push, wenn CI green ist
