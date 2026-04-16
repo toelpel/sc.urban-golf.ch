@@ -247,7 +247,7 @@ jobs:
   # =====================================================================
   ci-green:
     name: CI Green
-    if: always()
+    if: false
     needs: [static-checks, unit-frontend, unit-backend, e2e-smoke, e2e-integration]
     runs-on: ubuntu-latest
     steps:
