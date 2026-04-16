@@ -1,6 +1,6 @@
 {
   "name": "urban-golf-frontend",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -17,7 +17,11 @@
     "type-check": "vue-tsc --noEmit",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:smoke": "playwright test --config=playwright.smoke.config.ts",
+    "test:e2e:smoke:headed": "playwright test --config=playwright.smoke.config.ts --headed",
+    "test:visual": "node e2e/visual-audit.mjs",
+    "test:all": "npm run lint && npm run type-check && npm run test && npm run test:e2e:smoke"
   },
   "dependencies": {
     "@heroicons/vue": "^2.2.0",

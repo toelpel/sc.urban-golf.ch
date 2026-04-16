@@ -12,6 +12,8 @@ import ToastContainer from '@/components/ui/ToastContainer.vue'
 import PWAUpdateDialog from '@/components/pwa/PWAUpdateDialog.vue'
 import PWAInstallBanner from '@/components/pwa/PWAInstallBanner.vue'
 import { useNetworkStatus } from '@/composables/useNetworkStatus'
+import { useThemeMode } from '@/composables/useThemeMode'
 
 useNetworkStatus()
+useThemeMode()
 </script>

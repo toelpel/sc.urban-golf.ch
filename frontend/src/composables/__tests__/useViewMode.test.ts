@@ -75,12 +75,13 @@ describe('useViewMode', () => {
       expect(viewMode.value).toBe('horizontal')
     })
 
-    it('defaults to vertical when few players and many holes', () => {
+    it('defaults to ranking when few players and many holes', () => {
       const players = ref([{ id: 'p1', name: 'Player 1' }, { id: 'p2', name: 'Player 2' }])
       const holes = ref([1, 2, 3, 4, 5, 6, 7, 8, 9])
       const { viewMode, loadPreference } = useViewMode(players, holes)
       loadPreference()
-      expect(viewMode.value).toBe('vertical')
+      // Neuer Default: Ranking ist die primäre Scorecard-Ansicht
+      expect(viewMode.value).toBe('ranking')
     })
 
     it('ignores invalid localStorage value and uses default', () => {
@@ -89,8 +90,8 @@ describe('useViewMode', () => {
       const holes = ref([1, 2, 3, 4, 5, 6, 7, 8, 9])
       const { viewMode, loadPreference } = useViewMode(players, holes)
       loadPreference()
-      // With 2 players and 9 holes: not (>4 players && <=4 holes), so vertical
-      expect(viewMode.value).toBe('vertical')
+      // Für 2 Spieler + 9 Löcher greift der Ranking-Default
+      expect(viewMode.value).toBe('ranking')
     })
   })
 })

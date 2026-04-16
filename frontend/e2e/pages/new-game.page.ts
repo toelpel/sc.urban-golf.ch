@@ -10,12 +10,11 @@ export class NewGamePage {
 
   constructor(page: Page) {
     this.page = page
-    this.heading = page.locator('h1.maintitle')
-    // First input.input-field is the game name
-    this.gameNameInput = page.locator('input.input-field').first()
-    this.addPlayerButton = page.getByRole('button', { name: 'Add Player' })
-    this.startGameButton = page.getByRole('button', { name: 'Start Game' })
-    this.saveChangesButton = page.getByRole('button', { name: 'Save Changes' })
+    this.heading = page.getByRole('heading', { name: /Neues Spiel erstellen|Spiel bearbeiten|New Game|Edit Game/ })
+    this.gameNameInput = page.locator('input#game-name')
+    this.addPlayerButton = page.getByRole('button', { name: /Spieler hinzufügen|Add Player/ })
+    this.startGameButton = page.getByRole('button', { name: /Spiel starten|Start Game/ })
+    this.saveChangesButton = page.getByRole('button', { name: /Änderungen speichern|Save Changes/ })
   }
 
   async goto() {
@@ -33,9 +32,7 @@ export class NewGamePage {
   }
 
   async fillPlayerName(index: number, name: string) {
-    // First input is game name, players start at index 1
-    const playerInputs = this.page.locator('input.input-field')
-    await playerInputs.nth(index + 1).fill(name)
+    await this.page.locator('.new-game__player-input').nth(index).fill(name)
   }
 
   async addPlayer() {

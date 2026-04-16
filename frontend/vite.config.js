@@ -2,10 +2,16 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'path';
+import { readFileSync } from 'fs';
 import { VitePWA } from 'vite-plugin-pwa';
 import compression from 'vite-plugin-compression2';
 
+const pkg = JSON.parse(readFileSync(resolve(process.cwd(), 'package.json'), 'utf-8'));
+
 export default defineConfig(({ mode }) => ({
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
   test: {
     globals: true,
     environment: 'happy-dom',
@@ -50,6 +56,10 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     vue(),
     tailwindcss(),
+    // Hinweis: vite-plugin-pwa 1.2.0 erzeugt eine Rollup-Warnung
+    //   `inlineDynamicImports option is deprecated, please use codeSplitting: false instead`
+    // Die Warnung kommt aus dem Plugin selbst (beim Service-Worker-Build, nicht
+    // unserer App) und verschwindet mit einem künftigen Plugin-Update.
     VitePWA({
       devOptions: {
         enabled: mode !== 'development',

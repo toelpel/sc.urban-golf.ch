@@ -12,13 +12,13 @@ export class FeedbackPage {
 
   constructor(page: Page) {
     this.page = page
-    this.heading = page.locator('h1.maintitle')
-    this.starButtons = page.locator('button:has-text("★")')
+    this.heading = page.getByRole('heading', { name: /Feedback zur Scorecard|Feedback/ })
+    this.starButtons = page.locator('.feedback__star')
     this.messageInput = page.locator('textarea#message')
     this.nameInput = page.locator('input#name')
     this.emailInput = page.locator('input#email')
-    this.submitButton = page.locator('button.button-primary[type="submit"]')
-    this.thankYouMessage = page.getByText('Thank you for your feedback')
+    this.submitButton = page.getByRole('button', { name: /Absenden|Send/ })
+    this.thankYouMessage = page.getByText(/Vielen Dank für dein Feedback|Thank you/)
   }
 
   async goto() {

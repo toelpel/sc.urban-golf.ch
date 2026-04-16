@@ -1,386 +1,572 @@
-/* Globale Komponenten für Darkmode-fähige Eingabefelder und Buttons */
+/* =====================================================================
+   Urban Golf ScoreCard — Greenway Design System
+   Globales Stylesheet. Tokens kommen aus tokens.css.
+   ===================================================================== */
 
 @import "tailwindcss";
+@import "./tokens.css";
 @config "../../tailwind.config.js";
 @plugin "@tailwindcss/typography";
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* =====================================================================
+   Base
+   ===================================================================== */
 
 @layer base {
   html,
   body,
   #app {
-    @apply h-full;
+    height: 100%;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-feature-settings: "ss02", "cv11", "cv05";
+    color: var(--text-default);
+    background: var(--app-bg);
+    overscroll-behavior-y: none;
+  }
+
+  /* Tabular numerics überall wo Zahlen stehen */
+  .tabular,
+  .score-number,
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Focus-ring einheitlich */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  ::selection {
+    background: var(--color-accent-400);
+    color: var(--color-surface-900);
   }
 }
+
+/* =====================================================================
+   App-Shell
+   ===================================================================== */
 
 @layer components {
-  /* Glassmorphism Card – neutrales Card-Design */
-  .glass-card {
-    @apply p-5 rounded-2xl backdrop-blur-lg backdrop-saturate-150
-          bg-white/60 dark:bg-gray-900/60
-          border border-white/40 dark:border-white/40
-          text-gray-800 dark:text-white shadow-lg transition hover:shadow-xl;
+  .app-shell {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    isolation: isolate;
   }
 
-  /* Variante für klickbare Cards */
-  .glass-card--interactive {
-    @apply cursor-pointer select-none hover:scale-[1.01];
+  .app-main {
+    flex: 1 1 auto;
+    padding-bottom: calc(var(--spacing-nav-height) + var(--spacing-safe-bottom) + 1rem);
   }
 
-  /* Card-Inhalte */
-  .card-title {
-    @apply text-base sm:text-lg font-semibold flex items-center gap-2;
-  }
-  .card-icon {
-    @apply w-6 h-6 text-white/80 shrink-0;
-  }
-  .card-desc {
-    @apply text-sm text-gray-700 dark:text-gray-300 mt-1 whitespace-pre-line;
+  .app-main--no-nav {
+    padding-bottom: var(--spacing-safe-bottom);
   }
 
-  /* Enter-Animation (sichtbar beim IntersectionObserver) */
-  .appear-container {
-    @apply transition-opacity transition-transform duration-700 transform-gpu;
-  }
-  .appear-hidden {
-    @apply opacity-0 translate-y-8;
-  }
-  .appear-visible {
-    @apply opacity-100 translate-y-0;
+  .container-app {
+    width: 100%;
+    max-width: 48rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
   }
 
-  /* Listen-Card (kein globales Padding, damit Header/Body es steuern) */
-  .glass-list {
-    @apply p-0 rounded-2xl backdrop-blur-lg backdrop-saturate-150
-          bg-white/60 dark:bg-gray-900/60
-          border border-white/40 dark:border-white/40
-          text-gray-800 dark:text-white shadow-lg transition hover:shadow-xl
-          overflow-hidden isolate;
+  @media (min-width: 768px) {
+    .container-app {
+      max-width: 64rem;
+      padding-inline: 2rem;
+    }
   }
 
-  /* Gemeinsamer Innen-Wrapper für Header + Body */
-  .card-inner {
-    @apply divide-y divide-gray-200 dark:divide-white/10;
+  /* =====================================================================
+     Cards — echte Flächen, Elevation statt Blur
+     ===================================================================== */
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 200ms var(--ease-standard), transform 200ms var(--ease-standard);
   }
 
-  /* Body des expandierten Bereichs – gleiches L/R-Padding wie Header */
-  .card-body {
-    @apply px-5 md:px-6 pt-3 pb-4 bg-transparent;
+  .card--padded {
+    padding: 1.25rem;
   }
 
-  /* Zeile im Card-Header */
-  .card-row {
-    @apply flex justify-between items-center px-5 py-4 md:px-6 md:py-5 relative z-10;
+  .card--interactive {
+    cursor: pointer;
+    user-select: none;
   }
 
-  /* Chevron / Toggle-Button: gut sichtbar & tappable */
-.chevron-btn {
-  @apply relative flex items-center justify-center
-         w-9 h-9 md:w-8 md:h-8 rounded-full
-         bg-white/40 hover:bg-white/50
-         text-gray-700
-         ring-1 ring-white/60
-         transition hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40
-         dark:bg-gray-700/60 dark:hover:bg-gray-700/80
-         dark:text-gray-200
-         dark:ring-gray-500/50
-         dark:focus-visible:ring-gray-400/60;
-}
-
-  /* Titel- & Meta-Text kompakter */
-  .list-title {
-    @apply font-semibold text-sm md:text-base text-gray-900 dark:text-white truncate;
-  }
-  .list-meta {
-    @apply text-[11px] md:text-xs text-gray-700 dark:text-gray-400 truncate;
+  .card--interactive:hover {
+    box-shadow: var(--shadow-elev-2);
   }
 
-  /* ===========================
-     Glass-Inputs (inkl. States)
-     =========================== */
-  .input-field,
-  .textarea-field,
-  .select-field {
-    @apply w-full px-4 py-3 rounded-lg shadow-md transition
-           border border-white/50 dark:border-white/30
-           bg-white/30 dark:bg-gray-900/30
-           backdrop-blur-md backdrop-saturate-150
-           text-gray-900 dark:text-white
-           placeholder-gray-500 dark:placeholder-gray-400
-           hover:border-blue-400 dark:hover:border-blue-300
-           focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
-           dark:focus:ring-blue-300 dark:focus:border-blue-400;
+  .card--interactive:active {
+    transform: translateY(1px);
+    box-shadow: var(--shadow-elev-1);
   }
 
-  /* States */
-  .input-field:disabled,
-  .textarea-field:disabled,
-  .select-field:disabled {
-    @apply opacity-60 cursor-not-allowed;
-  }
-  .input-field[readonly],
-  .textarea-field[readonly],
-  .select-field[readonly] {
-    @apply opacity-80;
-  }
-
-  /* Fehlerzustand (z.B. VeeValidate) */
-  .input-error {
-    @apply border-red-400 focus:ring-red-400 focus:border-red-500;
+  .card--feature {
+    background: linear-gradient(
+      145deg,
+      color-mix(in oklab, var(--color-brand-500) 95%, white) 0%,
+      var(--color-brand-700) 100%
+    );
+    color: var(--color-surface-0);
+    border: 0;
+    box-shadow: var(--shadow-glow-brand);
   }
 
-  /* Kompaktere Variante (z.B. in Toolbars) */
-  .input-compact {
-    @apply py-2 text-sm rounded-md;
+  /* =====================================================================
+     Typografie
+     ===================================================================== */
+
+  .t-eyebrow {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
   }
 
-  /* Input-Gruppen (Label/Hint/Error) */
-  .input-group { @apply space-y-1; }
-  .input-label { @apply block text-sm font-medium text-gray-700 dark:text-gray-200; }
-  .input-hint  { @apply text-xs text-gray-500 dark:text-gray-400; }
-  .input-msg-error { @apply text-xs text-red-500; }
-}
+  .t-display {
+    font-family: var(--font-display);
+    font-size: var(--text-display);
+    line-height: 0.95;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    color: var(--text-strong);
+  }
 
-/* kleine Utilities, die Tailwind so nicht mit @apply abbildet */
-@layer utilities {
-  .will-change-backdrop { will-change: backdrop-filter; }
-  /* `isolate` gibt es bereits in Tailwind, nur zur Info:
-     .isolate { isolation: isolate; } */
-}
+  .t-headline {
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text-strong);
+  }
 
-/* Mobile‑Performance: weniger Blur auf sehr kleinen Screens */
-@media (max-width: 640px) {
-  .input-field, .textarea-field, .select-field {
-    @apply backdrop-blur-sm; /* zuvor md */
+  .t-title {
+    font-size: var(--text-2xl);
+    line-height: 1.15;
+    font-weight: 700;
+    color: var(--text-strong);
+    letter-spacing: -0.01em;
+  }
+
+  .t-subtitle {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  .t-body {
+    font-size: var(--text-base);
+    color: var(--text-default);
+  }
+
+  .t-muted {
+    color: var(--text-muted);
+  }
+
+  .t-score {
+    font-family: var(--font-display);
+    font-size: var(--text-score);
+    line-height: 0.95;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-strong);
+  }
+
+  /* =====================================================================
+     Dividers, Chips, Badges
+     ===================================================================== */
+
+  .divider {
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-pill);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    background: color-mix(in oklab, var(--text-default) 8%, transparent);
+    color: var(--text-default);
+    white-space: nowrap;
+  }
+
+  .chip--brand {
+    background: color-mix(in oklab, var(--primary) 14%, transparent);
+    color: var(--primary);
+  }
+
+  .chip--accent {
+    background: color-mix(in oklab, var(--accent) 18%, transparent);
+    color: var(--accent);
+  }
+
+  .chip--live {
+    background: color-mix(in oklab, var(--color-accent-500) 18%, transparent);
+    color: color-mix(in oklab, var(--color-accent-600) 60%, var(--text-strong));
+  }
+
+  .chip--live::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--color-accent-500);
+    box-shadow: 0 0 0 0 var(--color-accent-500);
+    animation: live-pulse 1.8s var(--ease-standard) infinite;
+  }
+
+  @keyframes live-pulse {
+    0%,100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-accent-500) 60%, transparent); }
+    70% { box-shadow: 0 0 0 8px transparent; }
+  }
+
+  /* =====================================================================
+     Inputs
+     ===================================================================== */
+
+  .field {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-md);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-strong);
+    font-size: var(--text-base);
+    transition: border-color 150ms var(--ease-standard), box-shadow 150ms var(--ease-standard);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--color-surface-900) 3%, transparent);
+  }
+
+  .field::placeholder {
+    color: var(--text-subtle);
+  }
+
+  .field:hover {
+    border-color: color-mix(in oklab, var(--primary) 55%, var(--card-border));
+  }
+
+  .field:focus,
+  .field:focus-visible {
+    /* Wir behalten einen sichtbaren Outline für High-Contrast + Forced-Colors.
+       Der Soft-Glow bleibt über box-shadow. */
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 16%, transparent);
+  }
+
+  .field--error {
+    border-color: var(--color-danger-500);
+  }
+
+  .field--error:focus {
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-danger-500) 18%, transparent);
+  }
+
+  .label-strong {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-default);
+    margin-bottom: 0.35rem;
+  }
+
+  .hint {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+
+  .hint--error {
+    color: var(--color-danger-500);
+  }
+
+  /* =====================================================================
+     Animationen
+     ===================================================================== */
+
+  @keyframes score-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+
+  .score-pop {
+    animation: score-pop 320ms var(--ease-spring);
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 200ms var(--ease-standard);
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
+  .slide-up-enter-active,
+  .slide-up-leave-active {
+    transition: transform 260ms var(--ease-emphasize), opacity 200ms var(--ease-standard);
+  }
+
+  .slide-up-enter-from,
+  .slide-up-leave-to {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  .view-fade-enter-active,
+  .view-fade-leave-active {
+    transition: opacity 180ms var(--ease-standard), transform 180ms var(--ease-standard);
+  }
+
+  .view-fade-enter-from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  .view-fade-leave-to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  .list-move {
+    transition: transform 300ms var(--ease-emphasize);
+  }
+
+  .list-enter-active,
+  .list-leave-active {
+    transition: all 220ms var(--ease-standard);
+  }
+
+  .list-enter-from,
+  .list-leave-to {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  /* =====================================================================
+     Scorecard-Tabelle (Grid-View)
+     ===================================================================== */
+
+  .scorecard {
+    width: 100%;
+    min-width: max-content;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-elev-1);
+  }
+
+  .scorecard th,
+  .scorecard td {
+    padding: 0.65rem 0.85rem;
+    font-size: var(--text-sm);
+    text-align: center;
+    border-bottom: 1px solid var(--divider);
+    background: transparent;
+  }
+
+  .scorecard th {
+    font-weight: 600;
+    color: var(--text-default);
+    background: color-mix(in oklab, var(--card-bg) 70%, var(--text-default) 4%);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .scorecard td.sticky,
+  .scorecard th.sticky {
+    background: var(--card-bg);
+    z-index: 3;
+  }
+
+  .scorecard tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .scorecard tbody tr:nth-child(even) td:not(.sticky) {
+    background: color-mix(in oklab, var(--text-default) 3%, transparent);
+  }
+
+  .scorecard-hover-row:hover td {
+    background: color-mix(in oklab, var(--primary) 6%, transparent) !important;
+  }
+
+  .scorecard td.scorecard-heatmap-great { background: color-mix(in oklab, var(--color-score-great) 30%, transparent); }
+  .scorecard td.scorecard-heatmap-good  { background: color-mix(in oklab, var(--color-score-good)  22%, transparent); }
+  .scorecard td.scorecard-heatmap-poor  { background: color-mix(in oklab, var(--color-score-poor)  22%, transparent); }
+  .scorecard td.scorecard-heatmap-bad   { background: color-mix(in oklab, var(--color-score-bad)   30%, transparent); }
+
+  .scorecard-sort-active-header {
+    background: color-mix(in oklab, var(--primary) 18%, var(--card-bg)) !important;
+    color: var(--primary) !important;
+  }
+
+  .scorecard-sort-active {
+    background: color-mix(in oklab, var(--primary) 7%, transparent) !important;
+  }
+
+  .scorecard-metric-highlight {
+    background: color-mix(in oklab, var(--primary) 4%, transparent);
+  }
+
+  /* Compact */
+  .scorecard-compact th,
+  .scorecard-compact td {
+    padding: 0.35rem 0.5rem;
+    font-size: var(--text-xs);
+  }
+
+  /* Skeleton */
+  .scorecard-skeleton {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+  }
+
+  .scorecard-skeleton-row {
+    display: flex;
+    gap: 1px;
+  }
+
+  .scorecard-skeleton-header {
+    height: 2.5rem;
+    flex: 1;
+    background: color-mix(in oklab, var(--text-default) 8%, transparent);
+  }
+
+  .scorecard-skeleton-cell {
+    height: 2.25rem;
+    flex: 1;
+    background: color-mix(in oklab, var(--text-default) 4%, transparent);
+  }
+
+  /* =====================================================================
+     Ranking Podium
+     ===================================================================== */
+
+  .ranking-row {
+    position: relative;
+  }
+
+  .ranking-row-gold {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, #fde047 24%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  .ranking-row-silver {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, #d1d5db 24%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  .ranking-row-bronze {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, #d97706 20%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  :where(.dark) .ranking-row-gold   { background: linear-gradient(90deg, color-mix(in oklab, #fde047 14%, transparent) 0%, transparent 70%); }
+  :where(.dark) .ranking-row-silver { background: linear-gradient(90deg, color-mix(in oklab, #d1d5db 14%, transparent) 0%, transparent 70%); }
+  :where(.dark) .ranking-row-bronze { background: linear-gradient(90deg, color-mix(in oklab, #d97706 12%, transparent) 0%, transparent 70%); }
+
+  /* =====================================================================
+     Hit-Areas / Accessibility
+     ===================================================================== */
+
+  .touch-target {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Thin scroll bars für horizontale Scroller */
+  .scroll-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scroll-hide::-webkit-scrollbar {
+    display: none;
   }
 }
 
-.maintitle {
-  @apply text-2xl font-semibold mb-4 text-gray-800 dark:text-white text-center whitespace-nowrap;
+/* =====================================================================
+   App-Background: sanfter Verlauf, kein Foto mehr
+   ===================================================================== */
+
+.app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background:
+    radial-gradient(ellipse 120% 80% at 10% 0%, var(--app-bg-gradient-a), transparent 60%),
+    radial-gradient(ellipse 100% 70% at 90% 10%, var(--app-bg-gradient-c), transparent 55%),
+    linear-gradient(180deg, var(--app-bg-gradient-b) 0%, var(--app-bg) 100%);
 }
 
-.button-primary {
-  @apply inline-block px-5 py-3 rounded-lg font-medium transition text-white bg-blue-500 shadow-md hover:bg-blue-600 hover:shadow-lg active:shadow focus:outline-none focus:ring focus:ring-blue-400 dark:bg-blue-400 dark:text-gray-900 dark:hover:bg-blue-300 dark:focus:ring-blue-300 transform;
-}
-
-.label {
-  @apply block mb-1 text-sm font-medium text-gray-700 dark:text-gray-200;
-}
-
-.helper-text {
-  @apply text-xs text-gray-500 dark:text-gray-400 mt-1;
-}
-
-.icon-button {
-  @apply w-10 h-10 flex items-center justify-center text-xl text-gray-800 dark:text-white hover:opacity-80 transition;
-}
-
-.dropdown-item {
-  @apply block w-full px-4 py-2 text-left text-sm transition hover:bg-blue-50 dark:hover:bg-gray-700;
-}
-
-.dropdown-item--active {
-  @apply text-blue-700 dark:text-blue-300 font-semibold;
-}
-
-.nav-bar {
-  @apply z-10 sticky top-0 bg-gray-400/50 border-b border-gray-400 p-4 shadow-sm backdrop-blur-md dark:bg-gray-800/50 dark:text-white dark:border-gray-600;
-}
-
-.footer-bar {
-  @apply z-10 text-center text-sm text-gray-500 py-1 border-t bg-gray-400/50 border-gray-400 shadow-sm backdrop-blur-md dark:bg-gray-800/50 dark:text-gray-400 dark:border-gray-600;
-  font-size: clamp(10px, 1.2vw, 0.875rem);
-  white-space: nowrap;
-}
-
-.material-nav-link {
-  @apply px-4 py-2 rounded-md font-medium transition text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-300;
-}
-
-.material-nav-link--active {
-  @apply text-white bg-blue-600 shadow-md hover:bg-blue-700 hover:shadow-lg hover:-translate-y-[1px] active:translate-y-0 active:shadow dark:bg-blue-400 dark:text-gray-900 dark:hover:bg-blue-300 focus:outline-none focus:ring focus:ring-blue-400 focus:ring-offset-1 transform;
-}
-
-/* ===========================
-   Scorecard: Glass-Style
-   =========================== */
-.scorecard-table {
-  @apply w-full min-w-max rounded-2xl overflow-hidden
-         bg-white/40 dark:bg-gray-900/40
-         backdrop-blur-md backdrop-saturate-150
-         border border-white/40 dark:border-white/20
-         shadow-lg;
-}
-
-.scorecard-header-cell {
-  @apply px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white
-         sticky top-0 z-10
-         bg-white/50 dark:bg-gray-900/50 backdrop-blur-md
-         border-b border-white/40 dark:border-white/20
-         shadow-sm;
-}
-
-/* linke, sticky 'Hole'-Spalte bekommt ebenfalls Glasfläche */
-.scorecard-player-cell,
-.scorecard-metric-cell,
-.scorecard-cell {
-  @apply px-3 py-2 text-sm text-gray-800 dark:text-gray-100
-         border-t border-white/30 dark:border-white/10;
-}
-
-/* Wenn Zellen sticky (links) verwendet werden, gib ihnen die gleiche Glasfläche */
-.scorecard-cell.sticky,
-.scorecard-player-cell.sticky,
-.scorecard-metric-cell.sticky {
-  @apply bg-white/40 dark:bg-gray-900/40 backdrop-blur-md;
-}
-
-/* Hover dezent glasig statt Vollfarbe */
-.scorecard-hover-row:hover {
-  @apply bg-white/30 dark:bg-gray-800/30;
-}
-
-/* Optional: dünne vertikale Divider zwischen Spieler-Spalten */
-.scorecard-table td + td,
-.scorecard-table th + th {
-  @apply border-l border-white/30 dark:border-white/10;
-}
-
-/* Sticky-Zellen brauchen eine eigene (leicht dichtere) Glasfläche */
-.scorecard-table th,
-.scorecard-table td {
-  @apply bg-transparent;
-}
-
-/* Compact-Modus: kleinere Schrift & Padding bei vielen Spielern */
-.scorecard-compact .scorecard-header-cell {
-  @apply px-2 py-1 text-xs;
-}
-
-.scorecard-compact .scorecard-cell,
-.scorecard-compact .scorecard-player-cell,
-.scorecard-compact .scorecard-metric-cell {
-  @apply px-2 py-1 text-xs;
-}
-
-/* Zebra-Striping: jede zweite Zeile dezent eingefärbt */
-.scorecard-table tbody tr:nth-child(even) {
-  @apply bg-white/20 dark:bg-gray-800/20;
-}
-
-/* Aktive Sortierspalte: dezenter Hintergrund */
-.scorecard-sort-active {
-  @apply bg-blue-50/40 dark:bg-blue-900/20;
-}
-
-.scorecard-sort-active-header {
-  @apply bg-blue-100/50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300;
-}
-
-/* Metric-Spalten (Ø / Total): leicht abgesetzt */
-.scorecard-metric-highlight {
-  @apply bg-gray-100/30 dark:bg-gray-700/20;
-}
-
-/* Ranking-View: Podium-Styles */
-.ranking-row-gold {
-  background: linear-gradient(90deg, rgba(253, 224, 71, 0.15) 0%, transparent 70%);
-}
-.ranking-row-silver {
-  background: linear-gradient(90deg, rgba(209, 213, 219, 0.15) 0%, transparent 70%);
-}
-.ranking-row-bronze {
-  background: linear-gradient(90deg, rgba(217, 119, 6, 0.1) 0%, transparent 70%);
-}
-
-:is(.dark) .ranking-row-gold {
-  background: linear-gradient(90deg, rgba(253, 224, 71, 0.08) 0%, transparent 70%);
-}
-:is(.dark) .ranking-row-silver {
-  background: linear-gradient(90deg, rgba(209, 213, 219, 0.08) 0%, transparent 70%);
-}
-:is(.dark) .ranking-row-bronze {
-  background: linear-gradient(90deg, rgba(217, 119, 6, 0.06) 0%, transparent 70%);
-}
-
-/* View-Wechsel Fade-Transition */
-.view-fade-enter-active,
-.view-fade-leave-active {
-  transition: opacity 0.15s ease, transform 0.15s ease;
-}
-.view-fade-enter-from {
-  opacity: 0;
-  transform: translateY(4px);
-}
-.view-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-4px);
-}
-
-/* Score-Heatmap: Farbcodierung relativ zum Loch-Durchschnitt
-   Spezifität .scorecard-table td.X nötig, da .scorecard-table td bg-transparent setzt */
-.scorecard-table td.scorecard-heatmap-great {
-  @apply bg-green-500/25 dark:bg-green-400/20;
-}
-.scorecard-table td.scorecard-heatmap-good {
-  @apply bg-green-400/15 dark:bg-green-400/10;
-}
-.scorecard-table td.scorecard-heatmap-poor {
-  @apply bg-red-400/15 dark:bg-red-400/10;
-}
-.scorecard-table td.scorecard-heatmap-bad {
-  @apply bg-red-500/25 dark:bg-red-400/20;
-}
-
-/* Score-Pulse Animation bei Wertänderung */
-@keyframes score-pulse {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.25); }
-  100% { transform: scale(1); }
-}
-.score-pulse {
-  animation: score-pulse 0.3s ease-out;
-}
-
-/* Scorecard Skeleton Loading */
-.scorecard-skeleton {
-  @apply rounded-2xl overflow-hidden;
-}
-.scorecard-skeleton-row {
-  @apply flex gap-px;
-}
-.scorecard-skeleton-cell {
-  @apply h-9 bg-white/20 dark:bg-white/10 flex-1;
-}
-.scorecard-skeleton-header {
-  @apply h-10 bg-white/30 dark:bg-white/15 flex-1;
-}
-
-/* Spieler-Farbe: linker Border-Akzent */
-.scorecard-player-color {
-  @apply border-l-3;
-}
-
-/* Animation für verschobene Listenelemente */
-.game-list-move {
-  transition: transform 0.3s ease;
-}
-
-.game-list-enter-active,
-.game-list-leave-active {
-  transition: all 0.2s ease;
-}
-
-.game-list-enter-from,
-.game-list-leave-to {
-  opacity: 0;
-  transform: translateY(4px);
-}
-
-/* Scroll-To-Top Button */
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
+.app-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image:
+    radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0);
+  background-size: 24px 24px;
+  color: var(--text-default);
+  pointer-events: none;
 }

@@ -1,29 +1,24 @@
-# Dependencies
+# =====================================================================
+# Frontend-spezifische Ergänzungen (Root .gitignore deckt das meiste ab)
+# =====================================================================
+
+# Dependencies (Sicherheitsnetz falls direkt in frontend/ gearbeitet wird)
 node_modules/
 .pnp
 .pnp.js
 
-# Production build
+# Build-Output
 dist/
 dist-ssr/
 *.local
 
-# Environment files
+# Environment-Dateien mit Secrets
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
 .env.*.local
 
 # Logs
-logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-.pnpm-debug.log*
 
 # Testing
 coverage/
@@ -31,14 +26,17 @@ coverage/
 
 # Playwright
 /e2e/test-results/
+/e2e/test-results-smoke/
+/e2e/screenshots/
 /playwright-report/
+/playwright-report-smoke/
 /blob-report/
 /playwright/.cache/
 
-# Vite
+# Vite-Cache
 .vite/
 
-# Editor directories and files
+# IDE
 .vscode/*
 !.vscode/extensions.json
 .idea/
@@ -47,28 +45,21 @@ coverage/
 *.njsproj
 *.sln
 *.sw?
-*.swp
-*.swo
-*~
 
-# OS files
+# OS
 .DS_Store
-.DS_Store?
 ._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
-# Temporary files
+# Temporär
 *.tmp
 *.temp
 .cache/
 
-# Optional files
+# Optional
 .npm
 .eslintcache
 .stylelintcache
 
-# Keep .htaccess if present
+# .htaccess bleibt tracked falls vorhanden
 !.htaccess

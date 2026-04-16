@@ -1,23 +1,38 @@
 {
   "General": {
-    "Home": "Home",
-    "NewGame": "Nouvelle parti",
+    "Home": "Accueil",
+    "NewGame": "Nouvelle partie",
     "Games": "Parties",
     "Game": "Partie",
     "Feedback": "Retour",
     "Scorecard": "Carte de score",
     "Hole": "Trou",
+    "HoleOne": "{n} trou",
+    "HoleMany": "{n} trous",
     "Player": "Joueur",
     "Total": "Total",
     "Back": "Retour",
     "Forward": "Suivant",
     "Send": "Envoyer",
     "FewerStrokes": "Moins de coups",
-    "MoreStrokes": "Plus de coups"
+    "MoreStrokes": "Plus de coups",
+    "Settings": "Paramètres",
+    "Version": "Version"
+  },
+  "Settings": {
+    "Theme": "Thème",
+    "Language": "Langue",
+    "ThemeLight": "Clair",
+    "ThemeDark": "Sombre",
+    "ThemeSystem": "Système"
   },
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Crée une nouvelle partie ou consulte les parties existantes.",
+    "Subtitle": "Urban Golf · Winterthour",
+    "RecentGames": "Parties récentes",
+    "SeeAll": "Tout",
+    "Contribute": "Contribuer",
     "OpenSource": {
       "Title": "Open source - participez !",
       "Text": "Commencez par une ⭐️, signalez des issues ou envoyez des pull requests. Nous avons hâte de voir vos contributions 🤩"
@@ -35,6 +50,14 @@
     },
     "Roadmap": {
       "Title": "Feuille de route",
+      "Subtitle": "Ce qui est livré et ce qui arrive ensuite.",
+      "Status": {
+        "Done": "Terminé",
+        "Planned": "Prévu",
+        "Open": "Ouvert",
+        "Progress": "Progrès",
+        "DoneOfTotal": "{done} sur {total} terminés"
+      },
       "Features": {
         "TestProd": {
           "Label": "Environnement Test/Prod propre",
@@ -94,17 +117,32 @@
   },
   "Feedback": {
     "Title": "Retour sur la scorecard",
+    "Subtitle": "Comment pouvons-nous faire mieux ? Chaque retour aide.",
     "ThankYou": "Merci pour ton retour ! 🍀",
     "RatingTitle": "Évaluation",
+    "RatingHint": "1 étoile = pas top, 5 étoiles = excellent",
+    "RatingLabels": {
+      "1": "1 étoile — pas top",
+      "2": "2 étoiles — bof",
+      "3": "3 étoiles — correct",
+      "4": "4 étoiles — j’aime",
+      "5": "5 étoiles — excellent"
+    },
     "Text": "Retour",
     "Name": "Nom (optionnel)",
-    "Email": "Email (optionnel)"
+    "Email": "Email (optionnel)",
+    "Errors": {
+      "RatingRequired": "Veuillez donner une note de 1 à 5 étoiles.",
+      "MessageRequired": "Veuillez saisir un commentaire.",
+      "SendFailed": "Le feedback n'a pas pu être envoyé."
+    }
   },
   "Scorecard": {
     "Loading": "Chargement des joueurs et des scores...",
     "ViewHorizontal": "Vue horizontale",
     "ViewVertical": "Vue verticale",
     "ViewRanking": "Classement",
+    "SortByName": "Trier par nom",
     "SortByAverage": "Trier par moyenne",
     "SortByTotal": "Trier par total"
   },
@@ -120,16 +158,32 @@
     "NewGame": {
       "TitleNew": "Créer une nouvelle partie",
       "TitleEdit": "Modifier la partie",
+      "Subtitle": "Donnez un nom à la partie et ajoutez des joueurs.",
       "GameName": "Nom de la partie",
+      "GameNamePlaceholder": "p.ex. Dimanche au parc",
       "PlayerName": "Joueur",
+      "PlayerNamePlaceholder": "Prénom",
       "SaveChanges": "Enregistrer les modifications",
       "StartGame": "Démarrer la partie",
-      "AddPlayer": "Ajouter un joueur"
+      "AddPlayer": "Ajouter un joueur",
+      "RemovePlayer": "Retirer le joueur",
+      "Errors": {
+        "GameAndPlayerRequired": "Veuillez saisir un nom de partie et au moins un joueur.",
+        "SaveFailed": "Échec de l'enregistrement de la partie.",
+        "LoadFailed": "Impossible de charger les données de la partie."
+      }
     },
     "HoleView": {
       "EditGame": "Modifier la partie",
-      "HideHoleOverview": "Cache la vue d'ensemble des trous",
-      "ShowHoleOverview": "Affiche l'aperçu des trous"
+      "HideHoleOverview": "Cacher la vue d'ensemble des trous",
+      "ShowHoleOverview": "Afficher l'aperçu des trous",
+      "ScoreFor": "Score pour {player}",
+      "OpenKeypad": "Ouvrir le clavier",
+      "KeypadQuickTitle": "Courant",
+      "KeypadShowAll": "Tout afficher",
+      "KeypadShortcutHint": "Astuce : 1–7 au clavier",
+      "StepperBack": "Trou précédent ({n})",
+      "StepperForward": "Trou suivant ({n})"
     }
   },
   "Network": {
@@ -143,8 +197,10 @@
     "Retry": "Réessayer"
   },
   "PWA": {
-    "UpdateAvailable": "Nouvelle version disponible.",
+    "UpdateAvailable": "Nouvelle version disponible",
+    "UpdateHint": "Recharge l'application pour obtenir la dernière version.",
     "Reload": "Recharger",
+    "Reloading": "Chargement…",
     "InstallBanner": {
       "Title": "Installer l'application",
       "Description": "Installe la ScoreCard pour un accès plus rapide – même hors ligne.",

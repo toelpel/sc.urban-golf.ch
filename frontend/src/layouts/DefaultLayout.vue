@@ -1,22 +1,40 @@
 <template>
-    <div class="min-h-screen flex flex-col text-gray-800 dark:text-white bg-white/40 dark:bg-gray-800/60">
-        <a href="#main-content"
-           class="sr-only focus:not-sr-only focus:absolute focus:z-[60] focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-md">
-          Skip to main content
-        </a>
-        <div class="sticky top-0 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-            <Header />
-        </div>
+  <div class="app-shell">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-        <main id="main-content" class="flex-1 overflow-y-auto w-[98%] max-w-6xl mx-auto px-4 py-3">
-            <slot></slot>
-        </main>
+    <TopBar />
 
-        <Footer />
-    </div>
+    <main id="main-content" class="app-main">
+      <slot></slot>
+    </main>
+
+    <BottomNav />
+  </div>
 </template>
 
 <script setup lang="ts">
-import Header from '@/components/layout/Header.vue'
-import Footer from '@/components/layout/Footer.vue'
+import TopBar from '@/components/layout/TopBar.vue'
+import BottomNav from '@/components/layout/BottomNav.vue'
 </script>
+
+<style scoped>
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 100;
+}
+.skip-link:focus {
+  left: 0.75rem;
+  top: calc(0.5rem + var(--spacing-safe-top));
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: var(--primary-ink);
+}
+</style>

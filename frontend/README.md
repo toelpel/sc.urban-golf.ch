@@ -1,142 +1,161 @@
-# Frontend – Urban Golf ScoreCard
+# Frontend — Urban Golf ScoreCard
 
-Welcome to **/frontend**! This folder contains the Vue frontend of the ScoreCard app. This README explains the tech stack, setup, workflows, testing, and provides useful links & tips so you can get productive quickly.
+Die Vue 3 PWA der ScoreCard-App. Dieser Guide fokussiert auf Dev-Workflow.
+Für Architektur siehe [../ARCHITECTURE.md](../ARCHITECTURE.md), für Tests
+[TESTING.md](TESTING.md), für Design-Regeln
+[../.claude/skills/ui-tokens/SKILL.md](../.claude/skills/ui-tokens/SKILL.md).
 
----
+## Quick Start
 
-## TL;DR – Quick Start
 ```bash
-# 1) Clone the project (repo root)
-# 2) Switch to the frontend folder
 cd frontend
-
-# 3) Install dependencies
-npm i
-
-# 4) Start the dev server (Vite)
-npm run dev
-# → http://localhost:5173 (default)
+npm install
+npm run dev                # http://localhost:5173
 ```
-> 💡 Standard environments via Vite: `.env`, `.env.development`, `.env.production`, `.env.test` (see **Environments & Config**).
 
----
+Backend muss separat laufen (siehe [../backend/README.md](../backend/README.md))
+oder `VITE_API_BASEURL` zeigt auf einen entfernten API-Endpoint.
 
 ## Tech Stack
-- **Vue 3** (Composition API)
-- **Vite 6** as dev server/builder
-- **Vue Router** for client-side routing
-- **TailwindCSS** for styling (including dark mode utilities)
-- **Heroicons** for UI icons
-- **PWA** via `vite-plugin-pwa`
 
----
+| Bereich | Version |
+| --- | --- |
+| Vue | 3.4 (Composition API, `<script setup lang="ts">`) |
+| Build | Vite 8 mit `@vitejs/plugin-vue` |
+| Routing | vue-router 5 (History-Mode) |
+| State | Pinia 3 (nur für echten globalen State) |
+| i18n | vue-i18n 11 (Legacy off) |
+| Styling | Tailwind v4 (`@theme`-Direktive) + eigene Tokens |
+| Icons | @heroicons/vue 2 |
+| HTTP | Axios 1 mit Retry |
+| PWA | vite-plugin-pwa 1 mit `injectManifest` + eigenem SW |
+| Tests | Vitest 4 + Playwright 1.59 |
 
-## Project Structure (Excerpt)
+## Projektstruktur
+
 ```
-/frontend
-├─ index.html
-├─ package.json
-├─ vite.config.*
-├─ src/
-│  ├─ main.js                 # App bootstrap
-│  ├─ App.vue                 # Root component
-│  ├─ router.js               # Vue Router
-│  ├─ assets/                 # Images, fonts, ...
-│  ├─ components/             # UI components (e.g., GamesListCompact*.vue)
-│  ├─ composables/            # UI composables (e.g., useGamesMetaData.js)
-│  ├─ layouts/                # Layouts to use in views
-│  ├─ locales/                # Translated texts as JSON
-│  ├─ views/                  # Pages (e.g., Home.vue, About.vue, ...)
-│  └─ styles/global.css       # Tailwind + global utilities
-└─ public/                    # Static assets
+frontend/
+├── index.html                       lädt Inter Variable Font + mountet #app
+├── vite.config.js                   Dev-Proxy /api → :3000, PWA-Plugin, Compression
+├── tailwind.config.js               Safelist für dynamische Klassen
+├── tsconfig.json
+├── src/
+│   ├── main.ts                      Pinia + Router + i18n + Axios + SW-Register
+│   ├── App.vue                      BackgroundImage + RouterView + Toasts + PWA-Dialoge
+│   ├── router/index.ts              Alle Routen + scrollBehavior
+│   ├── layouts/DefaultLayout.vue    TopBar + Main + BottomNav
+│   ├── pages/
+│   │   ├── home/HomePage.vue
+│   │   ├── games/GamesPage.vue
+│   │   ├── games/GamesNewPage.vue
+│   │   ├── feedback/FeedbackPage.vue
+│   │   └── about/AboutPage.vue (+ AboutHome, Roadmap, ChangeLog)
+│   ├── components/
+│   │   ├── layout/                  TopBar, BottomNav, SettingsSheet
+│   │   ├── ui/                      AppButton, AppCard, AppFab, AppBottomSheet,
+│   │   │                            SegmentedControl, PlayerAvatar, ProgressRing, …
+│   │   ├── games/                   GamesList*, GamesDetail* (Ranking/Horiz/Vert), GamesHoleView
+│   │   ├── about/                   AboutHome, Roadmap (Timeline), ChangeLog
+│   │   └── pwa/                     PWAInstallBanner, PWAUpdateDialog
+│   ├── composables/                 useGamesDetailData, useSortedPlayers, useOfflineSync,
+│   │                                useThemeMode, usePlayerColors, useViewMode, …
+│   ├── stores/syncQueue.ts          Offline-Queue (Pinia + useLocalStorage)
+│   ├── services/api.ts              HTTP-Client mit Retry
+│   ├── locales/{de,en,fr,nl}.json   i18n
+│   ├── assets/tokens.css            Design-Tokens (Tailwind @theme + semantische Vars)
+│   ├── assets/global.css            Base + Komponenten-Primitive + Animationen
+│   └── sw-custom.ts                 Custom Service-Worker (injectManifest)
+├── e2e/
+│   ├── smoke/                       Mock-basierte Smoke-Suite (kein Backend)
+│   ├── tests/                       Integration-Suite (braucht Backend + DB)
+│   ├── pages/                       Page-Objects für Integration-Tests
+│   └── visual-audit.mjs             Screenshot-Script pro Page × Theme
+├── playwright.config.ts             Integration-Config (baseURL default 8080)
+├── playwright.smoke.config.ts       Smoke-Config (Dev-Server auf 5173)
+└── TESTING.md                       Test-Übersicht
 ```
 
----
+## Environments / Config
 
-## Environments & Config
-Vite loads **`.env*` files** in the project root of the frontend. Variables prefixed with `VITE_` are injected into the frontend.
+Vite lädt `.env*` Dateien aus dem Frontend-Root. Nur Variablen mit `VITE_`-Prefix
+werden in den Client gebundled.
 
-**Recommended variables** (examples – adjust accordingly):
-```
-VITE_API_BASEURL=/api
-VITE_APP_NAME=Urban Golf ScoreCard
-```
-Typical files:
-- `.env` – global defaults
-- `.env.local` – local development
-- `.env.production` – production/release
-- `.env.test` – test/staging backend
+| Datei | Zweck |
+| --- | --- |
+| `.env.development` | Dev-Server-Defaults |
+| `.env.test` | Test-Build (`npm run build:test`) |
+| `.env.production` | Prod-Build (`npm run build` / `build:prod`) |
+| `.env.example` | Template, ins Repo committet |
 
----
+Wichtige Variablen:
+- `VITE_API_BASEURL=/api` — Pfad zur API, in dev durch `vite.config.js` → Port 3000 proxied
 
 ## NPM Scripts
-| Script               | Purpose                                                  |
-| -------------------- | -------------------------------------------------------- |
-| `npm run dev`        | Start dev server (HMR via Vite).                         |
-| `npm run build`      | Production build in `dist/`.                             |
-| `npm run preview`    | Preview production build locally.                        |
-| `npm run build:test` | Build against **test/staging** environment (`.env.test`).|
-| `npm run test`       | Run unit tests (Vitest).                                 |
 
-Example for `build:test` (in `package.json`):
-```json
-{
-  "scripts": {
-    "build:test": "cross-env NODE_ENV=production VITE_ENV=test vite build"
-  }
-}
-```
-Alternatively: `vite build --mode test` – Vite will load `.env.test`.
+| Script | Zweck |
+| --- | --- |
+| `npm run dev` | Vite Dev-Server, HMR, Proxy auf Backend |
+| `npm run build` | Prod-Bundle nach `dist/` |
+| `npm run build:test` | Bundle gegen Test-/Staging-Env |
+| `npm run preview` | Prod-Build lokal previewen |
+| `npm run lint` | ESLint |
+| `npm run lint:fix` | ESLint --fix |
+| `npm run type-check` | `vue-tsc --noEmit` |
+| `npm test` | Vitest Unit-Tests |
+| `npm run test:watch` | Vitest Watch-Mode |
+| `npm run test:e2e` | Playwright Integration-Suite (Backend erforderlich) |
+| `npm run test:e2e:smoke` | Playwright Smoke-Suite mit Mock-API |
+| `npm run test:e2e:smoke:headed` | Smoke mit sichtbarem Browser |
+| `npm run test:visual` | Screenshot-Audit (16 PNGs für Review) |
+| `npm run test:all` | Lint + Type-Check + Unit + Smoke in einer Kette |
 
----
+## Design System — "Greenway"
 
-## Development & Workflows
-1. **Branching**: Create a feature branch from `main`/`test`.
-2. **Local development**: `npm run dev`, router uses readable routes (e.g., `/games`, `/games/:gameId`, `/scorecard/:gameId/:holeId`).
-3. **Styling**: Use Tailwind utility-first; shared styles in `global.css` (e.g., `.input-field`, `.button-primary`, `.scorecard-*`).
-4. **Dark mode**: Use `dark:` variants; respect system preference (CSS media query). Optional custom toggle.
-5. **i18n**: Use `$t('...')` for translations. Maintain consistent keys in language JSON files.
-6. **Commits/PRs**: Run lint & tests locally; include screenshots/GIFs for UI changes.
+Alle UI-Entscheidungen referenzieren das Token-System. Konsultiere unbedingt
+[../.claude/skills/ui-tokens/SKILL.md](../.claude/skills/ui-tokens/SKILL.md)
+bevor du Farben, Spacing oder Typo anfasst.
 
----
+- **Tokens**: [src/assets/tokens.css](src/assets/tokens.css) — OKLCH-Farben,
+  Typo-Scale mit `clamp()`, Radii, Shadows, Motion-Easings. Tailwind-Utilities
+  werden via `@theme`-Direktive abgeleitet (`bg-brand-500`, `text-display`, …).
+- **Semantische Variablen** (`--primary`, `--card-bg`, `--text-strong`) in
+  `:root` (light) und `:root.dark` (dark) — Specificity `:root.dark` schlägt
+  `:root` bewusst.
+- **Komponenten-Primitive**: [src/components/ui/](src/components/ui/) — bevorzugt
+  verwenden statt neue Einzellösungen.
+- **Animationen**: GPU-accelerated (transform / opacity / background-position),
+  `prefers-reduced-motion` wird global in global.css respektiert.
+
+## State / Daten
+
+- **Pinia** nur für echten globalen State. Aktuell: `syncQueue`.
+- Daten die zu einer Route gehören → **Composable + Provide/Inject**. Siehe
+  `useGamesDetailData` + `gamesDetailKey` in [src/types/index.ts](src/types/index.ts).
+- **API** über [src/services/api.ts](src/services/api.ts) — Axios mit exponential
+  backoff (2 Retries) und globalen Toast-Fehlern via Interceptor.
 
 ## Testing
 
-Unit tests with Vitest. Run: `npm run test`
+Siehe [TESTING.md](TESTING.md) für die vollständige Teststrategie. Kurzfassung:
 
----
-
-## Styling Conventions (Tailwind)
-- Use utility classes; extract complex patterns with **@apply** in `global.css`.
-- **Responsiveness**: Use `sm:`, `md:`, `lg:` breakpoints and `clamp()`.
-- **States**: Use `hover:`, `focus:`, `active:`, and dark mode with `dark:`.
-
----
-
-## Recommended Tools
-- **ESLint** + **@vue/eslint-config** for linting
-- **Prettier** for formatting
-- **Type checking** (optional): `vue-tsc`/TypeScript
-
----
-
-## Useful Links
-- Vue 3: https://vuejs.org/
-- Vite: https://vitejs.dev/
-- Vue Router: https://router.vuejs.org/
-- TailwindCSS: https://tailwindcss.com/docs
-- Heroicons: https://heroicons.com/
-- Vitest: https://vitest.dev/
-- Vite PWA Plugin: https://vite-pwa-org.netlify.app/
-
----
+- `npm run test:all` läuft ohne Backend in ~15 s.
+- Smoke-Suite mockt die API (siehe [e2e/smoke/mock-api.ts](e2e/smoke/mock-api.ts))
+- Integration-Suite braucht laufendes Backend + PostgreSQL.
 
 ## Troubleshooting
-- **Vite/plugin versions**: Ensure `@vitejs/plugin-vue` matches Vite's major version.
-- **Port in use**: Start dev server with `npm run dev -- --port=5175`.
-- **Tailwind not working**: Check `postcss.config.cjs`/`tailwind.config.cjs` and ensure `@tailwind base; @tailwind components; @tailwind utilities;` are in `global.css`.
 
----
+- **Vite-Port belegt**: `npm run dev -- --port 5175`
+- **Tailwind nicht angewendet**: Prüfe `@import "tailwindcss";` in
+  [src/assets/global.css](src/assets/global.css) und `@tailwindcss/vite`-Plugin in `vite.config.js`.
+- **Dark-Mode greift nicht**: `:root.dark`-Specificity in tokens.css prüfen —
+  `:where(.dark)` gewinnt NICHT gegen `:root`.
+- **PWA-Cache-Stale**: im DevTools → Application → Service Workers → Unregister,
+  dann Hard-Reload. Oder in der App den Update-Dialog abwarten.
+- **Playwright-Browser fehlen**: `npx playwright install chromium`
 
-## License & Contributing
-Pull requests are welcome! Please follow code guidelines (lint/format/test) and include screenshots for UI changes.
+## Weiterlesen
+
+- [../README.md](../README.md) — Repo-Übersicht
+- [../ARCHITECTURE.md](../ARCHITECTURE.md) — technische Tiefen
+- [../CONTRIBUTING.md](../CONTRIBUTING.md) — PR-Workflow
+- [TESTING.md](TESTING.md) — Test-Pipeline

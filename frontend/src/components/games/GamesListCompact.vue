@@ -1,60 +1,125 @@
 <template>
-    <h1 class="maintitle">{{ $t('Games.ListGames.AllGames') }}</h1>
+  <div class="container-app games-list-page">
+    <header class="games-list-page__header">
+      <h1 class="t-headline">{{ $t('Games.ListGames.AllGames') }}</h1>
 
-    <div class="relative mb-4">
-        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2
-           text-gray-500 dark:text-gray-400 z-10" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-4.35-4.35m.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+      <div class="games-list-page__search">
+        <span class="games-list-page__search-icon" aria-hidden="true">
+          <MagnifyingGlassIcon class="w-5 h-5" />
         </span>
-
-        <input type="search" v-model="searchTerm" :placeholder="` ${$t('Games.ListGames.SearchText')}`"
-            class="input-field input-compact w-full pl-10 pr-10 relative z-0" inputmode="search" autocomplete="off"
-            aria-label="Search games" />
-
-        <button v-if="searchTerm" @click="searchTerm = ''" class="absolute right-2 top-1/2 -translate-y-1/2 p-1
-           text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100
-           transition z-10" aria-label="Clear search" type="button">✕</button>
-    </div>
+        <input
+          type="search"
+          v-model="searchTerm"
+          :placeholder="$t('Games.ListGames.SearchText')"
+          class="field games-list-page__input"
+          inputmode="search"
+          autocomplete="off"
+          aria-label="Search games"
+        />
+        <button
+          v-if="searchTerm"
+          @click="searchTerm = ''"
+          class="games-list-page__clear"
+          aria-label="Clear search"
+          type="button"
+        >
+          <XMarkIcon class="w-4 h-4" />
+        </button>
+      </div>
+    </header>
 
     <Suspense>
-        <template #default>
-            <GamesListCompactContent :search-term="searchTerm" :per-page="perPage" />
-        </template>
-        <template #fallback>
-            <div class="text-center text-gray-400 py-10">
-                {{ $t('Games.ListGames.Loading') }}
-            </div>
-        </template>
+      <template #default>
+        <GamesListCompactContent :search-term="searchTerm" :per-page="perPage" />
+      </template>
+      <template #fallback>
+        <div class="games-list-page__fallback">
+          {{ $t('Games.ListGames.Loading') }}
+        </div>
+      </template>
     </Suspense>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import GamesListCompactContent from '@/components/games/GamesListCompactContent.vue'
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
 function calculatePerPage(): number {
-    const skeleton = document.querySelector('.game-preview-skeleton')
-    const itemHeight = (skeleton as HTMLElement)?.offsetHeight || 70
-    const availableHeight = window.innerHeight - 320
-    return Math.max(5, Math.floor(availableHeight / itemHeight))
+  const available = typeof window !== 'undefined' ? window.innerHeight - 320 : 600
+  return Math.max(6, Math.floor(available / 90))
 }
 
 const searchTerm = ref('')
 const perPage = ref(calculatePerPage())
 
-function handleResize() {
-    perPage.value = calculatePerPage()
+function handleResize() { perPage.value = calculatePerPage() }
+
+onMounted(() => { window.addEventListener('resize', handleResize) })
+onUnmounted(() => { window.removeEventListener('resize', handleResize) })
+</script>
+
+<style scoped>
+.games-list-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-block: 1.25rem 2.5rem;
 }
 
-onMounted(() => {
-    window.addEventListener('resize', handleResize)
-})
+.games-list-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
 
-onUnmounted(() => {
-    window.removeEventListener('resize', handleResize)
-})
-</script>
+.games-list-page__search {
+  position: relative;
+}
+
+.games-list-page__search-icon {
+  position: absolute;
+  left: 0.95rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.games-list-page__input {
+  padding-left: 2.75rem;
+  padding-right: 2.5rem;
+  padding-block: 0.75rem;
+  font-size: var(--text-base);
+  border-radius: var(--radius-pill);
+}
+
+.games-list-page__clear {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  border: 0;
+  background: color-mix(in oklab, var(--text-default) 10%, transparent);
+  color: var(--text-default);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 150ms;
+}
+.games-list-page__clear:hover {
+  background: color-mix(in oklab, var(--text-default) 18%, transparent);
+  color: var(--text-strong);
+}
+
+.games-list-page__fallback {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+</style>

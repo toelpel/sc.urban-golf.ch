@@ -6,7 +6,7 @@ export class AboutPage {
 
   constructor(page: Page) {
     this.page = page
-    this.heading = page.locator('h1.maintitle')
+    this.heading = page.getByRole('heading', { name: /Über uns|About/ }).first()
   }
 
   async goto() {
