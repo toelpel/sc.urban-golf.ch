@@ -106,7 +106,15 @@ const routes: RouteRecordRaw[] = [
 
 const router = createRouter({
   history: createWebHistory('/'),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // Browser-Back/-Forward: an die vorherige Scroll-Position zurückkehren
+    if (savedPosition) return savedPosition
+    // Anker in der URL: dorthin scrollen
+    if (to.hash) return { el: to.hash, top: 72, behavior: 'smooth' }
+    // Bei neuer Route immer ganz nach oben (gilt auch für About → Roadmap/Changelog)
+    return { top: 0, left: 0, behavior: 'smooth' }
+  },
 })
 
 export default router

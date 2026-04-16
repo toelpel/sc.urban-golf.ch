@@ -1,5 +1,12 @@
 import { type Page, type Locator } from '@playwright/test'
 
+/**
+ * Home-Page Objekt für das Greenway-Designsystem.
+ * - Hero-Titel ist `.home-hero__title`
+ * - Primär-CTAs im Hero: Neues Spiel + Spiele
+ * - Sekundäre Navigation (Feedback, About) liegt in der Bottom-Nav (mobile)
+ *   bzw. der Top-Bar (Desktop ≥ 768px).
+ */
 export class HomePage {
   readonly page: Page
   readonly heading: Locator
@@ -10,11 +17,12 @@ export class HomePage {
 
   constructor(page: Page) {
     this.page = page
-    this.heading = page.locator('h1.maintitle')
-    this.newGameButton = page.locator('a.button-primary', { hasText: 'New Game' })
-    this.gamesButton = page.locator('a.button-primary', { hasText: /^Games$/ })
-    this.feedbackButton = page.locator('a.button-primary', { hasText: 'Feedback' })
-    this.aboutButton = page.locator('a.button-primary', { hasText: 'About' })
+    this.heading = page.locator('.home-hero__title')
+    this.newGameButton = page.getByRole('link', { name: /Neues Spiel|New Game/ })
+    this.gamesButton = page.getByRole('link', { name: /^(Spiele|Games)$/ })
+    // Feedback existiert nicht mehr als Hero-Button — nutze die Bottom-/Top-Nav
+    this.feedbackButton = page.getByRole('link', { name: /Feedback/ }).first()
+    this.aboutButton = page.getByRole('link', { name: /Über uns|About/ }).first()
   }
 
   async goto() {
@@ -23,12 +31,12 @@ export class HomePage {
   }
 
   async navigateToNewGame() {
-    await this.newGameButton.click()
+    await this.newGameButton.first().click()
     await this.page.waitForURL('/games/new')
   }
 
   async navigateToGames() {
-    await this.gamesButton.click()
+    await this.gamesButton.first().click()
     await this.page.waitForURL('/games')
   }
 

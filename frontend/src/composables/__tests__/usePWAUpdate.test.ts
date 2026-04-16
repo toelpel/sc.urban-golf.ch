@@ -29,15 +29,16 @@ describe('usePWAUpdate', () => {
     expect(showUpdateDialog.value).toBe(true)
   })
 
-  it('onNeedRefresh() auto-hides after 20 seconds', () => {
+  it('onNeedRefresh() keeps dialog open — no auto-hide (user must decide)', () => {
     const { onNeedRefresh, showUpdateDialog } = usePWAUpdate()
     onNeedRefresh(vi.fn())
 
     expect(showUpdateDialog.value).toBe(true)
 
-    vi.advanceTimersByTime(20_000)
+    // Auch nach viel Zeit bleibt der Dialog sichtbar, bis dismiss oder apply aufgerufen wird.
+    vi.advanceTimersByTime(60_000)
 
-    expect(showUpdateDialog.value).toBe(false)
+    expect(showUpdateDialog.value).toBe(true)
   })
 
   it('applyUpdate() hides dialog and calls updateSW(true)', async () => {

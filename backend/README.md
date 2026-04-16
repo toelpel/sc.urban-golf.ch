@@ -1,121 +1,138 @@
-# Backend – Urban Golf ScoreCard
+# Backend — Urban Golf ScoreCard
 
-Welcome to **/backend**! This folder contains the backend API for the ScoreCard app. This README explains the tech stack, setup, workflows, testing, and provides useful links & tips so you can get productive quickly.
+Die Fastify-5-API der ScoreCard-App. Für Architektur siehe
+[../ARCHITECTURE.md](../ARCHITECTURE.md), für Deployment
+[../DEPLOYMENT.md](../DEPLOYMENT.md).
 
----
-
-## TL;DR – Quick Start
+## Quick Start
 
 ```bash
-# 1) Clone the project (repo root)
-# 2) Switch to the backend folder
 cd backend
-
-# 3) Install dependencies
-npm i
-
-# 4) Start the development server
-npm run dev
-# → Default: http://localhost:3000
+npm install
+docker compose -f ../docker-compose.dev.yml up -d postgres    # nur Postgres
+cp .env.example .env                                          # falls vorhanden
+npm run migrate:up                                            # DB-Schema
+npm run dev                                                   # http://localhost:3000
 ```
-
-> 💡 Environments: `.env`, `.env.test`, `.env.production` control API behavior (see **Environments & Config**).
-
----
 
 ## Tech Stack
 
-- **Node.js** with **Fastify** as the web framework
-- **PostgreSQL** (direct connection via `pg` library)
-- **ESM** modules for modern JavaScript syntax
+| Bereich | Version / Library |
+| --- | --- |
+| Runtime | Node.js 20+ (ESM) |
+| Framework | Fastify 5 |
+| DB | PostgreSQL 16 via `pg` (nativer Client, kein ORM) |
+| Migrations | node-pg-migrate 8 (SQL-Files) |
+| Security | @fastify/helmet, @fastify/cors, @fastify/rate-limit |
+| Compression | @fastify/compress (gzip + brotli) |
+| Mail | nodemailer (Brevo/SMTP für Feedback) |
+| Tests | Vitest 4 |
+| Lint | ESLint 10 |
 
----
-
-## Project Structure (Excerpt)
+## Projektstruktur
 
 ```
-/backend
-├─ package.json
-├─ app.js               # Main application setup
-├─ routes/              # API routes
-├─ db/                  # Database connection setup
-├─ utils/               # Helper functions
-└─ tests/               # Unit tests
+backend/
+├── app.js                       Fastify-Bootstrap, Plugin-Registrierung, Server-Start
+├── routes/
+│   ├── games.js                 /api/games, /api/games/:id, /api/games/summary, …
+│   ├── players.js               /api/players
+│   ├── scores.js                /api/scores
+│   └── feedback.js              /api/feedback
+├── db/
+│   ├── index.js                 pg-Pool-Singleton
+│   ├── init/schema.sql          Schema für initiale Docker-DB
+│   └── migrations/              node-pg-migrate SQL-Files
+├── utils/                       Helpers
+├── scripts/                     Baseline-Migration, Utility-Scripts
+├── test/                        Vitest-Tests
+├── Dockerfile                   Multi-Stage Build
+├── eslint.config.js
+└── package.json
 ```
 
----
+## Environment
 
-## Environments & Config
-
-Environment variables are loaded via `.env` files. Critical variables include:
+`.env` (Root oder `backend/.env`) — Key-Wert-Paare:
 
 ```
 PORT=3000
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/urban_golf
 DATABASE_SSL=false
 ALLOWED_ORIGINS=http://localhost:5173,http://localhost:8080
-BREVO_SMTP_USER=your-brevo-login@email.com
-BREVO_SMTP_PASS=your-brevo-smtp-key
-ADMIN_EMAIL=admin@urban-golf.ch
 NODE_ENV=development
+
+# Feedback-Mail (Brevo/SMTP)
+BREVO_SMTP_USER=your-login@example.com
+BREVO_SMTP_PASS=***********
+ADMIN_EMAIL=admin@urban-golf.ch
 ```
 
-Typical files:
-
-- `.env` – global defaults
-- `.env.test` – local development
-- `.env.production` – production deployment
-
----
+`DATABASE_URL` ist die einzige Pflicht-Variable; alle anderen haben Defaults.
 
 ## NPM Scripts
 
-| Script          | Purpose              |
-| --------------- | -------------------- |
-| `npm run dev`   | Start backend        |
-| `npm run start` | Start in production  |
-| `npm run test`  | Run tests            |
+| Script | Zweck |
+| --- | --- |
+| `npm run dev` | Server starten (node app.js) |
+| `npm start` | Produktionsstart |
+| `npm test` | Vitest Unit-Tests |
+| `npm run test:watch` | Vitest Watch-Mode |
+| `npm run lint` / `lint:fix` | ESLint |
+| `npm run migrate:up` | Migrations anwenden (SQL-Files in `db/migrations/`) |
+| `npm run migrate:down` | Letzte Migration zurückrollen |
+| `npm run migrate:create` | Neues Migration-Skelett erzeugen |
+| `npm run migrate:baseline` | Bestehende DB als "migrated" markieren (einmalig nach Init-Schema) |
 
----
+### Typischer Migration-Flow
 
-## Development & Workflows
+```bash
+# 1) Neue Migration anlegen
+npm run migrate:create -- add_course_table
+# → erzeugt db/migrations/<ts>_add_course_table.sql
 
-1. **Branching**: Create a feature branch from `main`/`test`.
-2. **Local development**: Use `npm run dev` with a `.env.test` file configured.
-3. **Routing**: Routes are defined in `/routes` and mounted in `app.js`.
-4. **Commits/PRs**: Run tests locally before submitting.
+# 2) SQL in die Datei schreiben (up-Section)
 
----
+# 3) Anwenden
+npm run migrate:up
+
+# 4) Rollback (optional, zum Testen)
+npm run migrate:down
+```
+
+## API-Routen (Kurzüberblick)
+
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| GET | `/api/games/summary?page=1&per_page=10&search=…` | paginierte Liste mit Meta (Spieler, Löcher, Stats) |
+| GET | `/api/games/:id` | Spiel-Basisdaten |
+| GET | `/api/games/:id/players` | Spieler eines Spiels |
+| POST | `/api/games` | Spiel anlegen/updaten |
+| GET | `/api/scores?game_id=…` | Scores eines Spiels |
+| POST | `/api/scores` | Score anlegen/überschreiben (upsert) |
+| POST | `/api/players` | Spieler anlegen/updaten |
+| POST | `/api/feedback` | Feedback abgeben (triggert Mail) |
+
+Vollständige Schnittstellen-Signatur: [routes/](routes/).
+
+## Docker
+
+Produktions-Image via [Dockerfile](Dockerfile). Wird automatisch in CI/CD gebaut —
+siehe [.github/workflows/ci.yml](../.github/workflows/ci.yml).
+
+Lokal bauen:
+```bash
+docker build -f Dockerfile -t urbangolf-backend:dev ..
+```
 
 ## Testing
 
-Unit tests with Vitest. Run: `npm run test`
-
----
-
-## Recommended Tools
-
-- **ESLint** for linting
-- **Prettier** for formatting
-- **Vitest** for testing
-
----
-
-## Useful Links
-
-- Fastify: [https://fastify.dev/](https://fastify.dev/)
-- pg: [https://node-postgres.com/](https://node-postgres.com/)
-- PostgreSQL: [https://www.postgresql.org/docs/](https://www.postgresql.org/docs/)
-
----
+Unit-Tests mit Vitest in `test/`. Für E2E-Tests gegen ein laufendes Backend
+siehe [../frontend/TESTING.md](../frontend/TESTING.md#6-integration-e2e-npm-run-teste2e).
 
 ## Troubleshooting
 
-- **DB Connection Issues**: Check `DATABASE_URL` in `.env`.
-- **Port in Use**: Change `PORT` in `.env`.
-
----
-
-## License & Contributing
-
-Pull requests are welcome! Please follow the same lint/format/test guidelines as for the frontend.
+- **DB-Connection schlägt fehl**: `DATABASE_URL` prüfen, Postgres erreichbar? `psql $DATABASE_URL` testet die Verbindung.
+- **Migrations hängen**: `npm run migrate:baseline` einmalig gegen bereits initialisierte DB; dann `migrate:up`.
+- **CORS-Fehler im Frontend**: `ALLOWED_ORIGINS` muss den Frontend-Origin (inkl. Protokoll + Port) enthalten.
+- **Port 3000 belegt**: `PORT=3010 npm run dev`.

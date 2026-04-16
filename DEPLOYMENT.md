@@ -1,11 +1,24 @@
-# Urban Golf - Deployment Guide
+# Deployment Guide
 
-## Architecture Overview
+Deployment-Anleitung für den Urban-Golf-ScoreCard. Für die technische
+Architektur siehe [ARCHITECTURE.md](ARCHITECTURE.md).
 
-This application uses a containerized architecture with:
-- **Frontend**: Nginx serving static Vue.js SPA
-- **Backend**: Node.js/Fastify API server
-- **Database**: PostgreSQL 16
+## Architektur-Übersicht
+
+```
+┌──────────────┐   ┌──────────────┐   ┌─────────────┐
+│  Nginx       │   │  Fastify 5   │   │  Postgres   │
+│  (Frontend,  │──▶│  (Backend,   │──▶│  16-alpine  │
+│   static)    │   │   Node 20)   │   │             │
+└──────────────┘   └──────────────┘   └─────────────┘
+```
+
+- **Frontend** — Nginx liefert das statische SPA/PWA-Bundle aus.
+- **Backend** — Fastify-API unter `/api/*`.
+- **DB** — Postgres 16, mit Schema aus [backend/db/init/schema.sql](backend/db/init/schema.sql).
+
+CI/CD baut auf `main`-Push GHCR-Images (siehe [.github/workflows/ci.yml](.github/workflows/ci.yml))
+wenn alle Test-Jobs grün sind.
 
 ## Local Development
 
@@ -87,21 +100,30 @@ The simplest way to deploy:
 
 ### Deployment with Pre-built Images
 
-For using images from a registry (optional):
+CI/CD pushes images to **GHCR** on every merge to `main`
+(see [.github/workflows/ci.yml](.github/workflows/ci.yml)). Use those instead of
+building locally when possible.
 
-   ```bash
-   # Backend
-   docker build -t ghcr.io/yourusername/urbangolf-backend:latest ./backend
-   docker push ghcr.io/yourusername/urbangolf-backend:latest
+**Pull the latest tagged images:**
+```bash
+docker pull ghcr.io/toelpel/urbangolf-backend:latest
+docker pull ghcr.io/toelpel/urbangolf-frontend:latest
+```
 
-   # Frontend
-   docker build \
-     --build-arg VITE_API_BASEURL=/api \
-     -t ghcr.io/yourusername/urbangolf-frontend:latest ./frontend
-   docker push ghcr.io/yourusername/urbangolf-frontend:latest
-   ```
+**Or build locally:**
+```bash
+# Backend
+docker build -t ghcr.io/<you>/urbangolf-backend:latest -f backend/Dockerfile .
+docker push ghcr.io/<you>/urbangolf-backend:latest
 
-2. **Copy and customize the production example**
+# Frontend (VITE_API_BASEURL ist ein Build-Arg)
+docker build \
+  --build-arg VITE_API_BASEURL=/api \
+  -t ghcr.io/<you>/urbangolf-frontend:latest -f frontend/Dockerfile .
+docker push ghcr.io/<you>/urbangolf-frontend:latest
+```
+
+1. **Copy and customize the production example**
    ```bash
    cp docker-compose.prod.example.yml docker-compose.override.yml
    ```

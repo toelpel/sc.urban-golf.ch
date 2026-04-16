@@ -8,20 +8,35 @@
     "Scorecard": "Scorecard",
     "Roadmap": "Roadmap",
     "Hole": "Hole",
+    "HoleOne": "{n} hole",
+    "HoleMany": "{n} holes",
     "Player": "Player",
     "Total": "Total",
     "Back": "Back",
     "Forward": "Next",
     "Send": "Submit",
     "FewerStrokes": "Fewer strokes",
-    "MoreStrokes": "More strokes"
+    "MoreStrokes": "More strokes",
+    "Settings": "Settings",
+    "Version": "Version"
+  },
+  "Settings": {
+    "Theme": "Theme",
+    "Language": "Language",
+    "ThemeLight": "Light",
+    "ThemeDark": "Dark",
+    "ThemeSystem": "System"
   },
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Create a new game or view existing games.",
-      "OpenSource": {
-        "Title": "Open source - get involved!",
-        "Text": "Start with a ⭐️, report issues, or send pull requests. We look forward to your contributions 🤩"
+    "Subtitle": "Urban Golf · Winterthur",
+    "RecentGames": "Recent Games",
+    "SeeAll": "All",
+    "Contribute": "Contribute",
+    "OpenSource": {
+      "Title": "Open source - get involved!",
+      "Text": "Start with a ⭐️, report issues, or send pull requests. We look forward to your contributions 🤩"
     }
   },
   "About": {
@@ -36,6 +51,14 @@
     },
     "Roadmap": {
       "Title": "Roadmap",
+      "Subtitle": "What we've shipped and what's coming next.",
+      "Status": {
+        "Done": "Done",
+        "Planned": "Planned",
+        "Open": "Open",
+        "Progress": "Progress",
+        "DoneOfTotal": "{done} of {total} done"
+      },
       "Features": {
         "TestProd": {
           "Label": "Clean Test/Prod Environment",
@@ -95,17 +118,32 @@
   },
   "Feedback": {
     "Title": "Feedback on the Scorecard",
+    "Subtitle": "How can we improve? Every piece of feedback helps.",
     "ThankYou": "Thank you for your feedback! 🍀",
     "RatingTitle": "Rating",
+    "RatingHint": "1 star = not great, 5 stars = awesome",
+    "RatingLabels": {
+      "1": "1 star — not great",
+      "2": "2 stars — meh",
+      "3": "3 stars — okay",
+      "4": "4 stars — like it",
+      "5": "5 stars — awesome"
+    },
     "Text": "Feedback",
     "Name": "Name (optional)",
-    "Email": "Email (optional)"
+    "Email": "Email (optional)",
+    "Errors": {
+      "RatingRequired": "Please give a rating from 1 to 5 stars.",
+      "MessageRequired": "Please enter some feedback.",
+      "SendFailed": "Feedback could not be sent."
+    }
   },
   "Scorecard": {
     "Loading": "Loading players and scores...",
     "ViewHorizontal": "Horizontal view",
     "ViewVertical": "Vertical view",
     "ViewRanking": "Ranking",
+    "SortByName": "Sort by name",
     "SortByAverage": "Sort by average",
     "SortByTotal": "Sort by total"
   },
@@ -121,16 +159,32 @@
     "NewGame": {
       "TitleNew": "Create New Game",
       "TitleEdit": "Edit Game",
+      "Subtitle": "Give your game a name and add players.",
       "GameName": "Game Name",
+      "GameNamePlaceholder": "e.g. Sunday at the park",
       "PlayerName": "Player",
+      "PlayerNamePlaceholder": "First name",
       "SaveChanges": "Save Changes",
       "StartGame": "Start Game",
-      "AddPlayer": "Add Player"
+      "AddPlayer": "Add Player",
+      "RemovePlayer": "Remove player",
+      "Errors": {
+        "GameAndPlayerRequired": "Please enter a game name and at least one player.",
+        "SaveFailed": "Failed to save the game.",
+        "LoadFailed": "Failed to load game data."
+      }
     },
     "HoleView": {
       "EditGame": "Edit game",
       "HideHoleOverview": "Hide Hole Overview",
-      "ShowHoleOverview": "Show Hole Overview"
+      "ShowHoleOverview": "Show Hole Overview",
+      "ScoreFor": "Score for {player}",
+      "OpenKeypad": "Open keypad",
+      "KeypadQuickTitle": "Common",
+      "KeypadShowAll": "Show all",
+      "KeypadShortcutHint": "Tip: press 1–7 on your keyboard",
+      "StepperBack": "Previous hole ({n})",
+      "StepperForward": "Next hole ({n})"
     }
   },
   "Network": {
@@ -144,8 +198,10 @@
     "Retry": "Try again"
   },
   "PWA": {
-    "UpdateAvailable": "New version available.",
+    "UpdateAvailable": "New version available",
+    "UpdateHint": "Reload the app to load the latest version.",
     "Reload": "Reload",
+    "Reloading": "Reloading…",
     "InstallBanner": {
       "Title": "Install App",
       "Description": "Install ScoreCard for faster access – even offline.",

@@ -1,8 +1,12 @@
 <template>
   <transition name="fade">
-    <button v-if="showScrollToTop" @click="scrollToTop"
-      class="fixed bottom-6 right-6 z-50 p-3 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white rounded-full shadow-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition">
-      <ArrowUpIcon class="h-5 w-5" />
+    <button
+      v-if="showScrollToTop"
+      @click="scrollToTop"
+      class="scroll-top-btn"
+      aria-label="Nach oben"
+    >
+      <ArrowUpIcon class="w-5 h-5" />
     </button>
   </transition>
 </template>
@@ -13,3 +17,30 @@ import { useScrollToTopButton } from '@/composables/useScrollToTopButton'
 
 const { showScrollToTop, scrollToTop } = useScrollToTopButton()
 </script>
+
+<style scoped>
+.scroll-top-btn {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(var(--spacing-nav-height) + var(--spacing-safe-bottom) + 5rem);
+  z-index: 29;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: var(--card-bg);
+  color: var(--text-default);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-elev-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 150ms var(--ease-spring), background 150ms;
+}
+
+@media (min-width: 768px) {
+  .scroll-top-btn { bottom: 1.5rem; }
+}
+
+.scroll-top-btn:hover { background: var(--card-bg); color: var(--primary); }
+.scroll-top-btn:active { transform: scale(0.92); }
+</style>

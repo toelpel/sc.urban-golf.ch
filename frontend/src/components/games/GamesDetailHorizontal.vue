@@ -1,93 +1,92 @@
 <template>
-    <div class="relative w-full overflow-x-auto max-h-[calc(100dvh-11rem)] overflow-y-auto">
-        <div class="glass-card p-0 inline-block min-w-full">
-            <table class="scorecard-table min-w-[42rem] w-full border-collapse"
-                :class="{ 'scorecard-compact': players.length >= 5 }">
-                <thead class="backdrop-blur-md bg-white/40 dark:bg-gray-900/40">
-                    <tr>
-                        <th class="scorecard-header-cell cursor-pointer first:rounded-tl-2xl"
-                            :class="{ 'scorecard-sort-active-header': sortColumn === 'name' }"
-                            :aria-sort="ariaSortFor('name')" scope="col"
-                            tabindex="0" @click="$emit('sort', 'name')"
-                            @keydown.enter.prevent="$emit('sort', 'name')"
-                            @keydown.space.prevent="$emit('sort', 'name')">
-                            {{ $t('General.Player') }}
-                            <ChevronUpIcon v-if="sortColumn === 'name' && sortDirection === 'asc'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
-                            <ChevronDownIcon v-else-if="sortColumn === 'name'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
-                        </th>
+  <div class="scorecard-frame">
+    <table
+      class="scorecard"
+      :class="{ 'scorecard-compact': players.length >= 5 }"
+    >
+      <thead>
+        <tr>
+          <th
+            class="sticky"
+            style="left: 0; text-align: left"
+            :class="{ 'scorecard-sort-active-header': sortColumn === 'name' }"
+            :aria-sort="ariaSortFor('name')"
+            scope="col"
+          >
+            <button type="button" class="sort-btn" :aria-label="$t('Scorecard.SortByName')" @click="$emit('sort', 'name')">
+              {{ $t('General.Player') }}
+              <ChevronUpIcon v-if="sortColumn === 'name' && sortDirection === 'asc'" class="sort-ico" />
+              <ChevronDownIcon v-else-if="sortColumn === 'name'" class="sort-ico" />
+            </button>
+          </th>
 
-                        <th v-for="hole in holes" :key="hole" scope="col"
-                            class="scorecard-header-cell text-center border-l border-white/30 dark:border-white/10">
-                            <router-link :to="'/games/' + gameId + '/' + hole"
-                                class="hover:underline text-blue-600 dark:text-blue-400">
-                                {{ hole }}
-                            </router-link>
-                        </th>
+          <th v-for="hole in holes" :key="hole" scope="col">{{ hole }}</th>
 
-                        <th class="scorecard-header-cell cursor-pointer w-14 border-l border-white/30 dark:border-white/10"
-                            :class="{ 'scorecard-sort-active-header': sortColumn === 'average' }"
-                            :aria-sort="ariaSortFor('average')" scope="col"
-                            :aria-label="$t('Scorecard.SortByAverage')"
-                            tabindex="0" @click="$emit('sort', 'average')"
-                            @keydown.enter.prevent="$emit('sort', 'average')"
-                            @keydown.space.prevent="$emit('sort', 'average')">
-                            Ø
-                            <ChevronUpIcon v-if="sortColumn === 'average' && sortDirection === 'asc'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
-                            <ChevronDownIcon v-else-if="sortColumn === 'average'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
-                        </th>
-                        <th class="scorecard-header-cell cursor-pointer w-16 border-l border-white/30 dark:border-white/10 last:rounded-tr-2xl"
-                            :class="{ 'scorecard-sort-active-header': sortColumn === 'total' }"
-                            :aria-sort="ariaSortFor('total')" scope="col"
-                            tabindex="0" @click="$emit('sort', 'total')"
-                            @keydown.enter.prevent="$emit('sort', 'total')"
-                            @keydown.space.prevent="$emit('sort', 'total')">
-                            {{ $t('General.Total') }}
-                            <ChevronUpIcon v-if="sortColumn === 'total' && sortDirection === 'asc'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
-                            <ChevronDownIcon v-else-if="sortColumn === 'total'"
-                                class="inline w-3.5 h-3.5 ml-0.5 text-blue-500 dark:text-blue-300" aria-hidden="true" />
-                        </th>
-                    </tr>
-                </thead>
+          <th
+            scope="col"
+            class="scorecard-metric-highlight"
+            :class="{ 'scorecard-sort-active-header': sortColumn === 'average' }"
+            :aria-sort="ariaSortFor('average')"
+          >
+            <button type="button" class="sort-btn" :aria-label="$t('Scorecard.SortByAverage')" @click="$emit('sort', 'average')">
+              Ø
+              <ChevronUpIcon v-if="sortColumn === 'average' && sortDirection === 'asc'" class="sort-ico" />
+              <ChevronDownIcon v-else-if="sortColumn === 'average'" class="sort-ico" />
+            </button>
+          </th>
 
-                <tbody>
-                    <tr v-for="player in sortedPlayers" :key="player.id"
-                        class="hover:bg-white/30 dark:hover:bg-gray-800/30 transition">
-                        <td class="scorecard-player-cell font-medium border-l-3"
-                            :class="[
-                                colorMap[player.id]?.border ?? '',
-                                { 'scorecard-sort-active': sortColumn === 'name' }
-                            ]">
-                            <span class="flex items-center gap-1.5">
-                                <span class="w-2 h-2 rounded-full shrink-0"
-                                    :class="colorMap[player.id]?.dot ?? ''"></span>
-                                {{ player.name }}
-                            </span>
-                        </td>
+          <th
+            scope="col"
+            class="scorecard-metric-highlight"
+            :class="{ 'scorecard-sort-active-header': sortColumn === 'total' }"
+            :aria-sort="ariaSortFor('total')"
+          >
+            <button type="button" class="sort-btn" :aria-label="$t('Scorecard.SortByTotal')" @click="$emit('sort', 'total')">
+              {{ $t('General.Total') }}
+              <ChevronUpIcon v-if="sortColumn === 'total' && sortDirection === 'asc'" class="sort-ico" />
+              <ChevronDownIcon v-else-if="sortColumn === 'total'" class="sort-ico" />
+            </button>
+          </th>
+        </tr>
+      </thead>
 
-                        <td v-for="hole in holes" :key="hole"
-                            class="scorecard-cell text-center"
-                            :class="getHeatmapClass(player.id, hole)">
-                            {{ scores[player.id]?.[hole] ?? '–' }}
-                        </td>
+      <tbody>
+        <tr
+          v-for="player in sortedPlayers"
+          :key="player.id"
+          class="scorecard-hover-row"
+          :style="{ '--player-accent': colorMap[player.id]?.color }"
+        >
+          <td
+            class="sticky scorecard__player-cell"
+            style="left: 0; text-align: left"
+            :class="{ 'scorecard-sort-active': sortColumn === 'name' }"
+          >
+            <span class="scorecard__player-name">
+              <span class="scorecard__player-dot" :style="{ background: colorMap[player.id]?.color }"></span>
+              {{ player.name }}
+            </span>
+          </td>
 
-                        <td class="scorecard-metric-cell w-14 text-center scorecard-metric-highlight"
-                            :class="{ 'scorecard-sort-active': sortColumn === 'average' }">
-                            {{ averageScore(player.id) }}
-                        </td>
-                        <td class="scorecard-metric-cell w-16 text-center font-semibold scorecard-metric-highlight"
-                            :class="{ 'scorecard-sort-active': sortColumn === 'total' }">
-                            {{ totalScore(player.id) }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+          <td
+            v-for="hole in holes"
+            :key="hole"
+            :class="getHeatmapClass(player.id, hole)"
+          >{{ scores[player.id]?.[hole] ?? '–' }}</td>
+
+          <td
+            class="scorecard-metric-highlight"
+            :class="{ 'scorecard-sort-active': sortColumn === 'average' }"
+          >{{ averageScore(player.id) }}</td>
+
+          <td
+            class="scorecard-metric-highlight scorecard__total"
+            :class="{ 'scorecard-sort-active': sortColumn === 'total' }"
+          >{{ totalScore(player.id) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -103,19 +102,18 @@ defineEmits<{
 }>()
 
 const props = defineProps<{
-    players: Player[]
-    holes: number[]
-    scores: ScoreMap
-    gameId: string
-    sortColumn: string
-    sortDirection: string
-    sortedPlayers: Player[]
-    averageScore: (playerId: string) => string
-    totalScore: (playerId: string) => number
+  players: Player[]
+  holes: number[]
+  scores: ScoreMap
+  gameId: string
+  sortColumn: string
+  sortDirection: string
+  sortedPlayers: Player[]
+  averageScore: (playerId: string) => string
+  totalScore: (playerId: string) => number
 }>()
 
 const { colorMap } = usePlayerColors(computed(() => props.players))
-
 const playerIds = computed(() => props.players.map(p => p.id))
 
 function getHeatmapClass(playerId: string, hole: number): string {
@@ -127,3 +125,72 @@ function ariaSortFor(column: 'name' | 'total' | 'average'): 'ascending' | 'desce
   return props.sortDirection === 'asc' ? 'ascending' : 'descending'
 }
 </script>
+
+<style scoped>
+.scorecard-frame {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100dvh - 14rem);
+  border-radius: var(--radius-lg);
+}
+
+.scorecard { min-width: 42rem; }
+
+.sort-btn {
+  background: transparent;
+  border: 0;
+  padding: 0.3rem 0.45rem;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  border-radius: var(--radius-sm);
+}
+.sort-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.sort-ico {
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-left: 0.2rem;
+  color: var(--primary);
+  vertical-align: -2px;
+}
+
+
+.scorecard__player-cell {
+  position: relative;
+  font-weight: 600;
+}
+
+.scorecard__player-cell::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 15%; bottom: 15%;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--player-accent, var(--primary));
+}
+
+.scorecard__player-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-strong);
+}
+
+.scorecard__player-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+}
+
+.scorecard__total { font-weight: 700; }
+</style>

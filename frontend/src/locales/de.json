@@ -7,17 +7,32 @@
     "Feedback": "Feedback",
     "Scorecard": "Scorecard",
     "Hole": "Loch",
+    "HoleOne": "{n} Loch",
+    "HoleMany": "{n} Löcher",
     "Player": "Spieler",
     "Total": "Total",
     "Back": "Zurück",
     "Forward": "Weiter",
     "Send": "Absenden",
     "FewerStrokes": "Weniger Schläge",
-    "MoreStrokes": "Mehr Schläge"
+    "MoreStrokes": "Mehr Schläge",
+    "Settings": "Einstellungen",
+    "Version": "Version"
+  },
+  "Settings": {
+    "Theme": "Design",
+    "Language": "Sprache",
+    "ThemeLight": "Hell",
+    "ThemeDark": "Dunkel",
+    "ThemeSystem": "System"
   },
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Erstelle ein neues Spiel oder sieh dir bestehende Spiele an.",
+    "Subtitle": "Urban Golf · Winterthur",
+    "RecentGames": "Letzte Spiele",
+    "SeeAll": "Alle",
+    "Contribute": "Mitmachen",
     "OpenSource": {
       "Title": "Open Source - mach mit!",
       "Text": "Starte mit ⭐️, melde Issues oder sende Pull Requests. Wir freuen uns auf deine Mitarbeit 🤩"
@@ -35,6 +50,14 @@
     },
     "Roadmap": {
       "Title": "Roadmap",
+      "Subtitle": "Was bisher kam und was als Nächstes kommt.",
+      "Status": {
+        "Done": "Erledigt",
+        "Planned": "Geplant",
+        "Open": "Offen",
+        "Progress": "Fortschritt",
+        "DoneOfTotal": "{done} von {total} erledigt"
+      },
       "Features": {
         "TestProd": {
           "Label": "Saubere Test/Prod Umgebung",
@@ -50,7 +73,7 @@
         },
         "OpenSource": {
           "Label": "Open Source",
-          "Desc": "Code wird öffentlich auf GitHub verfügbar.\nKollaboration sehr erwünscht 🤩s"
+          "Desc": "Code wird öffentlich auf GitHub verfügbar.\nKollaboration sehr erwünscht 🤩"
         },
         "UserManagement": {
           "Label": "User-Verwaltung",
@@ -94,17 +117,32 @@
   },
   "Feedback": {
     "Title": "Feedback zur Scorecard",
+    "Subtitle": "Was können wir besser machen? Jedes Feedback hilft.",
     "ThankYou": "Vielen Dank für dein Feedback! 🍀",
     "RatingTitle": "Bewertung",
+    "RatingHint": "1 Stern = nicht so gut, 5 Sterne = super",
+    "RatingLabels": {
+      "1": "1 Stern — nicht so gut",
+      "2": "2 Sterne — geht so",
+      "3": "3 Sterne — okay",
+      "4": "4 Sterne — gefällt mir",
+      "5": "5 Sterne — super"
+    },
     "Text": "Feedback",
     "Name": "Name (optional)",
-    "Email": "Email (optional)"
+    "Email": "Email (optional)",
+    "Errors": {
+      "RatingRequired": "Bitte 1 bis 5 Sterne vergeben.",
+      "MessageRequired": "Bitte ein Feedback eingeben.",
+      "SendFailed": "Feedback konnte nicht gesendet werden."
+    }
   },
   "Scorecard": {
     "Loading": "Lade Spieler und Scores ...",
     "ViewHorizontal": "Horizontale Ansicht",
     "ViewVertical": "Vertikale Ansicht",
     "ViewRanking": "Rangliste",
+    "SortByName": "Nach Name sortieren",
     "SortByAverage": "Nach Durchschnitt sortieren",
     "SortByTotal": "Nach Total sortieren"
   },
@@ -120,16 +158,32 @@
     "NewGame": {
       "TitleNew": "Neues Spiel erstellen",
       "TitleEdit": "Spiel bearbeiten",
+      "Subtitle": "Gib deinem Spiel einen Namen und füge die Spieler hinzu.",
       "GameName": "Spielname",
+      "GameNamePlaceholder": "z.B. Sonntag im Eulachpark",
       "PlayerName": "Spieler",
+      "PlayerNamePlaceholder": "Vorname",
       "SaveChanges": "Änderungen speichern",
       "StartGame": "Spiel starten",
-      "AddPlayer": "Spieler hinzufügen"
+      "AddPlayer": "Spieler hinzufügen",
+      "RemovePlayer": "Spieler entfernen",
+      "Errors": {
+        "GameAndPlayerRequired": "Bitte Spielname und mindestens einen Spieler angeben.",
+        "SaveFailed": "Fehler beim Speichern des Spiels.",
+        "LoadFailed": "Spiel konnte nicht geladen werden."
+      }
     },
     "HoleView": {
       "EditGame": "Spiel bearbeiten",
       "HideHoleOverview": "Verstecke die Lochübersicht",
-      "ShowHoleOverview": "Zeige die Lochübersicht an"
+      "ShowHoleOverview": "Zeige die Lochübersicht an",
+      "ScoreFor": "Score für {player}",
+      "OpenKeypad": "Keypad öffnen",
+      "KeypadQuickTitle": "Üblich",
+      "KeypadShowAll": "Alle anzeigen",
+      "KeypadShortcutHint": "Tipp: 1–7 auf der Tastatur",
+      "StepperBack": "Zum vorherigen Loch ({n})",
+      "StepperForward": "Zum nächsten Loch ({n})"
     }
   },
   "Network": {
@@ -143,8 +197,10 @@
     "Retry": "Erneut versuchen"
   },
   "PWA": {
-    "UpdateAvailable": "Neue Version verfügbar.",
+    "UpdateAvailable": "Neue Version verfügbar",
+    "UpdateHint": "Starte die App neu um die neuste Version zu laden.",
     "Reload": "Neu laden",
+    "Reloading": "Lädt…",
     "InstallBanner": {
       "Title": "App installieren",
       "Description": "Installiere die ScoreCard für schnelleren Zugriff – auch offline.",

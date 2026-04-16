@@ -7,17 +7,32 @@
     "Feedback": "Feedback",
     "Scorecard": "Scorekaart",
     "Hole": "Hole",
+    "HoleOne": "{n} hole",
+    "HoleMany": "{n} holes",
     "Player": "Speler",
     "Total": "Totaal",
     "Back": "Terug",
     "Forward": "Volgende",
     "Send": "Verzenden",
     "FewerStrokes": "Minder slagen",
-    "MoreStrokes": "Meer slagen"
+    "MoreStrokes": "Meer slagen",
+    "Settings": "Instellingen",
+    "Version": "Versie"
+  },
+  "Settings": {
+    "Theme": "Thema",
+    "Language": "Taal",
+    "ThemeLight": "Licht",
+    "ThemeDark": "Donker",
+    "ThemeSystem": "Systeem"
   },
   "Home": {
     "Title": "Urban-Golf.ch - ScoreCard",
     "Text": "Maak een nieuw spel aan of bekijk bestaande spellen.",
+    "Subtitle": "Urban Golf · Winterthur",
+    "RecentGames": "Recente spellen",
+    "SeeAll": "Alles",
+    "Contribute": "Bijdragen",
     "OpenSource": {
       "Title": "Open source - doe mee!",
       "Text": "Begin met een ⭐️, meld issues of stuur pull requests. We kijken uit naar je bijdrage 🤩"
@@ -35,6 +50,14 @@
     },
     "Roadmap": {
       "Title": "Routekaart",
+      "Subtitle": "Wat er geleverd is en wat nog komt.",
+      "Status": {
+        "Done": "Voltooid",
+        "Planned": "Gepland",
+        "Open": "Open",
+        "Progress": "Voortgang",
+        "DoneOfTotal": "{done} van {total} voltooid"
+      },
       "Features": {
         "TestProd": {
           "Label": "Scheidbare Test/Prod-omgeving",
@@ -94,17 +117,32 @@
   },
   "Feedback": {
     "Title": "Feedback over de scorecard",
+    "Subtitle": "Wat kunnen we beter doen? Alle feedback helpt.",
     "ThankYou": "Bedankt voor je feedback! 🍀",
     "RatingTitle": "Beoordeling",
+    "RatingHint": "1 ster = niet top, 5 sterren = geweldig",
+    "RatingLabels": {
+      "1": "1 ster — niet top",
+      "2": "2 sterren — meh",
+      "3": "3 sterren — oké",
+      "4": "4 sterren — goed",
+      "5": "5 sterren — geweldig"
+    },
     "Text": "Feedback",
     "Name": "Naam (optioneel)",
-    "Email": "E-mail (optioneel)"
+    "Email": "E-mail (optioneel)",
+    "Errors": {
+      "RatingRequired": "Geef een beoordeling van 1 tot 5 sterren.",
+      "MessageRequired": "Voer a.u.b. feedback in.",
+      "SendFailed": "Feedback kon niet worden verstuurd."
+    }
   },
   "Scorecard": {
     "Loading": "Spelers en scores laden...",
     "ViewHorizontal": "Horizontale weergave",
     "ViewVertical": "Verticale weergave",
     "ViewRanking": "Ranglijst",
+    "SortByName": "Sorteer op naam",
     "SortByAverage": "Sorteer op gemiddelde",
     "SortByTotal": "Sorteer op totaal"
   },
@@ -120,16 +158,32 @@
     "NewGame": {
       "TitleNew": "Nieuw spel aanmaken",
       "TitleEdit": "Spel bewerken",
+      "Subtitle": "Geef je spel een naam en voeg spelers toe.",
       "GameName": "Spelnaam",
+      "GameNamePlaceholder": "bv. Zondag in het park",
       "PlayerName": "Speler",
+      "PlayerNamePlaceholder": "Voornaam",
       "SaveChanges": "Wijzigingen opslaan",
       "StartGame": "Spel starten",
-      "AddPlayer": "Speler toevoegen"
+      "AddPlayer": "Speler toevoegen",
+      "RemovePlayer": "Speler verwijderen",
+      "Errors": {
+        "GameAndPlayerRequired": "Voer een spelnaam en minimaal één speler in.",
+        "SaveFailed": "Fout bij het opslaan van het spel.",
+        "LoadFailed": "Spel kon niet worden geladen."
+      }
     },
     "HoleView": {
       "EditGame": "Spel bewerken",
-      "HideHoleOverview": "Verborgen gaten overzicht",
-      "ShowHoleOverview": "Overzicht gaten tonen"
+      "HideHoleOverview": "Holes-overzicht verbergen",
+      "ShowHoleOverview": "Holes-overzicht tonen",
+      "ScoreFor": "Score voor {player}",
+      "OpenKeypad": "Toetsenblok openen",
+      "KeypadQuickTitle": "Gebruikelijk",
+      "KeypadShowAll": "Alles tonen",
+      "KeypadShortcutHint": "Tip: 1–7 op het toetsenbord",
+      "StepperBack": "Vorige hole ({n})",
+      "StepperForward": "Volgende hole ({n})"
     }
   },
   "Network": {
@@ -143,8 +197,10 @@
     "Retry": "Opnieuw proberen"
   },
   "PWA": {
-    "UpdateAvailable": "Nieuwe versie beschikbaar.",
+    "UpdateAvailable": "Nieuwe versie beschikbaar",
+    "UpdateHint": "Herlaad de app om de nieuwste versie te laden.",
     "Reload": "Herladen",
+    "Reloading": "Laden…",
     "InstallBanner": {
       "Title": "App installeren",
       "Description": "Installeer de ScoreCard voor snellere toegang – ook offline.",

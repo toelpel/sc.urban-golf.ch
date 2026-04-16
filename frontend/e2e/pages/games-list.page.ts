@@ -10,16 +10,16 @@ export class GamesListPage {
 
   constructor(page: Page) {
     this.page = page
-    this.heading = page.locator('h1.maintitle')
+    this.heading = page.getByRole('heading', { name: /Alle Spiele|All Games/ })
     this.searchInput = page.locator('input[type="search"]')
     this.clearSearchButton = page.locator('button[aria-label="Clear search"]')
-    this.gameItems = page.locator('li.glass-list')
-    this.noGamesMessage = page.getByText('No games found')
+    this.gameItems = page.locator('.games-list__item--interactive')
+    this.noGamesMessage = page.getByText(/Keine Spiele gefunden|No games found/)
   }
 
   async goto() {
     const responsePromise = this.page.waitForResponse(
-      resp => resp.url().includes('/api/games') && resp.status() === 200,
+      (resp) => resp.url().includes('/api/games') && resp.status() === 200,
       { timeout: 15000 }
     )
     await this.page.goto('/games')
@@ -30,7 +30,7 @@ export class GamesListPage {
 
   async search(term: string) {
     const responsePromise = this.page.waitForResponse(
-      resp => resp.url().includes('/api/games') && resp.status() === 200,
+      (resp) => resp.url().includes('/api/games') && resp.status() === 200,
       { timeout: 10000 }
     )
     await this.searchInput.fill(term)
@@ -39,7 +39,7 @@ export class GamesListPage {
 
   async clearSearch() {
     const responsePromise = this.page.waitForResponse(
-      resp => resp.url().includes('/api/games') && resp.status() === 200,
+      (resp) => resp.url().includes('/api/games') && resp.status() === 200,
       { timeout: 10000 }
     )
     await this.clearSearchButton.click()
@@ -51,11 +51,11 @@ export class GamesListPage {
   }
 
   async clickGame(gameName: string) {
-    await this.page.locator('li.glass-list', { hasText: gameName }).first().click()
+    await this.page.locator('.games-list__item--interactive', { hasText: gameName }).first().click()
   }
 
   async expandGameDetails(gameName: string) {
-    const gameRow = this.page.locator('li.glass-list', { hasText: gameName }).first()
-    await gameRow.locator('button[aria-label="Expand"], button[aria-label="Collapse"]').click()
+    const gameRow = this.page.locator('.games-list__item--interactive', { hasText: gameName }).first()
+    await gameRow.locator('.games-list__chevron').click()
   }
 }

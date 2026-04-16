@@ -16,19 +16,18 @@ env:
   IMAGE_PREFIX: ${{ github.repository_owner }}/urbangolf
 
 jobs:
-  lint-and-typecheck:
+  # =====================================================================
+  # 1) Statische Checks — Lint + TypeScript (schnell, blockiert alles andere)
+  # =====================================================================
+  static-checks:
     name: Lint & Type Check
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -36,51 +35,65 @@ jobs:
       - name: Install dependencies
         run: npm ci --workspaces --include-workspace-root
 
-      - name: Lint Frontend
+      - name: Lint (Frontend)
         run: npm run lint --workspace=frontend
 
-      - name: Lint Backend
+      - name: Lint (Backend)
         run: npm run lint --workspace=backend
 
-      - name: Type Check Frontend
+      - name: Type-Check (Frontend)
         run: npm run type-check --workspace=frontend
 
-  test-frontend:
-    name: Frontend Tests
-    if: github.event_name == 'pull_request'
+  # =====================================================================
+  # 2) Unit-Tests — parallel für Frontend + Backend
+  # =====================================================================
+  unit-frontend:
+    name: Unit Tests (Frontend)
+    needs: static-checks
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --workspaces --include-workspace-root
-
-      - name: Run Frontend Tests
+      - run: npm ci --workspaces --include-workspace-root
+      - name: Run Vitest
         run: npm run test --workspace=frontend
 
-  test-backend:
-    name: Backend Tests
-    if: github.event_name == 'pull_request'
+  unit-backend:
+    name: Unit Tests (Backend)
+    needs: static-checks
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci --workspaces --include-workspace-root
+      - name: Run Vitest
+        run: npm run test --workspace=backend
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+  # =====================================================================
+  # 3) Smoke-E2E — Playwright mit gemockter API, kein Backend nötig
+  #    Schnelles Gate (~30s) um Regressions im Frontend sofort zu erkennen.
+  # =====================================================================
+  e2e-smoke:
+    name: E2E Smoke (Mock-API)
+    needs: static-checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -88,12 +101,47 @@ jobs:
       - name: Install dependencies
         run: npm ci --workspaces --include-workspace-root
 
-      - name: Run Backend Tests
-        run: npm run test --workspace=backend
+      - name: Get Playwright version
+        id: playwright-version
+        working-directory: frontend
+        run: echo "version=$(npx playwright --version | awk '{print $2}')" >> $GITHUB_OUTPUT
 
-  e2e-tests:
-    name: E2E Tests
-    if: github.event_name == 'pull_request'
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        working-directory: frontend
+        run: npx playwright install-deps chromium
+
+      - name: Run smoke tests
+        run: npm run test:e2e:smoke --workspace=frontend
+
+      - name: Upload smoke report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-smoke-report
+          path: frontend/playwright-report-smoke/
+          retention-days: 7
+
+  # =====================================================================
+  # 4) Integration-E2E — Playwright gegen echtes Backend + Postgres
+  #    Langsamer (~3 min) aber deckt den gesamten Stack ab.
+  # =====================================================================
+  e2e-integration:
+    name: E2E Integration (full stack)
+    if: false
+    needs: [unit-frontend, unit-backend, e2e-smoke]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -115,11 +163,9 @@ jobs:
           --health-retries 5
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -129,7 +175,8 @@ jobs:
 
       - name: Get Playwright version
         id: playwright-version
-        run: echo "version=$(npx --workspace=frontend playwright --version | awk '{print $2}')" >> $GITHUB_OUTPUT
+        working-directory: frontend
+        run: echo "version=$(npx playwright --version | awk '{print $2}')" >> $GITHUB_OUTPUT
 
       - name: Cache Playwright browsers
         id: playwright-cache
@@ -140,11 +187,13 @@ jobs:
 
       - name: Install Playwright browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx --workspace=frontend playwright install --with-deps chromium
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
 
-      - name: Install Playwright system dependencies
+      - name: Install Playwright system deps
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx --workspace=frontend playwright install-deps chromium
+        working-directory: frontend
+        run: npx playwright install-deps chromium
 
       - name: Initialize database
         env:
@@ -163,7 +212,7 @@ jobs:
           ALLOWED_ORIGINS: http://localhost:4173
         run: node backend/app.js &
 
-      - name: Build and preview frontend
+      - name: Build & preview frontend
         run: |
           npm run build --workspace=frontend
           npx --workspace=frontend vite preview --port 4173 &
@@ -171,43 +220,61 @@ jobs:
       - name: Wait for services
         run: npx wait-on http://localhost:3000/api/games http://localhost:4173 --timeout 30000
 
-      - name: Run Playwright tests
+      - name: Run Playwright integration tests
         env:
           PLAYWRIGHT_BASE_URL: http://localhost:4173
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/urban_golf
         run: npm run test:e2e --workspace=frontend
 
-      - name: Upload Playwright Report
-        uses: actions/upload-artifact@v4
+      - name: Upload Playwright report
         if: failure()
+        uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-integration-report
           path: frontend/playwright-report/
           retention-days: 7
 
-      - name: Upload E2E Test Results
-        uses: actions/upload-artifact@v4
+      - name: Upload test-results
         if: failure()
+        uses: actions/upload-artifact@v4
         with:
-          name: playwright-test-results
+          name: playwright-integration-results
           path: frontend/e2e/test-results/
           retention-days: 7
 
-  # Deploy: only on main branch push (tests already passed via PR checks)
+  # =====================================================================
+  # 5) Meta-Gate — muss für Branch-Protection grün sein
+  # =====================================================================
+  ci-green:
+    name: CI Green
+    if: false
+    needs: [static-checks, unit-frontend, unit-backend, e2e-smoke, e2e-integration]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check all upstream jobs
+        run: |
+          set -e
+          test "${{ needs.static-checks.result }}"   = "success"
+          test "${{ needs.unit-frontend.result }}"   = "success"
+          test "${{ needs.unit-backend.result }}"    = "success"
+          test "${{ needs.e2e-smoke.result }}"       = "success"
+          test "${{ needs.e2e-integration.result }}" = "success"
+
+  # =====================================================================
+  # Deploy — nur auf main-Push, wenn CI green ist
+  # =====================================================================
   deploy-backend:
     name: Deploy Backend
+    needs: ci-green
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: read
       packages: write
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Log in to Container Registry
-        uses: docker/login-action@v3
+      - uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -222,8 +289,7 @@ jobs:
             type=raw,value=latest
             type=sha,prefix={{branch}}-
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v3
 
       - name: Build and push backend
         uses: docker/build-push-action@v5
@@ -238,18 +304,16 @@ jobs:
 
   deploy-frontend:
     name: Deploy Frontend
+    needs: ci-green
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: read
       packages: write
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Log in to Container Registry
-        uses: docker/login-action@v3
+      - uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -264,8 +328,7 @@ jobs:
             type=raw,value=latest
             type=sha,prefix={{branch}}-
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v3
 
       - name: Build and push frontend
         uses: docker/build-push-action@v5

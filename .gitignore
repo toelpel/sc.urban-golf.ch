@@ -1,34 +1,56 @@
+# =====================================================================
 # Dependencies
+# =====================================================================
 node_modules/
 .pnp
 .pnp.js
 
-# Workspace-specific lock files (use root package-lock.json only)
+# Workspace-lokale Lock-Files — wir nutzen ausschließlich den Root-Lockfile
 backend/package-lock.json
 frontend/package-lock.json
 
-# Testing
-coverage/
-.nyc_output
-
-# AI Tools
-.claude
-
-# Production builds
+# =====================================================================
+# Build-Output
+# =====================================================================
 dist/
 build/
 out/
+.cache/
 
-# Environment files
+# =====================================================================
+# Environment-Dateien
+# Tracked bleiben: .env.example, .env.development, .env.production, .env.test
+# Ignoriert werden Dateien mit echten Secrets
+# =====================================================================
 .env
 .env.local
-.env.production
 .env.development.local
 .env.test.local
 .env.production.local
 .env.*.local
 
-# Logs
+# =====================================================================
+# Tests / CI-Artefakte
+# =====================================================================
+coverage/
+.nyc_output/
+
+# Playwright (alle Varianten)
+playwright-report/
+playwright-report-smoke/
+frontend/playwright-report/
+frontend/playwright-report-smoke/
+frontend/e2e/test-results/
+frontend/e2e/test-results-smoke/
+frontend/blob-report/
+frontend/playwright/.cache/
+
+# Visual-Audit Screenshots (werden bei Bedarf regeneriert)
+frontend/e2e/screenshots/
+
+# =====================================================================
+# Logs & Runtime
+# =====================================================================
 logs/
 *.log
 npm-debug.log*
@@ -37,13 +59,33 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
-# Runtime data
 pids/
 *.pid
 *.seed
 *.pid.lock
 
-# IDE - VSCode
+# =====================================================================
+# Caches
+# =====================================================================
+.npm
+.eslintcache
+.stylelintcache
+.vite/
+.rpt2_cache/
+.rts2_cache_*/
+
+# =====================================================================
+# AI-Tools & Claude Code
+# settings.json + skills/ sind geteiltes Team-Wissen und bleiben tracked.
+# Lokale Benutzer-Settings, Memory und temporäre Daten bleiben out.
+# =====================================================================
+.claude/settings.local.json
+.claude/cache/
+.claude/.history
+
+# =====================================================================
+# IDE — VSCode (geteilte Konfigs bleiben im Repo)
+# =====================================================================
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -51,32 +93,31 @@ pids/
 !.vscode/extensions.json
 *.code-workspace
 
-# IDE - JetBrains
+# IDE — JetBrains
 .idea/
 *.iml
 *.iws
 *.ipr
-out/
 
-# IDE - Vim
+# IDE — Vim / Emacs
 *.swp
 *.swo
-*~
-
-# IDE - Emacs
 *~
 \#*\#
 /.emacs.desktop
 /.emacs.desktop.lock
 *.elc
 
-# OS - macOS
+# =====================================================================
+# Operating Systems
+# =====================================================================
+# macOS
 .DS_Store
 .AppleDouble
 .LSOverride
 ._*
 
-# OS - Windows
+# Windows
 Thumbs.db
 Thumbs.db:encryptable
 ehthumbs.db
@@ -84,49 +125,33 @@ ehthumbs_vista.db
 Desktop.ini
 $RECYCLE.BIN/
 
-# OS - Linux
-*~
+# Linux
 .directory
 .Trash-*
 
+# =====================================================================
 # Docker
+# =====================================================================
 .docker/
 docker-compose.override.yml
 data/
 
-# Database dumps with real data (keep only schema-only dump in backend/db/init/)
+# =====================================================================
+# Datenbank-Dumps mit realen Daten
+# (Schema-only Dumps in backend/db/init/ bleiben tracked)
+# =====================================================================
 backend/db/db_dump_*/
 
-# Temporary files
+# =====================================================================
+# Temporär
+# =====================================================================
 *.tmp
 *.temp
-.cache/
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
-.eslintcache
-
-# Optional stylelint cache
-.stylelintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
-
-# Optional REPL history
 .node_repl_history
-
-# Diagnostic reports
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
-
-# Stores VSCode versions used for testing
 .vscode-test
 
-# yarn v2
+# yarn v2 PnP
 .yarn/cache
 .yarn/unplugged
 .yarn/build-state.yml
