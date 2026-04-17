@@ -14,7 +14,7 @@ Fastify 5 Backend, vollständig in Docker containerisierbar, Offline-fähig.
 - **Frontend**: Vue 3.4 + Vite 8 + TypeScript + Tailwind v4 + Pinia 3 + Vue-Router 5 + vue-i18n 11 + vite-plugin-pwa 1
 - **Backend**: Fastify 5 + pg (nativer PostgreSQL-Client) + @fastify/compress
 - **DB**: PostgreSQL 16 (Alpine) — Schema in [backend/db/init/schema.sql](backend/db/init/schema.sql)
-- **Tests**: Vitest (Unit) + Playwright (E2E, zwei Suites: Smoke mit Mock-API + Integration mit echtem Backend)
+- **Tests**: Vitest (Unit) + Playwright Smoke-Suite mit Mock-API. Backend-Contract-Tests geplant — siehe [.claude/plans/backend-contract-tests.md](.claude/plans/backend-contract-tests.md).
 - **Infra**: Docker + Nginx (statische Auslieferung Frontend) + Traefik-ready, GitHub Actions CI/CD
 
 ## Workspaces
@@ -36,7 +36,7 @@ npm run test:all       # lint + type-check + unit + smoke-e2e
 | `npm install` | beide Workspaces installieren |
 | `npm run dev` | Frontend + Backend parallel starten |
 | `npm run test:all` | komplette Test-Pipeline ohne Backend (~15 s) |
-| `npm run test:e2e --workspace=frontend` | Integration-E2E (braucht laufendes Backend + DB) |
+| `npm run test:e2e:smoke --workspace=frontend` | Smoke-E2E (Playwright mit Mock-API, kein Backend) |
 | `npm run docker:dev` | kompletter Stack via Docker Compose |
 
 ## Code-Konventionen
@@ -106,7 +106,7 @@ Branch-Protection (via CI) erwartet, dass diese Jobs grün sind:
 - `static-checks` (Lint + Type-Check)
 - `unit-frontend` + `unit-backend`
 - `e2e-smoke` (Playwright mit Mock-API)
-- `e2e-integration` (Playwright mit Backend + DB)
+- `ci-green` (Meta-Gate)
 
 Siehe [.github/workflows/ci.yml](.github/workflows/ci.yml).
 

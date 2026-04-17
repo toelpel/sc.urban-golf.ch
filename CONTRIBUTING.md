@@ -35,11 +35,10 @@ Das läuft in ~15s und umfasst:
 3. Unit-Tests (Vitest, Frontend + Backend)
 4. Smoke-E2E (Playwright mit Mock-API, Mobile + Desktop)
 
-Wenn du die **Integration-E2E** (mit echtem Backend) lokal laufen willst:
-```bash
-docker compose -f docker-compose.dev.yml up -d
-npm run test:e2e --workspace=frontend
-```
+Für API-Verifikation gegen ein echtes Backend: siehe den Contract-Test-Plan
+[`.claude/plans/backend-contract-tests.md`](.claude/plans/backend-contract-tests.md).
+Die frühere Playwright-Integration-Suite wurde entfernt, weil sie ans alte UI
+gebunden war und durch die Smoke-Suite funktional abgelöst wurde.
 
 ## Commits
 

@@ -10,10 +10,16 @@ kann unabhängig ausgeführt werden.
 | Lint                | ESLint            | `npm run lint`                  | ~2 s  | nein          |
 | Type-Check          | vue-tsc           | `npm run type-check`            | ~3 s  | nein          |
 | Unit                | Vitest            | `npm test`                      | ~1 s  | nein          |
-| Smoke-E2E (mock)    | Playwright        | `npm run test:e2e:smoke`        | ~5 s  | nein          |
+| Smoke-E2E (mock)    | Playwright        | `npm run test:e2e:smoke`        | ~7 s  | nein          |
 | Visual-Audit        | Playwright Node   | `npm run test:visual`           | ~20 s | nein          |
-| Integration-E2E     | Playwright        | `npm run test:e2e`              | ~60 s | **ja**        |
+| Horizontal-Audit    | Playwright Node   | `node e2e/horizontal-scroll-audit.mjs` | ~10 s | nein |
 | Alles zusammen      | Meta              | `npm run test:all`              | ~15 s | nein          |
+
+> Die vormals existierende **Integration-E2E-Suite** (Playwright gegen echtes
+> Backend + Postgres) wurde entfernt. Grund: sie war ans alte UI gebunden und
+> wurde durch die Smoke-Suite funktional abgelöst. Für echte Backend-Abdeckung
+> ist ein separater Contract-Test-Ansatz geplant — siehe
+> [`.claude/plans/backend-contract-tests.md`](../.claude/plans/backend-contract-tests.md).
 
 ## Details
 
@@ -37,15 +43,16 @@ Vitest mit `happy-dom`. Tests liegen entweder neben dem Quellfile
 - `services/api`                 — HTTP-Wrapper
 
 ### 4. Smoke-E2E (`npm run test:e2e:smoke`)
-**Neu:** Schneller Playwright-Lauf ohne Backend. Alle API-Routen werden
+Schneller Playwright-Lauf ohne Backend. Alle API-Routen werden
 via `page.route()` gemockt (siehe [e2e/smoke/mock-api.ts](e2e/smoke/mock-api.ts)).
 
-Testet die kritischen User-Flows im neuen Greenway-UI:
+Testet die kritischen User-Flows:
 - **home**: Hero, Recent-Games, Bottom-Nav Navigation
 - **new-game**: Spiel erstellen, Spieler hinzufügen, Limit 10
 - **score-entry**: ± Buttons, Keypad-Sheet, Hole-Pill-Navigation
 - **scorecard**: Podium-Ranking by Total, View-Switcher
 - **settings-and-i18n**: Theme-Wechsel, Sprachwechsel
+- **version-display**: App-Version im Settings-Sheet
 
 Läuft parallel auf Mobile (Pixel 5) **und** Desktop-Chromium. Der Vite-Dev-Server
 wird automatisch gestartet (`webServer`).
@@ -61,17 +68,10 @@ Playwright-Node-API-Script das bei jeder Route zwei Screenshots macht
 Ergebnis: `e2e/screenshots/*.png`. Hilfreich bei Designänderungen zum
 Vergleich vorher/nachher.
 
-### 6. Integration-E2E (`npm run test:e2e`)
-Die ursprüngliche Playwright-Suite. Braucht ein **laufendes Backend**
-unter `PLAYWRIGHT_BASE_URL` (Default `http://localhost:8080`) mit
-Postgres-DB. Der `global-setup` seedet Testdaten. Page-Objects wurden
-nach dem Redesign auf die neuen Selektoren aktualisiert — bleiben kompatibel
-solange die DOM-Struktur stabil bleibt.
-
-```bash
-# DB + Backend vorbereiten, dann:
-npm run test:e2e
-```
+### 6. Horizontal-Scroll-Audit (`node e2e/horizontal-scroll-audit.mjs`)
+Misst auf jeder Haupt-View `scrollWidth` vs `clientWidth` (Pixel-5-Viewport).
+Findet sofort Layouts die unerwünscht horizontal scrollen. Gate-freundlich —
+Exit-Code 1 bei Overflow.
 
 ### 7. Kombi (`npm run test:all`)
 Führt alles aus was ohne Backend läuft: Lint → Type-Check → Unit → Smoke-E2E.
@@ -85,29 +85,35 @@ frontend/
 │   ├── **/*.test.ts                      # Unit-Tests (neben Quelle)
 │   └── **/__tests__/*.test.ts            # Unit-Tests (Ordner-Stil)
 ├── e2e/
-│   ├── pages/                            # Page-Objects (Integration)
-│   ├── tests/                            # Integration-Specs (Backend nötig)
 │   ├── smoke/                            # Smoke-Specs (Mock-API)
 │   │   ├── fixtures.ts
 │   │   ├── mock-api.ts
 │   │   └── *.spec.ts
-│   ├── fixtures.ts                       # Integration-Fixture
-│   ├── global-setup.ts / teardown.ts     # DB-Seed (Integration)
-│   └── visual-audit.mjs                  # Screenshot-Script
-├── playwright.config.ts                  # Integration-Konfig
-├── playwright.smoke.config.ts            # Smoke-Konfig
+│   ├── visual-audit.mjs                  # Screenshot-Script
+│   └── horizontal-scroll-audit.mjs       # Overflow-Check
+├── playwright.smoke.config.ts            # Smoke-Konfig (Auto-Dev-Server)
 └── eslint.config.js
 ```
 
-## CI-Empfehlung
+## CI-Pipeline
 
-Im CI sollten mindestens laufen:
+[.github/workflows/ci.yml](../.github/workflows/ci.yml) führt diese Jobs aus:
+
+1. `static-checks` (Lint + Type-Check)
+2. `unit-frontend` + `unit-backend` parallel
+3. `e2e-smoke` (Mock-API Playwright)
+4. `ci-green` Meta-Gate für Branch-Protection
+5. `deploy-backend` + `deploy-frontend` (nur auf main-Push)
+
+Gesamtlaufzeit: **~6-10 Minuten** von Push bis GHCR-Tag.
+
+## Backend-Tests
+
+Das Backend hat eine separate Vitest-Suite:
 ```bash
-npm run lint
-npm run type-check
-npm test
-npm run test:e2e:smoke
+npm test --workspace=backend
 ```
 
-Die Integration-Suite (`test:e2e`) sollte in einem separaten Job laufen der
-vorher Postgres + Backend hochfährt.
+63 Unit-Tests über API-Validation, Utils und DB-Zugriff. Backend-Contract-Tests
+(gegen die Fastify-App ohne Browser) sind in Planung, siehe
+[backend-contract-tests plan](../.claude/plans/backend-contract-tests.md).

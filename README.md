@@ -76,9 +76,9 @@ Einzeln:
 | `npm test` | Vitest Unit-Tests (beide Workspaces) | nein |
 | `npm run test:e2e:smoke --workspace=frontend` | Playwright mit Mock-API | nein |
 | `npm run test:visual --workspace=frontend` | Screenshot-Audit (Light+Dark) | nein |
-| `npm run test:e2e` | Playwright Integration-Suite | **ja** |
 
-Details: [frontend/TESTING.md](frontend/TESTING.md).
+Details: [frontend/TESTING.md](frontend/TESTING.md). Backend-Contract-Tests
+sind in Planung — siehe [.claude/plans/backend-contract-tests.md](.claude/plans/backend-contract-tests.md).
 
 ## 🎨 Design System — "Greenway"
 

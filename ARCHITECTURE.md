@@ -174,7 +174,7 @@ Schema-Source-of-Truth: [backend/db/init/schema.sql](backend/db/init/schema.sql)
 | Unit (Frontend) | Vitest + happy-dom | Composables, Utils, Stores ohne Rendering |
 | Unit (Backend) | Vitest | Pure Funktionen, Validation-Helpers |
 | Smoke-E2E | Playwright + Mock-API | Kritische User-Flows ohne Backend (`npm run test:e2e:smoke`) |
-| Integration-E2E | Playwright + Backend + DB | Vollständiger Stack auf Postgres-Service (`npm run test:e2e`) |
+| Backend-Contract (geplant) | Vitest + Fastify-Inject | API-Request/Response-Contracts ohne Browser — siehe [.claude/plans/backend-contract-tests.md](.claude/plans/backend-contract-tests.md) |
 | Visual-Audit | Playwright Node API | Screenshots pro Page × Theme, manuelle Review |
 
 Siehe [frontend/TESTING.md](frontend/TESTING.md).

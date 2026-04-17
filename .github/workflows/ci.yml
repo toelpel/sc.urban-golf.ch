@@ -135,117 +135,12 @@ jobs:
           retention-days: 7
 
   # =====================================================================
-  # 4) Integration-E2E — Playwright gegen echtes Backend + Postgres
-  #    Aktuell deaktiviert (zu lange Laufzeit). Zum Wieder-Aktivieren:
-  #    1) `if: false` entfernen
-  #    2) `e2e-integration` in `ci-green.needs` wieder ergänzen
-  # =====================================================================
-  e2e-integration:
-    name: E2E Integration (full stack)
-    if: false
-    needs: [unit-frontend, unit-backend, e2e-smoke]
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: read
-
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_DB: urban_golf
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --workspaces --include-workspace-root
-
-      - name: Get Playwright version
-        id: playwright-version
-        working-directory: frontend
-        run: echo "version=$(npx playwright --version | awk '{print $2}')" >> $GITHUB_OUTPUT
-
-      - name: Cache Playwright browsers
-        id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
-
-      - name: Install Playwright browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        working-directory: frontend
-        run: npx playwright install --with-deps chromium
-
-      - name: Install Playwright system deps
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        working-directory: frontend
-        run: npx playwright install-deps chromium
-
-      - name: Initialize database
-        env:
-          PGHOST: localhost
-          PGPORT: 5432
-          PGUSER: postgres
-          PGPASSWORD: postgres
-          PGDATABASE: urban_golf
-        run: psql -f backend/db/init/schema.sql
-
-      - name: Start backend
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/urban_golf
-          PORT: 3000
-          NODE_ENV: test
-          ALLOWED_ORIGINS: http://localhost:4173
-        run: node backend/app.js &
-
-      - name: Build & preview frontend
-        run: |
-          npm run build --workspace=frontend
-          npx --workspace=frontend vite preview --port 4173 &
-
-      - name: Wait for services
-        run: npx wait-on http://localhost:3000/api/games http://localhost:4173 --timeout 30000
-
-      - name: Run Playwright integration tests
-        env:
-          PLAYWRIGHT_BASE_URL: http://localhost:4173
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/urban_golf
-        run: npm run test:e2e --workspace=frontend
-
-      - name: Upload Playwright report
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-integration-report
-          path: frontend/playwright-report/
-          retention-days: 7
-
-      - name: Upload test-results
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-integration-results
-          path: frontend/e2e/test-results/
-          retention-days: 7
-
-  # =====================================================================
-  # 5) Meta-Gate — muss für Branch-Protection grün sein
+  # 4) Meta-Gate — muss für Branch-Protection grün sein
+  #    Hinweis: früher gab es hier einen e2e-integration Job (Playwright
+  #    gegen echtes Backend + Postgres). Dieser wurde entfernt, weil die
+  #    Tests ans alte UI gebunden waren und die Smoke-Suite + künftige
+  #    Backend-Contract-Tests die Coverage effizienter abdecken.
+  #    Plan: .claude/plans/backend-contract-tests.md
   # =====================================================================
   ci-green:
     name: CI Green
