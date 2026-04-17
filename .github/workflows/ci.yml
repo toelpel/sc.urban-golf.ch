@@ -10,6 +10,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+# Sicherer Default — einzelne Jobs (Deploys) erweitern bei Bedarf.
+permissions:
+  contents: read
+
 env:
   NODE_VERSION: '20'
   REGISTRY: ghcr.io
@@ -22,8 +26,6 @@ jobs:
   static-checks:
     name: Lint & Type Check
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -51,8 +53,6 @@ jobs:
     name: Unit Tests (Frontend)
     needs: static-checks
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -67,8 +67,6 @@ jobs:
     name: Unit Tests (Backend)
     needs: static-checks
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -88,8 +86,6 @@ jobs:
     needs: static-checks
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v4
 
